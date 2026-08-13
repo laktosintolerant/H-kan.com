@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="sv" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Interaktiv Verktygslåda: Funktioner & Grafer (GeoGebra) | Håkan.com</title>
+  <meta name="description" content="Utforska räta linjen y = kx + m och andragradsfunktionen y = ax² + bx + c med interaktiva reglage och inbyggd GeoGebra grafräknare.">
+  
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="mat-style.css">
+
+  <!-- Förhindra theme-flicker -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('hakan_site_theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+
+  <!-- GeoGebra Embed Skript (Officiella Web API) -->
+  <script src="https://www.geogebra.org/apps/deployggb.js" async></script>
+
+  <style>
+    .tabs-bar {
+      display: flex;
+      gap: 0.75rem;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.25rem;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-primary);
+      border-bottom-color: var(--accent-primary);
+    }
+
+    .slider-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      touch-action: pan-y;
+    }
+
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1.25rem;
+      touch-action: none;
+    }
+
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+    }
+
+    .slider-input-val {
+      font-family: var(--font-mono);
+      color: var(--accent-primary);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 12px;
+      border-radius: 6px;
+      background: var(--bg-input);
+      outline: none;
+      accent-color: var(--accent-primary);
+      cursor: pointer;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .eq-banner {
+      font-family: var(--font-mono);
+      font-size: 1.6rem;
+      font-weight: 800;
+      text-align: center;
+      padding: 1.25rem;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--accent-primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .prop-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      font-size: 0.95rem;
+    }
+
+    .prop-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0.8rem;
+      background: var(--bg-surface-elevated);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--accent-primary);
+    }
+
+    .geogebra-iframe-wrapper {
+      width: 100%;
+      height: 550px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--card-shadow);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../../index.html" class="brand-logo">
+        <div class="brand-icon">H</div>
+        <span class="brand-text">Håkan.com</span>
+        <span class="brand-badge">GRAFER</span>
+      </a>
+
+      <nav class="nav-group">
+        <ul class="nav-links">
+          <li><a href="../../index.html" class="nav-link">← Tillbaka till portalen</a></li>
+          <li><a href="index.html" class="nav-link">Matematik 2a</a></li>
+          <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link">kemi1.se ↗</a></li>
+        </ul>
+
+        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Växla tema"></button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HUVUDINNEHÅLL -->
+  <main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+    
+    <!-- Brödsmulor -->
+    <div class="breadcrumbs">
+      <a href="../../index.html">Hem</a>
+      <span class="divider">/</span>
+      <a href="index.html">Matematik 2a</a>
+      <span class="divider">/</span>
+      <span style="color: var(--text-primary); font-weight: 600;">Funktioner & Grafer</span>
+    </div>
+
+    <!-- Banner -->
+    <section class="math-banner">
+      <div class="math-banner-content">
+        <h1>📉 Interaktiv Verktygslåda: Funktioner & Grafer</h1>
+        <p>
+          Dra i skjutreglagen för att direkt se hur räta linjen \(y = kx + m\) och andragradsfunktionen \(y = ax^2 + bx + c\) förändras i form, lutning och läge.
+        </p>
+      </div>
+    </section>
+
+    <!-- Fliknavigering -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" data-tab="linear">
+        <span>📏 Räta Linjen (y = kx + m)</span>
+      </button>
+      <button class="tab-btn" data-tab="quadratic">
+        <span>📐 Andragradsfunktion (y = ax² + bx + c)</span>
+      </button>
+      <button class="tab-btn" data-tab="geogebra">
+        <span>🌐 GeoGebra Grafräknare</span>
+      </button>
+    </div>
+
+    <!-- ======================================================================
+         FLIK 1: RÄTA LINJEN (y = kx + m)
+         ====================================================================== -->
+    <div class="tab-content" id="tab-linear">
+      <div class="eq-banner linear-eq-display">y = 1.5x - 2</div>
+
+      <!-- Presets -->
+      <div style="margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Snabbval:</span>
+        <button class="preset-btn preset-linear-btn" data-k="2" data-m="1">y = 2x + 1</button>
+        <button class="preset-btn preset-linear-btn" data-k="-0.5" data-m="3">y = -0.5x + 3</button>
+        <button class="preset-btn preset-linear-btn" data-k="0" data-m="4">y = 4 (Horisontell)</button>
+        <button class="preset-btn preset-linear-btn" data-k="-1" data-m="0">y = -x (Genom origo)</button>
+      </div>
+
+      <div class="solver-layout">
+        <!-- Reglage -->
+        <div class="slider-card">
+          <h3 style="margin-bottom: 1.25rem;">🎛️ Reglage för räta linjen</h3>
+
+          <!-- k-reglage -->
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Lutning (k):</span>
+              <span class="slider-input-val" id="val-k">1.5</span>
+            </div>
+            <input type="range" id="slider-k" min="-5" max="5" step="0.1" value="1.5">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Bestämmer hur brant linjen lutar. Positiv = stiger, Negativ = faller.</span>
+          </div>
+
+          <!-- m-reglage -->
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>y-skärning (m):</span>
+              <span class="slider-input-val" id="val-m">-2</span>
+            </div>
+            <input type="range" id="slider-m" min="-8" max="8" step="0.5" value="-2">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Bestämmer var linjen korsar y-axeln (där x = 0).</span>
+          </div>
+
+          <!-- Egenskaper -->
+          <h4 style="margin-top: 1.5rem; margin-bottom: 0.75rem;">Analys av linjen:</h4>
+          <div class="prop-list">
+            <div class="prop-item">
+              <span>y-skärningspunkt:</span>
+              <strong id="linear-y-intercept">(0, -2)</strong>
+            </div>
+            <div class="prop-item">
+              <span>Nollställe (x-skärning):</span>
+              <strong id="linear-x-intercept">(1.33, 0)</strong>
+            </div>
+            <div class="prop-item">
+              <span>Linjens typ:</span>
+              <strong id="linear-slope-type">Växande (Positiv)</strong>
+            </div>
+            <div class="prop-item">
+              <span>Lutningsvinkel:</span>
+              <strong id="linear-angle">56.3°</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Canvas Graf & Värdetabell -->
+        <div>
+          <div class="canvas-wrapper" style="margin-top: 0;">
+            <h4 style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem;">Visualisering av y = kx + m</h4>
+            <canvas id="linearCanvas"></canvas>
+          </div>
+
+          <div style="margin-top: 1.25rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem;">
+            <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">📊 Värdetabell för valda x:</h4>
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+              <thead>
+                <tr>
+                  <th style="padding: 0.4rem 0.8rem; border-bottom: 2px solid var(--border-color);">x</th>
+                  <th style="padding: 0.4rem 0.8rem; border-bottom: 2px solid var(--border-color);">y = f(x)</th>
+                </tr>
+              </thead>
+              <tbody id="linear-table-body">
+                <!-- Fylls i dynamiskt -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         FLIK 2: ANDRAGRADSFUNKTION (y = ax² + bx + c)
+         ====================================================================== -->
+    <div class="tab-content" id="tab-quadratic" style="display: none;">
+      <div class="eq-banner quad-eq-display" style="color: var(--color-ai);">y = x² - 2x - 3</div>
+
+      <!-- Presets -->
+      <div style="margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Snabbval:</span>
+        <button class="preset-btn preset-quad-btn" data-a="1" data-b="-2" data-c="-3">y = x² - 2x - 3</button>
+        <button class="preset-btn preset-quad-btn" data-a="-1" data-b="4" data-c="0">y = -x² + 4x (Sur munn)</button>
+        <button class="preset-btn preset-quad-btn" data-a="0.5" data-b="0" data-c="-4">y = 0.5x² - 4</button>
+      </div>
+
+      <div class="solver-layout">
+        <!-- Reglage -->
+        <div class="slider-card">
+          <h3 style="margin-bottom: 1.25rem;">🎛️ Reglage för parabeln</h3>
+
+          <!-- a-reglage -->
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Form / Öppning (a):</span>
+              <span class="slider-input-val" id="val-a">1</span>
+            </div>
+            <input type="range" id="slider-a" min="-3" max="3" step="0.1" value="1">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">a > 0: Glad munn (Minimi). a < 0: Sur munn (Maximi).</span>
+          </div>
+
+          <!-- b-reglage -->
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Förskjutning (b):</span>
+              <span class="slider-input-val" id="val-b">-2</span>
+            </div>
+            <input type="range" id="slider-b" min="-6" max="6" step="0.5" value="-2">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Påverkar symmetrilinjens placering (x = -b/2a).</span>
+          </div>
+
+          <!-- c-reglage -->
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>y-skärning (c):</span>
+              <span class="slider-input-val" id="val-c">-3</span>
+            </div>
+            <input type="range" id="slider-c" min="-8" max="8" step="0.5" value="-3">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Skärningspunkten där kurvan korsar y-axeln.</span>
+          </div>
+
+          <!-- Egenskaper -->
+          <h4 style="margin-top: 1.5rem; margin-bottom: 0.75rem;">Analys av parabeln:</h4>
+          <div class="prop-list">
+            <div class="prop-item">
+              <span>Vändpunkt (Vertex):</span>
+              <strong id="quad-vertex">(1, -4)</strong>
+            </div>
+            <div class="prop-item">
+              <span>Symmetrilinje:</span>
+              <strong id="quad-sym">x = 1</strong>
+            </div>
+            <div class="prop-item">
+              <span>Form:</span>
+              <strong id="quad-shape">Minimipunkt (Glad munn 😊)</strong>
+            </div>
+            <div class="prop-item">
+              <span>Nollställen:</span>
+              <strong id="quad-roots">x₁ = 3, x₂ = -1</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Canvas Graf & Värdetabell -->
+        <div>
+          <div class="canvas-wrapper" style="margin-top: 0;">
+            <h4 style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem;">Visualisering av y = ax² + bx + c</h4>
+            <canvas id="quadCanvas"></canvas>
+          </div>
+
+          <div style="margin-top: 1.25rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem;">
+            <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">📊 Värdetabell för valda x:</h4>
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+              <thead>
+                <tr>
+                  <th style="padding: 0.4rem 0.8rem; border-bottom: 2px solid var(--border-color);">x</th>
+                  <th style="padding: 0.4rem 0.8rem; border-bottom: 2px solid var(--border-color);">y = f(x)</th>
+                </tr>
+              </thead>
+              <tbody id="quad-table-body">
+                <!-- Fylls i dynamiskt -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         FLIK 3: GEOGEBRA GRAFRÄKNARE (INBÄDDAD)
+         ====================================================================== -->
+    <div class="tab-content" id="tab-geogebra" style="display: none;">
+      <section class="content-panel">
+        <h2 class="panel-title">🌐 Interaktiv GeoGebra Grafräknare</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+          Använd GeoGebras officiella grafräknare direkt i webbläsaren för att skriva in egna ekvationer, rita funktionsgrafer, hitta skärningspunkter och tangentlinjer.
+        </p>
+
+        <!-- Inbäddad GeoGebra Applet -->
+        <div class="geogebra-iframe-wrapper">
+          <iframe 
+            src="https://www.geogebra.org/calculator" 
+            style="width: 100%; height: 100%; border: none;"
+            title="GeoGebra Grafräknare"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>Håkan.com</strong> / Verktygslåda för funktioner & grafer.
+      </div>
+      <ul class="footer-links">
+        <li><a href="../../index.html">Start</a></li>
+        <li><a href="index.html">Matematik 2a</a></li>
+        <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer">kemi1.se ↗</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script src="graph-explorer.js"></script>
+</body>
+</html>

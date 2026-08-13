@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="sv" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matematik 2a – Resurser & Verktyg | Håkan.com</title>
+  <meta name="description" content="Interaktiva verktyg, PQ-formellösare, formelblad och moduler för Matematik nivå 2a på gymnasiet.">
+  
+  <!-- Huvudstil + Matematikstil -->
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="mat-style.css">
+
+  <!-- Förhindra theme-flicker vid första laddning -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('hakan_site_theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       TOP NAVIGATION
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../../index.html" class="brand-logo">
+        <div class="brand-icon">H</div>
+        <span class="brand-text">Håkan.com</span>
+        <span class="brand-badge">MATTE 2A</span>
+      </a>
+
+      <nav class="nav-group">
+        <ul class="nav-links">
+          <li><a href="../../index.html" class="nav-link">← Tillbaka till portalen</a></li>
+          <li><a href="#pq-solver" class="nav-link">PQ-Lösare</a></li>
+          <li><a href="#formler" class="nav-link">Formler</a></li>
+          <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link">kemi1.se ↗</a></li>
+        </ul>
+
+        <!-- Ljust/Mörkt läge växlare -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Växla tema">
+          <!-- Ikon renderas av JS -->
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       HUVUDINNEHÅLL
+       ======================================================================== -->
+  <main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+    
+    <!-- Brödsmulor -->
+    <div class="breadcrumbs">
+      <a href="../../index.html">Hem</a>
+      <span class="divider">/</span>
+      <span>Projekt</span>
+      <span class="divider">/</span>
+      <span style="color: var(--text-primary); font-weight: 600;">Matematik 2a</span>
+    </div>
+
+    <!-- Matematik Banner -->
+    <section class="math-banner">
+      <div class="math-banner-content">
+        <h1>📐 Matematik nivå 2a – Resurscenter</h1>
+        <p>
+          En sammanställning av centrala moment, interaktiva kalkylatorer, steg-för-steg-lösare och formelsamlingar anpassade för gymnasiekursen Matematik 2a.
+        </p>
+      </div>
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="funktioner-grafer.html" class="solver-btn" style="text-decoration: none; display: inline-block; background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);">
+          Funktioner & Grafer (GeoGebra) 📉
+        </a>
+        <a href="#pq-solver" class="solver-btn" style="text-decoration: none; display: inline-block;">
+          PQ-Lösaren ⚡
+        </a>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         NYHET: INTERAKTIV VERKTYGSLÅDA (GEOGEBRA & REGLAGE)
+         ====================================================================== -->
+    <section class="content-panel" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(56, 189, 248, 0.05) 100%); border-color: rgba(168, 85, 247, 0.25);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--color-ai); letter-spacing: 0.05em; background: rgba(168, 85, 247, 0.15); padding: 0.2rem 0.6rem; border-radius: 999px;">Ny interaktiv modul</span>
+          <h2 class="panel-title" style="margin-top: 0.5rem; margin-bottom: 0.4rem;">📉 Verktygslåda för Funktioner & Grafer (GeoGebra)</h2>
+          <p style="color: var(--text-secondary); max-width: 700px;">
+            Dra i skjutreglage för $k$ och $m$ i räta linjen ($y = kx + m$) samt $a, b, c$ i andragradsfunktioner ($y = ax^2 + bx + c$) för att se hur grafen förändras i realtid. Inkluderar även GeoGebra-grafräknare.
+          </p>
+        </div>
+        <a href="funktioner-grafer.html" class="filter-btn active" style="background: var(--color-ai); border-color: var(--color-ai); text-decoration: none; font-weight: 700; padding: 0.75rem 1.5rem;">
+          Öppna Verktygslådan →
+        </a>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SEKTION 1: KURSENS CENTRALA MOMENT
+         ====================================================================== -->
+    <h2 class="panel-title">📚 Centrala kursmoduler i Matematik 2a</h2>
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-card-icon">🔣</div>
+        <h3>1. Algebra & Ekvationer</h3>
+        <ul>
+          <li>Andragradsekvationer & PQ-formeln</li>
+          <li>Nollproduktmetoden & faktorisering</li>
+          <li>Kvadratkomplettering</li>
+          <li>Komplexa tal (icke-reella rötter)</li>
+        </ul>
+      </div>
+
+      <div class="module-card">
+        <div class="module-card-icon">⚖️</div>
+        <h3>2. Linjära Ekvationssystem</h3>
+        <ul>
+          <li>Grafisk lösningsmetod</li>
+          <li>Substitutionsmetoden</li>
+          <li>Additionsmetoden</li>
+          <li>Tillämpningar och textuppgifter</li>
+        </ul>
+      </div>
+
+      <div class="module-card">
+        <div class="module-card-icon">📈</div>
+        <h3>3. Funktioner & Parabler</h3>
+        <ul>
+          <li>Räta linjens ekvation (\(y = kx + m\))</li>
+          <li>Andragradsfunktioner (\(y = ax^2 + bx + c\))</li>
+          <li>Symmetrilinje och extrempunkter</li>
+          <li>Definitions- & värdemängd</li>
+        </ul>
+      </div>
+
+      <div class="module-card">
+        <div class="module-card-icon">📊</div>
+        <h3>4. Logaritmer & Statistik</h3>
+        <ul>
+          <li>Tiotalslogaritmer (\(\lg x\))</li>
+          <li>Logaritmlagar och exponentialekvationer</li>
+          <li>Läges- och spridningsmått</li>
+          <li>Normalfördelning & standardavvikelse</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         SEKTION 2: INTERAKTIVT VERKTYG – PQ-FORMELLÖSARE MED GRAF
+         ====================================================================== -->
+    <section class="content-panel" id="pq-solver">
+      <h2 class="panel-title">⚡ Interaktiv PQ-Lösare & Parabelanalys</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+        Mata in koefficienterna för ekvationen \(ax^2 + px + q = 0\). Verktyget beräknar nollställen, visar hela steg-för-steg-lösningen och plottar kurvan med vändpunkt i realtid.
+      </p>
+
+      <!-- Snabbval / Exempel -->
+      <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Testa exempel:</span>
+        <button class="preset-btn" data-a="1" data-p="-6" data-q="8">x² - 6x + 8 = 0 (2 rötter)</button>
+        <button class="preset-btn" data-a="1" data-p="4" data-q="4">x² + 4x + 4 = 0 (Dubbelrot)</button>
+        <button class="preset-btn" data-a="1" data-p="-2" data-q="5">x² - 2x + 5 = 0 (Komplexa)</button>
+        <button class="preset-btn" data-a="2" data-p="-8" data-q="6">2x² - 8x + 6 = 0 (a = 2)</button>
+      </div>
+
+      <div class="solver-layout">
+        <!-- Inmatning -->
+        <div class="solver-inputs">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;">
+            <div class="input-group">
+              <label for="input-a">Koefficient a:</label>
+              <input type="number" id="input-a" class="input-field" value="1" step="any">
+            </div>
+            <div class="input-group">
+              <label for="input-p">p (eller b):</label>
+              <input type="number" id="input-p" class="input-field" value="-6" step="any">
+            </div>
+            <div class="input-group">
+              <label for="input-q">q (eller c):</label>
+              <input type="number" id="input-q" class="input-field" value="8" step="any">
+            </div>
+          </div>
+
+          <button id="btn-solve" class="solver-btn">Beräkna & visualisera ✨</button>
+
+          <!-- Grafvisning -->
+          <div class="canvas-wrapper">
+            <h4 style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem;">Funktionsgraf f(x)</h4>
+            <canvas id="graphCanvas"></canvas>
+          </div>
+        </div>
+
+        <!-- Resultat & Steg-för-steg -->
+        <div class="solver-results">
+          <div class="result-box-highlight">
+            <h4>Resultat (Rötter / Nollställen):</h4>
+            <div class="roots-display" id="roots-output">Beräknar...</div>
+          </div>
+
+          <h4 style="margin-bottom: 0.75rem; font-size: 0.95rem;">Steg-för-steg uträkning:</h4>
+          <div class="steps-list" id="steps-output">
+            <!-- Fylls i av mat-solver.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SEKTION 3: FORMELSAMLING FÖR MATEMATIK 2A
+         ====================================================================== -->
+    <section class="content-panel" id="formler">
+      <h2 class="panel-title">📖 Snabbformler för Matematik 2a</h2>
+      <div class="formula-cards-grid">
+        <div class="formula-card">
+          <h4>PQ-formeln</h4>
+          <div class="formula-math">x = -(p/2) ± √((p/2)² - q)</div>
+          <p class="formula-desc">Gäller för ekvationer på formen x² + px + q = 0.</p>
+        </div>
+
+        <div class="formula-card">
+          <h4>Räta linjens lutning (k-värde)</h4>
+          <div class="formula-math">k = (y₂ - y₁) / (x₂ - x₁)</div>
+          <p class="formula-desc">Riktningskoefficient mellan två punkter (x₁, y₁) och (x₂, y₂).</p>
+        </div>
+
+        <div class="formula-card">
+          <h4>Tiotalslogaritmer</h4>
+          <div class="formula-math">10^(lg x) = x &nbsp;|&nbsp; lg(a · b) = lg a + lg b</div>
+          <p class="formula-desc">Definition och additionslag för tiotalslogaritmer (x > 0).</p>
+        </div>
+
+        <div class="formula-card">
+          <h4>Andragradsfunktionens symmetrilinje</h4>
+          <div class="formula-math">x = -p / 2</div>
+          <p class="formula-desc">Ligger alltid mitt emellan funktionens nollställen.</p>
+        </div>
+
+        <div class="formula-card">
+          <h4>Pythagoras sats</h4>
+          <div class="formula-math">a² + b² = c²</div>
+          <p class="formula-desc">Samband mellan kateterna a, b och hypotenusan c i en rätvinklig triangel.</p>
+        </div>
+
+        <div class="formula-card">
+          <h4>Standardavvikelse (Stickprov)</h4>
+          <div class="formula-math">s = √( Σ(x - x̄)² / (n - 1) )</div>
+          <p class="formula-desc">Mått på hur observationerna sprider sig kring medelvärdet.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SEKTION 4: EXTERNA RESURSER & KEMI-LÄNKAR
+         ====================================================================== -->
+    <section class="content-panel">
+      <h2 class="panel-title">🔗 Relaterade resurser & läromedel</h2>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="filter-btn" style="text-decoration: none;">
+          🧪 Besök kemi1.se (Gymnasiekemi) ↗
+        </a>
+        <a href="../../index.html" class="filter-btn" style="text-decoration: none;">
+          🏠 Tillbaka till portalöversikten
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>Håkan.com</strong> / Matematik 2a resursnav.
+      </div>
+      <ul class="footer-links">
+        <li><a href="../../index.html">Start</a></li>
+        <li><a href="#pq-solver">PQ-Lösare</a></li>
+        <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer">kemi1.se ↗</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../../assets/js/main.js"></script>
+  <script src="mat-solver.js"></script>
+</body>
+</html>

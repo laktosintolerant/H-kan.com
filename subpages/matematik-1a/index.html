@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="sv" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Matematik 1a: Modulbaserade Snabbtest | Håkan.com</title>
+  <meta name="description" content="Självrättande modulbaserade snabbtest i Matematik 1a med omedelbar steg-för-steg-förklaring vid fel svar.">
+  
+  <link rel="stylesheet" href="../../assets/css/style.css">
+
+  <!-- Förhindra theme-flicker -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('hakan_site_theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+
+  <style>
+    /* Anpassade stilar för Snabbtest-modulen */
+    .quiz-hero {
+      background: var(--bg-surface-glass);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .quiz-hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.05));
+      pointer-events: none;
+    }
+
+    .topic-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .topic-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: relative;
+    }
+
+    .topic-card:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-3px);
+      box-shadow: var(--card-shadow);
+    }
+
+    .topic-card.active {
+      border-color: var(--accent-primary);
+      background: var(--bg-surface-elevated);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .topic-card.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--accent-primary);
+      border-top-left-radius: var(--radius-md);
+      border-bottom-left-radius: var(--radius-md);
+    }
+
+    .topic-icon {
+      font-size: 1.5rem;
+    }
+
+    .topic-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+    }
+
+    .topic-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Quiz-kort & Fråga */
+    .quiz-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--card-shadow);
+      display: none;
+    }
+
+    .quiz-container.visible {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .quiz-progress-bar-bg {
+      height: 8px;
+      width: 100%;
+      background: var(--bg-surface-elevated);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent-gradient);
+      transition: width 0.3s ease;
+    }
+
+    .quiz-meta-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .question-badge {
+      font-family: var(--font-mono);
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .question-text {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    .math-expr {
+      font-family: var(--font-mono);
+      background: var(--bg-body);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      color: var(--accent-primary);
+      display: inline-block;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      padding: 1rem 1.25rem;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 1rem;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--accent-primary);
+      background: var(--bg-surface);
+      transform: translateX(4px);
+    }
+
+    .option-btn.selected {
+      border-color: var(--accent-primary);
+    }
+
+    .option-btn.correct {
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.12) !important;
+      color: #10b981 !important;
+    }
+
+    .option-btn.incorrect {
+      border-color: #ef4444 !important;
+      background: rgba(239, 68, 68, 0.12) !important;
+      color: #ef4444 !important;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    /* Feedback-panel */
+    .feedback-panel {
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .feedback-panel.correct-bg {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .feedback-panel.incorrect-bg {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .feedback-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .feedback-title.correct-text { color: #10b981; }
+    .feedback-title.incorrect-text { color: #ef4444; }
+
+    .feedback-body {
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .feedback-steps {
+      margin-top: 0.75rem;
+      padding-left: 1.2rem;
+    }
+
+    .feedback-steps li {
+      margin-bottom: 0.4rem;
+    }
+
+    .quiz-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
+
+    .next-btn {
+      padding: 0.75rem 1.75rem;
+      border-radius: var(--radius-full);
+      background: var(--accent-gradient);
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 4px 14px var(--accent-glow);
+      transition: all var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .next-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--accent-glow);
+    }
+
+    /* Summary Card */
+    .summary-card {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .score-circle {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: var(--bg-surface-elevated);
+      border: 3px solid var(--accent-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .score-number {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .score-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       TOP NAVIGATION
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../../index.html" class="brand-logo">
+        <div class="brand-icon">H</div>
+        <span class="brand-text">Håkan.com</span>
+        <span class="brand-badge">MATTE 1A</span>
+      </a>
+
+      <nav class="nav-group">
+        <ul class="nav-links">
+          <li><a href="../../index.html" class="nav-link">← Startsida</a></li>
+          <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link">kemi1.se ↗</a></li>
+        </ul>
+
+        <!-- Ljust/Mörkt läge växlare -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Växla tema">
+          <!-- Ikon renderas av main.js -->
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       HUVUDINNEHÅLL
+       ======================================================================== -->
+  <main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+    
+    <!-- Brödsmulor -->
+    <div class="breadcrumbs">
+      <a href="../../index.html">Hem</a>
+      <span class="divider">/</span>
+      <span>Matematik 1a</span>
+      <span class="divider">/</span>
+      <span style="color: var(--text-primary); font-weight: 600;">Modulbaserade Snabbtest</span>
+    </div>
+
+    <!-- Verktygsbanner -->
+    <section class="quiz-hero">
+      <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--badge-bg); color: var(--badge-text); padding: 0.25rem 0.75rem; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;">
+        <span>🧠 Självrättande Repetition</span>
+      </div>
+      <h1 class="subpage-title">Matematik Nivå 1a: Modulbaserade Snabbtest</h1>
+      <p class="subpage-desc">
+        Korta, fokuserade quiz delade per område. Du får omedelbar steg-för-steg-förklaring vid fel svar så att du lär dig av dina misstag direkt!
+      </p>
+    </section>
+
+    <!-- Områdesväljare -->
+    <h2 style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">
+      1. Välj ett område att repetera:
+    </h2>
+    <div class="topic-selector-grid" id="topic-selector-grid">
+      <!-- Genereras dynamiskt via JS -->
+    </div>
+
+    <!-- Quiz-Behållare -->
+    <section class="quiz-container" id="quiz-container">
+      <div class="quiz-meta-header">
+        <span id="quiz-topic-title" style="font-weight: 600; color: var(--accent-primary);">Område</span>
+        <span class="question-badge" id="question-progress-text">Fråga 1 av 3</span>
+      </div>
+
+      <div class="quiz-progress-bar-bg">
+        <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+      </div>
+
+      <div id="quiz-card-content">
+        <!-- Fråga, alternativ och feedback renderas här -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>Håkan.com</strong> / Matematik 1a Repetitionsmodul
+      </div>
+      <ul class="footer-links">
+        <li><a href="../../index.html">Start</a></li>
+        <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer">kemi1.se ↗</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    /* ========================================================================
+       FRÅGEDATABAS FÖR MATEMATIK NIVÅ 1A
+       ======================================================================== */
+    const QUIZ_TOPICS = [
+      {
+        id: 'negativa-tal',
+        title: '1. Negativa Tal',
+        icon: '➖',
+        description: 'Teckenregler, addition/subtraktion och multiplikation med negativa tal.',
+        questions: [
+          {
+            id: 'neg-1',
+            question: 'Vad blir värdet av uttrycket: <span class="math-expr">(-7) + (-4)</span> ?',
+            options: [
+              { text: '-11', correct: true },
+              { text: '-3', correct: false },
+              { text: '3', correct: false },
+              { text: '11', correct: false }
+            ],
+            explanation: {
+              summary: 'När vi adderar ett negativt tal är det samma sak som att subtrahera det positiva talet.',
+              steps: [
+                'Formel/Regel: a + (-b) = a - b',
+                '(-7) + (-4) blir alltså -7 - 4',
+                'Om du startar på -7 på tallinjen och går 4 steg åt vänster landar du på -11.'
+              ]
+            }
+          },
+          {
+            id: 'neg-2',
+            question: 'Beräkna: <span class="math-expr">5 - (-8)</span>',
+            options: [
+              { text: '-3', correct: false },
+              { text: '3', correct: false },
+              { text: '13', correct: true },
+              { text: '-13', correct: false }
+            ],
+            explanation: {
+              summary: 'Två minustecken i rad som möts utan siffror emellan tar ut varandra och blir plus!',
+              steps: [
+                'Regel: a - (-b) = a + b',
+                '5 - (-8) = 5 + 8',
+                '5 + 8 = 13'
+              ]
+            }
+          },
+          {
+            id: 'neg-3',
+            question: 'Vad blir produkten av: <span class="math-expr">(-4) · (-6)</span> ?',
+            options: [
+              { text: '-24', correct: false },
+              { text: '24', correct: true },
+              { text: '-10', correct: false },
+              { text: '10', correct: false }
+            ],
+            explanation: {
+              summary: 'Multiplikation mellan två negativa tal ger alltid en positiv produkt (Lika tecken ger plus).',
+              steps: [
+                'Regel: (-) · (-) = (+)',
+                '4 · 6 = 24',
+                'Därför är (-4) · (-6) = +24'
+              ]
+            }
+          }
+        ]
+      },
+      {
+        id: 'prioriteringsregler',
+        title: '2. Prioriteringsregler',
+        icon: '🔢',
+        description: 'Parenteser, potenser, multiplikation/division före addition/subtraktion (PEMDAS/BODMAS).',
+        questions: [
+          {
+            id: 'prio-1',
+            question: 'Vad blir svaret på: <span class="math-expr">3 + 4 · 5</span> ?',
+            options: [
+              { text: '35', correct: false },
+              { text: '23', correct: true },
+              { text: '19', correct: false },
+              { text: '60', correct: false }
+            ],
+            explanation: {
+              summary: 'Multiplikation ska alltid utföras FÖRE addition!',
+              steps: [
+                'Vanlig fallgrop: Räkna från vänster till höger (3 + 4 = 7, 7 · 5 = 35) är FEL!',
+                'Korrekt ordning: Beräkna multiplikationen först: 4 · 5 = 20',
+                'Därefter additionen: 3 + 20 = 23'
+              ]
+            }
+          },
+          {
+            id: 'prio-2',
+            question: 'Beräkna uttrycket: <span class="math-expr">2 · (8 - 3)²</span>',
+            options: [
+              { text: '50', correct: true },
+              { text: '100', correct: false },
+              { text: '25', correct: false },
+              { text: '260', correct: false }
+            ],
+            explanation: {
+              summary: 'Prioriteringsordningen är: 1. Parentes, 2. Potens, 3. Multiplikation.',
+              steps: [
+                'Steg 1 (Parentes): 8 - 3 = 5',
+                'Steg 2 (Potens): 5² = 5 · 5 = 25',
+                'Steg 3 (Multiplikation): 2 · 25 = 50'
+              ]
+            }
+          },
+          {
+            id: 'prio-3',
+            question: 'Vad blir värdet av: <span class="math-expr">12 / 3 + 2 · 4</span> ?',
+            options: [
+              { text: '24', correct: false },
+              { text: '12', correct: true },
+              { text: '20', correct: false },
+              { text: '16', correct: false }
+            ],
+            explanation: {
+              summary: 'Division och multiplikation har högre prioritet än addition.',
+              steps: [
+                'Beräkna divisionen först: 12 / 3 = 4',
+                'Beräkna multiplikationen: 2 · 4 = 8',
+                'Addera resultaten: 4 + 8 = 12'
+              ]
+            }
+          }
+        ]
+      },
+      {
+        id: 'brak',
+        title: '3. Bråkräkning',
+        icon: '🍕',
+        description: 'Gemensam nämnare, förlängning, förkortning och de fyra räknesätten med bråk.',
+        questions: [
+          {
+            id: 'brak-1',
+            question: 'Vad blir summan av: <span class="math-expr">1/4 + 2/3</span> ?',
+            options: [
+              { text: '3/7', correct: false },
+              { text: '11/12', correct: true },
+              { text: '8/12', correct: false },
+              { text: '3/12', correct: false }
+            ],
+            explanation: {
+              summary: 'Vid addition av bråk måste de ha samma nämnare (Minsta Gemensamma Nämnare).',
+              steps: [
+                'Minsta gemensamma nämnare för 4 och 3 är 12.',
+                'Förläng 1/4 med 3: (1 · 3) / (4 · 3) = 3/12',
+                'Förläng 2/3 med 4: (2 · 4) / (3 · 4) = 8/12',
+                'Addera täljarna: 3/12 + 8/12 = 11/12'
+              ]
+            }
+          },
+          {
+            id: 'brak-2',
+            question: 'Vad blir produkten när du multiplicerar: <span class="math-expr">3/5 · 2/7</span> ?',
+            options: [
+              { text: '6/35', correct: true },
+              { text: '5/12', correct: false },
+              { text: '21/10', correct: false },
+              { text: '6/12', correct: false }
+            ],
+            explanation: {
+              summary: 'Vid multiplikation av bråk multipliceras täljare med täljare och nämnare med nämnare.',
+              steps: [
+                'Täljare: 3 · 2 = 6',
+                'Nämnare: 5 · 7 = 35',
+                'Svar: 6/35 (behöver ej gemensam nämnare!)'
+              ]
+            }
+          },
+          {
+            id: 'brak-3',
+            question: 'Förenkla bråket <span class="math-expr">15/20</span> så långt som möjligt:',
+            options: [
+              { text: '3/4', correct: true },
+              { text: '5/4', correct: false },
+              { text: '3/5', correct: false },
+              { text: '1/2', correct: false }
+            ],
+            explanation: {
+              summary: 'Förkorta innebär att dividera både täljare och nämnare med samma heltal.',
+              steps: [
+                'Både 15 och 20 är delbara med 5.',
+                'Täljare: 15 / 5 = 3',
+                'Nämnare: 20 / 5 = 4',
+                'Förenklat bråk = 3/4'
+              ]
+            }
+          }
+        ]
+      },
+      {
+        id: 'algebraiska-uttryck',
+        title: '4. Algebraiska Uttryck',
+        icon: '🔣',
+        description: 'Förenkling av uttryck, förenkla parenteser och kombinera lika termer.',
+        questions: [
+          {
+            id: 'alg-1',
+            question: 'Förenkla uttrycket: <span class="math-expr">4x + 7 - 2x + 3</span>',
+            options: [
+              { text: '2x + 10', correct: true },
+              { text: '6x + 10', correct: false },
+              { text: '12x', correct: false },
+              { text: '2x + 4', correct: false }
+            ],
+            explanation: {
+              summary: 'Samla x-termer för sig och siffertermer (konstanter) för sig.',
+              steps: [
+                'x-termer: 4x - 2x = 2x',
+                'Siffertermer: 7 + 3 = 10',
+                'Kombinerat svar: 2x + 10'
+              ]
+            }
+          },
+          {
+            id: 'alg-2',
+            question: 'Ta bort parentesen och förenkla: <span class="math-expr">5x - (3x - 4)</span>',
+            options: [
+              { text: '2x - 4', correct: false },
+              { text: '2x + 4', correct: true },
+              { text: '8x - 4', correct: false },
+              { text: '8x + 4', correct: false }
+            ],
+            explanation: {
+              summary: 'Ett minustecken framför en parentes ändrar alla tecken inuti parentesen när den tas bort!',
+              steps: [
+                'Minustecken framför (3x - 4) gör om +3x till -3x och -4 till +4.',
+                'Uttrycket blir: 5x - 3x + 4',
+                'Förenklat: 2x + 4'
+              ]
+            }
+          },
+          {
+            id: 'alg-3',
+            question: 'Beräkna värdet av uttrycket <span class="math-expr">3a - 2b</span> när <span class="math-expr">a = 4</span> och <span class="math-expr">b = -1</span>:',
+            options: [
+              { text: '10', correct: false },
+              { text: '14', correct: true },
+              { text: '8', correct: false },
+              { text: '6', correct: false }
+            ],
+            explanation: {
+              summary: 'Ersätt a och b med deras värden och räkna noggrant med tecknen.',
+              steps: [
+                '3a = 3 · 4 = 12',
+                '2b = 2 · (-1) = -2',
+                'Uttrycket: 12 - (-2)',
+                'Eftersom minustecken möter negativt tal: 12 + 2 = 14'
+              ]
+            }
+          }
+        ]
+      },
+      {
+        id: 'formler-ekvationer',
+        title: '5. Formler & Ekvationer',
+        icon: '⚖️',
+        description: 'Ekvationslösning, balansmetoden och att bryta ut/lösa ut variabler ur formler.',
+        questions: [
+          {
+            id: 'ekv-1',
+            question: 'Lös ekvationen: <span class="math-expr">3x + 5 = 20</span>',
+            options: [
+              { text: 'x = 5', correct: true },
+              { text: 'x = 8.33', correct: false },
+              { text: 'x = 15', correct: false },
+              { text: 'x = 4.5', correct: false }
+            ],
+            explanation: {
+              summary: 'Använd balansmetoden för att isolera x på ena sidan av likhetstecknet.',
+              steps: [
+                'Subtrahera 5 från båda sidor: 3x = 20 - 5  =>  3x = 15',
+                'Dividera båda sidor med 3: x = 15 / 3',
+                'Svar: x = 5'
+              ]
+            }
+          },
+          {
+            id: 'ekv-2',
+            question: 'Lös ekvationen: <span class="math-expr">5x - 4 = 2x + 11</span>',
+            options: [
+              { text: 'x = 3', correct: false },
+              { text: 'x = 5', correct: true },
+              { text: 'x = 7', correct: false },
+              { text: 'x = 15', correct: false }
+            ],
+            explanation: {
+              summary: 'Samla variablerna (x) på den sida där det finns flest x.',
+              steps: [
+                'Subtrahera 2x från båda sidor: 3x - 4 = 11',
+                'Addera 4 på båda sidor: 3x = 15',
+                'Dividera med 3 på båda sidor: x = 5'
+              ]
+            }
+          },
+          {
+            id: 'ekv-3',
+            question: 'Ur formeln för rektangelns omkrets <span class="math-expr">O = 2b + 2h</span>, löser vi ut höjden <span class="math-expr">h</span>. Vad blir det?',
+            options: [
+              { text: 'h = (O - 2b) / 2', correct: true },
+              { text: 'h = O - 2b - 2', correct: false },
+              { text: 'h = 2O / b', correct: false },
+              { text: 'h = O - b', correct: false }
+            ],
+            explanation: {
+              summary: 'Målet är att få h helt ensamt på en sida genom omflyttning.',
+              steps: [
+                'Börja med: O = 2b + 2h',
+                'Subtrahera 2b på båda sidor: O - 2b = 2h',
+                'Dividera hela vänsterledet med 2: h = (O - 2b) / 2'
+              ]
+            }
+          }
+        ]
+      }
+    ];
+
+    /* ========================================================================
+       QUIZ-LOGIK & APPLIKATIONSSTATEMANAGEMENT
+       ======================================================================== */
+    let currentTopicIndex = 0;
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+    let isAnswered = false;
+
+    // Elementreferenser
+    const topicGridEl = document.getElementById('topic-selector-grid');
+    const quizContainerEl = document.getElementById('quiz-container');
+    const quizTopicTitleEl = document.getElementById('quiz-topic-title');
+    const questionProgressTextEl = document.getElementById('question-progress-text');
+    const quizProgressFillEl = document.getElementById('quiz-progress-fill');
+    const quizCardContentEl = document.getElementById('quiz-card-content');
+
+    // Rendera ämneskort i väljaren
+    function renderTopics() {
+      topicGridEl.innerHTML = '';
+      QUIZ_TOPICS.forEach((topic, index) => {
+        const card = document.createElement('div');
+        card.className = `topic-card ${index === currentTopicIndex ? 'active' : ''}`;
+        card.onclick = () => selectTopic(index);
+        
+        card.innerHTML = `
+          <div class="topic-icon">${topic.icon}</div>
+          <div class="topic-title">${topic.title}</div>
+          <div class="topic-meta">${topic.questions.length} frågor • ${topic.description}</div>
+        `;
+        topicGridEl.appendChild(card);
+      });
+    }
+
+    // Välj ett nytt område
+    function selectTopic(index) {
+      currentTopicIndex = index;
+      currentQuestionIndex = 0;
+      userAnswers = [];
+      isAnswered = false;
+      
+      renderTopics();
+      loadQuestion();
+      
+      quizContainerEl.classList.add('visible');
+      quizContainerEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Ladda aktuell fråga
+    function loadQuestion() {
+      const topic = QUIZ_TOPICS[currentTopicIndex];
+      const q = topic.questions[currentQuestionIndex];
+      isAnswered = false;
+
+      // Uppdatera header & progress
+      quizTopicTitleEl.textContent = `${topic.icon} ${topic.title}`;
+      questionProgressTextEl.textContent = `Fråga ${currentQuestionIndex + 1} av ${topic.questions.length}`;
+      
+      const progressPercent = ((currentQuestionIndex) / topic.questions.length) * 100;
+      quizProgressFillEl.style.width = `${progressPercent}%`;
+
+      // Rendera frågekort
+      let optionsHTML = '';
+      q.options.forEach((opt, idx) => {
+        optionsHTML += `
+          <button class="option-btn" onclick="handleOptionSelect(${idx})" id="opt-btn-${idx}">
+            <span>${opt.text}</span>
+            <span class="opt-indicator" id="opt-ind-${idx}"></span>
+          </button>
+        `;
+      });
+
+      quizCardContentEl.innerHTML = `
+        <div class="question-text">${q.question}</div>
+        <div class="options-grid">${optionsHTML}</div>
+        <div class="feedback-panel" id="feedback-panel"></div>
+        <div class="quiz-actions" id="quiz-actions" style="display: none;">
+          <button class="next-btn" onclick="nextQuestion()">
+            ${currentQuestionIndex === topic.questions.length - 1 ? 'Visa resultat 🏁' : 'Nästa fråga ➔'}
+          </button>
+        </div>
+      `;
+    }
+
+    // Hantera val av svar
+    function handleOptionSelect(selectedIndex) {
+      if (isAnswered) return;
+      isAnswered = true;
+
+      const topic = QUIZ_TOPICS[currentTopicIndex];
+      const q = topic.questions[currentQuestionIndex];
+      const selectedOpt = q.options[selectedIndex];
+      const isCorrect = selectedOpt.correct;
+
+      // Spara användarens svar
+      userAnswers.push({ questionId: q.id, isCorrect: isCorrect, selectedIndex: selectedIndex });
+
+      // Inaktivera alla knappar och färglägg
+      q.options.forEach((opt, idx) => {
+        const btn = document.getElementById(`opt-btn-${idx}`);
+        const ind = document.getElementById(`opt-ind-${idx}`);
+        btn.disabled = true;
+
+        if (opt.correct) {
+          btn.classList.add('correct');
+          ind.textContent = '✓ Rätt';
+        } else if (idx === selectedIndex && !isCorrect) {
+          btn.classList.add('incorrect');
+          ind.textContent = '✗ Ditt svar';
+        }
+      });
+
+      // Rendera pedagogisk feedback
+      const feedbackPanel = document.getElementById('feedback-panel');
+      feedbackPanel.style.display = 'block';
+
+      if (isCorrect) {
+        feedbackPanel.className = 'feedback-panel correct-bg';
+        feedbackPanel.innerHTML = `
+          <div class="feedback-title correct-text">
+            <span>🎉 Helt rätt! Bra jobbat.</span>
+          </div>
+          <div class="feedback-body">
+            <p>${q.explanation.summary}</p>
+          </div>
+        `;
+      } else {
+        feedbackPanel.className = 'feedback-panel incorrect-bg';
+        
+        let stepsHTML = '';
+        q.explanation.steps.forEach(step => {
+          stepsHTML += `<li>${step}</li>`;
+        });
+
+        feedbackPanel.innerHTML = `
+          <div class="feedback-title incorrect-text">
+            <span>💡 Inte riktigt – Här är förklaringen:</span>
+          </div>
+          <div class="feedback-body">
+            <p><strong>Kort sammanfattning:</strong> ${q.explanation.summary}</p>
+            <ol class="feedback-steps">${stepsHTML}</ol>
+          </div>
+        `;
+      }
+
+      // Visa nästa-knapp
+      document.getElementById('quiz-actions').style.display = 'flex';
+    }
+
+    // Gå till nästa fråga eller visa sammanfattning
+    function nextQuestion() {
+      const topic = QUIZ_TOPICS[currentTopicIndex];
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex < topic.questions.length) {
+        loadQuestion();
+      } else {
+        renderSummary();
+      }
+    }
+
+    // Rendera sammanfattning när modulen är klar
+    function renderSummary() {
+      const topic = QUIZ_TOPICS[currentTopicIndex];
+      const correctCount = userAnswers.filter(a => a.isCorrect).length;
+      const totalCount = topic.questions.length;
+      const percentage = Math.round((correctCount / totalCount) * 100);
+
+      quizProgressFillEl.style.width = '100%';
+      questionProgressTextEl.textContent = 'Modul Slutförd!';
+
+      let feedbackMsg = '';
+      if (percentage === 100) {
+        feedbackMsg = '🌟 Perfekt! Du har full koll på detta område.';
+      } else if (percentage >= 66) {
+        feedbackMsg = '👍 Mycket bra! Du har god förståelse för grunderna.';
+      } else {
+        feedbackMsg = '💪 Bra kämpat! Gå gärna igenom förklaringarna igen och gör om testen för att stärka minnet.';
+      }
+
+      quizCardContentEl.innerHTML = `
+        <div class="summary-card">
+          <div class="score-circle">
+            <span class="score-number">${correctCount}/${totalCount}</span>
+            <span class="score-label">${percentage}% RÄTT</span>
+          </div>
+          <h2 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">
+            Modul slutförd: ${topic.title}
+          </h2>
+          <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+            ${feedbackMsg}
+          </p>
+
+          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <button class="next-btn" onclick="selectTopic(${currentTopicIndex})">
+              🔄 Gör om denna modul
+            </button>
+            ${currentTopicIndex < QUIZ_TOPICS.length - 1 ? `
+              <button class="filter-btn active" style="padding: 0.75rem 1.5rem;" onclick="selectTopic(${currentTopicIndex + 1})">
+                Nästa område ➔
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    // Initiera första visningen
+    renderTopics();
+    selectTopic(0);
+  </script>
+</body>
+</html>

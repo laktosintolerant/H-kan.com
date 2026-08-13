@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="sv" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Håkan.com – Projekt, Matematik 2a & Kemi 1</title>
+  <meta name="description" content="Samlingsportal för digitala läromedel, AI-verktyg, Matematik 2a, kemi1.se och framtida projekt av Håkan.">
+  <link rel="stylesheet" href="assets/css/style.css">
+  
+  <!-- Förhindra theme-flicker vid första laddning -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('hakan_site_theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       TOP NAVIGATION
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-logo" id="header-brand-logo">
+        <div class="brand-icon">H</div>
+        <span class="brand-text">Håkan.com</span>
+        <span class="brand-badge">PORTAL</span>
+      </a>
+
+      <nav class="nav-group">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link active">Hem</a></li>
+          <li><a href="subpages/matematik-1a/index.html" class="nav-link">Matematik 1a</a></li>
+          <li><a href="subpages/matematik-2a/index.html" class="nav-link">Matematik 2a</a></li>
+          <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link">kemi1.se ↗</a></li>
+          <li><a href="#guide-section" class="nav-link">Lägg till projekt</a></li>
+        </ul>
+
+        <!-- Ljust/Mörkt läge växlare -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Växla tema">
+          <!-- Ikon renderas av JS -->
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       HERO SECTION
+       ======================================================================== -->
+  <main>
+    <section class="hero-section">
+      <div class="container container-narrow">
+        <div class="hero-pill">
+          <span class="hero-pill-dot"></span>
+          <span>Digital verktygslåda & samlingshemsida</span>
+        </div>
+
+        <h1 class="hero-title">
+          Projekt, verktyg och läromedel i en <span class="gradient-text">gemensam hubb</span>
+        </h1>
+
+        <p class="hero-lead">
+          Välkommen till min samlingsportal. Här samlar jag interaktiva resurser och verktyg för <strong>Matematik 2a</strong>, länkar till <strong>kemi1.se</strong> samt nya AI-utvecklade pedagogiska moduler.
+        </p>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-number">2+</span>
+            <span class="stat-label">Huvudämnen</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">AI-optimerad</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">Dark & Light</span>
+            <span class="stat-label">Temastöd</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         PROJEKTÖVERSIKT, SÖK & FILTER
+         ======================================================================== -->
+    <section class="container" id="projects-section">
+      <div class="controls-wrapper">
+        <!-- Sökfält -->
+        <div class="search-box-container">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <input 
+            type="text" 
+            id="search-input" 
+            class="search-input" 
+            placeholder="Sök bland projekt, verktyg, formler eller ämnen..."
+            autocomplete="off"
+          >
+          <span class="search-shortcut" title="Tryck / för att söka">Tryck /</span>
+        </div>
+
+        <!-- Filterknappar -->
+        <div class="filter-pills" id="filter-pills">
+          <!-- Renderas dynamiskt av JS -->
+        </div>
+
+        <div class="results-info">
+          <span id="results-count">Laddar resurser...</span>
+        </div>
+      </div>
+
+      <!-- Projektkort Grid -->
+      <div class="projects-grid" id="projects-grid">
+        <!-- Renderas dynamiskt från assets/js/projects-data.js -->
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         GUIDE: SÅ LÄGGER DU TILL NYA AI-KODADE PROJEKT
+         ======================================================================== -->
+    <section class="container" id="guide-section">
+      <div class="guide-section">
+        <div class="guide-header">
+          <h2 class="guide-title">💡 Så lägger du till nya projekt & AI-verktyg</h2>
+          <p style="color: var(--text-secondary);">
+            Stommen är byggd för att vara extremt smidig att bygga ut när du tar fram nya appar och övningar med AI.
+          </p>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-step">
+            <div class="guide-step-num">1</div>
+            <h4>Skapa en ny undersida</h4>
+            <p>
+              Kopiera mallen <code>templates/subpage-template.html</code> till en ny mapp under <code>subpages/ditt-verktyg/index.html</code>.
+            </p>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-num">2</div>
+            <h4>AI-koda funktionaliteten</h4>
+            <p>
+              Be AI fylla undersidan med interaktiva formler, miniräknare eller övningar. Mallen har redan ljust/mörkt tema och navigation!
+            </p>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-num">3</div>
+            <h4>Registrera i <code>projects-data.js</code></h4>
+            <p>
+              Öppna <code>assets/js/projects-data.js</code> och klistra in en ny rad med titel, länk och taggar. Kortet dyker upp direkt på startsidan!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>Håkan.com</strong> – Samlingsportal för matematik, kemi och digitala projekt.
+      </div>
+      <ul class="footer-links">
+        <li><a href="subpages/matematik-2a/index.html">Matematik 2a</a></li>
+        <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer">kemi1.se ↗</a></li>
+        <li><a href="#projects-section">Alla projekt</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/projects-data.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
