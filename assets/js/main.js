@@ -87,7 +87,10 @@
 
       // Tangentbordsgenväg för snabbsök (/)
       window.addEventListener('keydown', (e) => {
-        if (e.key === '/' && document.activeElement !== searchInput) {
+        const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+        const isEditing = activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select' || document.activeElement.isContentEditable;
+        
+        if (e.key === '/' && !isEditing) {
           e.preventDefault();
           searchInput.focus();
         } else if (e.key === 'Escape' && document.activeElement === searchInput) {

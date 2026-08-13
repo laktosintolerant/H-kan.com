@@ -96,7 +96,7 @@ const PROJECTS_DATA = [
     id: 'periodiska-systemet',
     title: 'Periodiska Systemet – Digitalt',
     category: 'Kemi',
-    description: 'Interaktiv utforskare av det periodiska systemet med elektronskal, atomradie, elektronegativitet och aggregationstillstånd.',
+    description: 'Interaktiv utforskare av det periodiska systemet med elektronskal, atomradie, elektronegativitet och aggregationstillstånd på kemi1.se.',
     icon: '⚛️',
     url: 'https://kemi1.se',
     isExternal: true,
@@ -104,34 +104,6 @@ const PROJECTS_DATA = [
     badgeType: 'external',
     accentColor: 'var(--color-chem)',
     tags: ['Periodiska systemet', 'Grundämnen', 'Elektroner', 'Kemi 1'],
-    featured: false
-  },
-  {
-    id: 'ai-pedagogik',
-    title: 'AI & Studieassistans',
-    category: 'AI & Verktyg',
-    description: 'Samling av specialtränade prompter och AI-verktyg för att skapa individanpassade repetitionstester och matteuppgifter.',
-    icon: '🤖',
-    url: 'templates/subpage-template.html',
-    isExternal: false,
-    badge: 'AI-verktyg',
-    badgeType: 'internal',
-    accentColor: 'var(--color-ai)',
-    tags: ['AI', 'Prompting', 'Studieteknik', 'Pedagogik'],
-    featured: false
-  },
-  {
-    id: 'enhetsomvandlare',
-    title: 'Enhets- & Storhetsomvandlare',
-    category: 'AI & Verktyg',
-    description: 'Snabbt verktyg för att omvandla enheter inom substansmängd, molmassa, koncentration, SI-prefix och geometriska volymer.',
-    icon: '🔄',
-    url: 'templates/subpage-template.html',
-    isExternal: false,
-    badge: 'Verktygslåda',
-    badgeType: 'internal',
-    accentColor: 'var(--color-web)',
-    tags: ['Enheter', 'Molaritet', 'SI-prefix', 'Kalkylator'],
     featured: false
   }
 ];
