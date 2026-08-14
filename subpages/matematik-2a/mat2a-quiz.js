@@ -590,7 +590,18 @@
   let quizProgressFillEl = null;
   let quizCardContentEl = null;
 
+  function bindElements() {
+    topicGridEl = document.getElementById('mat2a-topic-selector-grid');
+    quizContainerEl = document.getElementById('single-module-quiz-container') || document.getElementById('mat2a-quiz-container');
+    quizTopicTitleEl = document.getElementById('single-module-topic-title') || document.getElementById('mat2a-quiz-topic-title');
+    questionProgressTextEl = document.getElementById('single-module-progress-text') || document.getElementById('mat2a-question-progress-text');
+    quizProgressFillEl = document.getElementById('single-module-progress-fill') || document.getElementById('mat2a-quiz-progress-fill');
+    quizCardContentEl = document.getElementById('single-module-card-content') || document.getElementById('mat2a-quiz-card-content');
+  }
+
   function initQuizEngine() {
+    bindElements();
+
     // Check if the page is a standalone single module subpage
     const bodyModuleAttr = document.body.getAttribute('data-module-index');
     if (bodyModuleAttr !== null && bodyModuleAttr !== undefined && bodyModuleAttr !== '') {
@@ -601,38 +612,28 @@
       }
     }
 
-    topicGridEl = document.getElementById('mat2a-topic-selector-grid');
-    quizContainerEl = document.getElementById('mat2a-quiz-container');
-    quizTopicTitleEl = document.getElementById('mat2a-quiz-topic-title');
-    questionProgressTextEl = document.getElementById('mat2a-question-progress-text');
-    quizProgressFillEl = document.getElementById('mat2a-quiz-progress-fill');
-    quizCardContentEl = document.getElementById('mat2a-quiz-card-content');
-
-    if (!topicGridEl || !quizContainerEl) return;
-
-    renderTopics();
-    selectTopic(0, false); // initial view without scrolling
+    if (topicGridEl && quizContainerEl) {
+      renderTopics();
+      selectTopic(0, false); // initial view without scrolling
+    }
   }
 
   function initSingleModule(topicIndex) {
+    bindElements();
     currentTopicIndex = topicIndex;
     currentQuestionIndex = 0;
     userAnswers = [];
     isAnswered = false;
 
-    quizContainerEl = document.getElementById('mat2a-quiz-container') || document.getElementById('single-module-quiz-container');
-    quizTopicTitleEl = document.getElementById('mat2a-quiz-topic-title') || document.getElementById('single-module-topic-title');
-    questionProgressTextEl = document.getElementById('mat2a-question-progress-text') || document.getElementById('single-module-progress-text');
-    quizProgressFillEl = document.getElementById('mat2a-quiz-progress-fill') || document.getElementById('single-module-progress-fill');
-    quizCardContentEl = document.getElementById('mat2a-quiz-card-content') || document.getElementById('single-module-card-content');
-
     if (!quizContainerEl || !quizCardContentEl) return;
 
     quizContainerEl.classList.add('visible');
+    quizContainerEl.style.display = 'block';
     loadQuestion();
   }
 
   function renderTopics() {
+    bindElements();
     if (!topicGridEl) return;
     topicGridEl.innerHTML = '';
 
@@ -883,6 +884,10 @@
     TOPICS: MAT2A_TOPICS
   };
 
-  document.addEventListener('DOMContentLoaded', initQuizEngine);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initQuizEngine);
+  } else {
+    initQuizEngine();
+  }
 
 })();
