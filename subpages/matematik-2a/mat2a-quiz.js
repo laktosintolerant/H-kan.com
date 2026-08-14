@@ -591,6 +591,16 @@
   let quizCardContentEl = null;
 
   function initQuizEngine() {
+    // Check if the page is a standalone single module subpage
+    const bodyModuleAttr = document.body.getAttribute('data-module-index');
+    if (bodyModuleAttr !== null && bodyModuleAttr !== undefined && bodyModuleAttr !== '') {
+      const modIdx = parseInt(bodyModuleAttr, 10);
+      if (!isNaN(modIdx) && modIdx >= 0 && modIdx < MAT2A_TOPICS.length) {
+        initSingleModule(modIdx);
+        return;
+      }
+    }
+
     topicGridEl = document.getElementById('mat2a-topic-selector-grid');
     quizContainerEl = document.getElementById('mat2a-quiz-container');
     quizTopicTitleEl = document.getElementById('mat2a-quiz-topic-title');
@@ -602,6 +612,24 @@
 
     renderTopics();
     selectTopic(0, false); // initial view without scrolling
+  }
+
+  function initSingleModule(topicIndex) {
+    currentTopicIndex = topicIndex;
+    currentQuestionIndex = 0;
+    userAnswers = [];
+    isAnswered = false;
+
+    quizContainerEl = document.getElementById('mat2a-quiz-container') || document.getElementById('single-module-quiz-container');
+    quizTopicTitleEl = document.getElementById('mat2a-quiz-topic-title') || document.getElementById('single-module-topic-title');
+    questionProgressTextEl = document.getElementById('mat2a-question-progress-text') || document.getElementById('single-module-progress-text');
+    quizProgressFillEl = document.getElementById('mat2a-quiz-progress-fill') || document.getElementById('single-module-progress-fill');
+    quizCardContentEl = document.getElementById('mat2a-quiz-card-content') || document.getElementById('single-module-card-content');
+
+    if (!quizContainerEl || !quizCardContentEl) return;
+
+    quizContainerEl.classList.add('visible');
+    loadQuestion();
   }
 
   function renderTopics() {
@@ -632,12 +660,14 @@
     userAnswers = [];
     isAnswered = false;
 
-    renderTopics();
+    if (topicGridEl) renderTopics();
     loadQuestion();
 
-    quizContainerEl.classList.add('visible');
-    if (shouldScroll) {
-      quizContainerEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (quizContainerEl) {
+      quizContainerEl.classList.add('visible');
+      if (shouldScroll) {
+        quizContainerEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   }
 
@@ -646,11 +676,13 @@
     const q = topic.questions[currentQuestionIndex];
     isAnswered = false;
 
-    quizTopicTitleEl.textContent = `${topic.icon} ${topic.title}`;
-    questionProgressTextEl.textContent = `Fråga ${currentQuestionIndex + 1} av ${topic.questions.length}`;
+    if (quizTopicTitleEl) quizTopicTitleEl.textContent = `${topic.icon} ${topic.title}`;
+    if (questionProgressTextEl) questionProgressTextEl.textContent = `Fråga ${currentQuestionIndex + 1} av ${topic.questions.length}`;
 
-    const progressPercent = (currentQuestionIndex / topic.questions.length) * 100;
-    quizProgressFillEl.style.width = `${progressPercent}%`;
+    if (quizProgressFillEl) {
+      const progressPercent = (currentQuestionIndex / topic.questions.length) * 100;
+      quizProgressFillEl.style.width = `${progressPercent}%`;
+    }
 
     let optionsHTML = '';
     q.options.forEach((opt, idx) => {
@@ -665,20 +697,22 @@
 
     const diffBadge = q.difficulty ? `<span class="difficulty-pill ${q.difficulty.toLowerCase()}">${q.difficulty}</span>` : '';
 
-    quizCardContentEl.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-        <span style="font-size: 0.82rem; font-weight: 600; color: var(--color-math); text-transform: uppercase; letter-spacing: 0.05em;">Delområde: ${topic.badge}</span>
-        ${diffBadge}
-      </div>
-      <div class="question-text">${q.question}</div>
-      <div class="options-grid">${optionsHTML}</div>
-      <div class="feedback-panel" id="m2a-feedback-panel" style="display: none;"></div>
-      <div class="quiz-actions" id="m2a-quiz-actions" style="display: none;">
-        <button class="next-btn" onclick="window.Mat2aQuiz.nextQuestion()">
-          ${currentQuestionIndex === topic.questions.length - 1 ? 'Visa modulresultat 🏁' : 'Nästa fråga ➔'}
-        </button>
-      </div>
-    `;
+    if (quizCardContentEl) {
+      quizCardContentEl.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <span style="font-size: 0.82rem; font-weight: 600; color: var(--color-math); text-transform: uppercase; letter-spacing: 0.05em;">Delområde: ${topic.badge}</span>
+          ${diffBadge}
+        </div>
+        <div class="question-text">${q.question}</div>
+        <div class="options-grid">${optionsHTML}</div>
+        <div class="feedback-panel" id="m2a-feedback-panel" style="display: none;"></div>
+        <div class="quiz-actions" id="m2a-quiz-actions" style="display: none;">
+          <button class="next-btn" onclick="window.Mat2aQuiz.nextQuestion()">
+            ${currentQuestionIndex === topic.questions.length - 1 ? 'Visa modulresultat 🏁' : 'Nästa fråga ➔'}
+          </button>
+        </div>
+      `;
+    }
   }
 
   function handleOptionSelect(selectedIndex) {
@@ -764,8 +798,8 @@
     const totalCount = topic.questions.length;
     const percentage = Math.round((correctCount / totalCount) * 100);
 
-    quizProgressFillEl.style.width = '100%';
-    questionProgressTextEl.textContent = 'Modul Slutförd!';
+    if (quizProgressFillEl) quizProgressFillEl.style.width = '100%';
+    if (questionProgressTextEl) questionProgressTextEl.textContent = 'Modul Slutförd!';
 
     let feedbackMsg = '';
     if (percentage === 100) {
@@ -776,34 +810,58 @@
       feedbackMsg = '💪 Bra repetition! Gå gärna igenom de pedagogiska steg-för-steg-lösningarna och gör om modulen för att befästa kunskaperna inför provet.';
     }
 
-    quizCardContentEl.innerHTML = `
-      <div class="summary-card">
-        <div class="score-circle">
-          <span class="score-number">${correctCount}/${totalCount}</span>
-          <span class="score-label">${percentage}% RÄTT</span>
-        </div>
-        <h2 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; margin-bottom: 0.35rem;">
-          Modul slutförd: ${topic.title}
-        </h2>
-        <p style="font-size: 0.9rem; color: var(--color-math); font-weight: 600; margin-bottom: 0.5rem;">
-          Inriktning: ${topic.badge} (${topic.weeks})
-        </p>
-        <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 540px; margin-left: auto; margin-right: auto; line-height: 1.6;">
-          ${feedbackMsg}
-        </p>
+    const isStandalone = document.body.getAttribute('data-module-index') !== null;
+    const nextModulHref = `modul-${currentTopicIndex + 2}.html`;
 
-        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-          <button class="next-btn" onclick="window.Mat2aQuiz.selectTopic(${currentTopicIndex})">
-            🔄 Gör om denna modul
+    let nextButtonHTML = '';
+    if (currentTopicIndex < MAT2A_TOPICS.length - 1) {
+      if (isStandalone) {
+        nextButtonHTML = `
+          <a href="${nextModulHref}" class="filter-btn active" style="padding: 0.75rem 1.5rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
+            Nästa modul: ${escapeHtml(MAT2A_TOPICS[currentTopicIndex + 1].badge)} ➔
+          </a>
+        `;
+      } else {
+        nextButtonHTML = `
+          <button class="filter-btn active" style="padding: 0.75rem 1.5rem; font-size: 0.95rem;" onclick="window.Mat2aQuiz.selectTopic(${currentTopicIndex + 1})">
+            Nästa modul: ${escapeHtml(MAT2A_TOPICS[currentTopicIndex + 1].badge)} ➔
           </button>
-          ${currentTopicIndex < MAT2A_TOPICS.length - 1 ? `
-            <button class="filter-btn active" style="padding: 0.75rem 1.5rem; font-size: 0.95rem;" onclick="window.Mat2aQuiz.selectTopic(${currentTopicIndex + 1})">
-              Nästa modul: ${escapeHtml(MAT2A_TOPICS[currentTopicIndex + 1].badge)} ➔
+        `;
+      }
+    } else if (isStandalone) {
+      nextButtonHTML = `
+        <a href="index.html" class="filter-btn active" style="padding: 0.75rem 1.5rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
+          📚 Tillbaka till översikten ➔
+        </a>
+      `;
+    }
+
+    if (quizCardContentEl) {
+      quizCardContentEl.innerHTML = `
+        <div class="summary-card">
+          <div class="score-circle">
+            <span class="score-number">${correctCount}/${totalCount}</span>
+            <span class="score-label">${percentage}% RÄTT</span>
+          </div>
+          <h2 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; margin-bottom: 0.35rem;">
+            Modul slutförd: ${topic.title}
+          </h2>
+          <p style="font-size: 0.9rem; color: var(--color-math); font-weight: 600; margin-bottom: 0.5rem;">
+            Inriktning: ${topic.badge} (${topic.weeks})
+          </p>
+          <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 540px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+            ${feedbackMsg}
+          </p>
+
+          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <button class="next-btn" onclick="window.Mat2aQuiz.selectTopic(${currentTopicIndex})">
+              🔄 Gör om denna modul
             </button>
-          ` : ''}
+            ${nextButtonHTML}
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    }
   }
 
   function escapeHtml(str) {
@@ -818,9 +876,11 @@
 
   // Global namespace for event handlers
   window.Mat2aQuiz = {
+    initSingleModule,
     selectTopic,
     handleOptionSelect,
-    nextQuestion
+    nextQuestion,
+    TOPICS: MAT2A_TOPICS
   };
 
   document.addEventListener('DOMContentLoaded', initQuizEngine);

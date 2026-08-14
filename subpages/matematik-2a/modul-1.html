@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="sv" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modul 1: Algebra & Funktioner – Matematik 2a | Håkan.com</title>
+  <meta name="description" content="Modul 1 för Matematik nivå 2a: Negativa tal, bråk, algebraiska uttryck, formler, ekvationer och funktionsbegreppet (v. 35–39).">
+  
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="mat-style.css">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('hakan_site_theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+</head>
+<body data-module-index="0">
+
+  <!-- ========================================================================
+       TOP NAVIGATION
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../../index.html" class="brand-logo">
+        <div class="brand-icon">H</div>
+        <span class="brand-text">Håkan.com</span>
+        <span class="brand-badge">MATTE 2A</span>
+      </a>
+
+      <nav class="nav-group">
+        <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Öppna meny" aria-expanded="false">
+          <svg class="hamburger-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24" style="display:none;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+
+        <ul class="nav-links">
+          <li><a href="../../index.html" class="nav-link">🏠 Hem</a></li>
+          <li><a href="../matematik-1a/index.html" class="nav-link">📐 Matematik 1a</a></li>
+          <li><a href="index.html" class="nav-link active">📊 Matematik 2a</a></li>
+          <li><a href="funktioner-grafer.html" class="nav-link">📉 Funktioner & Grafer</a></li>
+          <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link">🧪 kemi1.se ↗</a></li>
+          <li class="mobile-only-link"><a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="nav-link kofi-nav-item">☕ Stöd på Ko-fi ↗</a></li>
+          <li class="mobile-only-link"><a href="mailto:stark@håkan.com" class="nav-link">✉ Kontakt</a></li>
+        </ul>
+
+        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Växla tema"></button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       HUVUDINNEHÅLL
+       ======================================================================== -->
+  <main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+    
+    <!-- Brödsmulor -->
+    <div class="breadcrumbs">
+      <a href="../../index.html">Hem</a>
+      <span class="divider">/</span>
+      <a href="index.html">Matematik 2a</a>
+      <span class="divider">/</span>
+      <span style="color: var(--text-primary); font-weight: 600;">Modul 1: Algebra & Funktioner</span>
+    </div>
+
+    <!-- Modul Hero -->
+    <section class="math-banner" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(99, 102, 241, 0.06) 100%);">
+      <div class="math-banner-content">
+        <div style="display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+          <span class="topic-badge-pill" style="font-size: 0.82rem; padding: 0.25rem 0.75rem;">Test Kapitel 1</span>
+          <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">📅 Vecka 35–39</span>
+        </div>
+        <h1 style="font-size: 2.1rem; margin-bottom: 0.6rem;">🔣 Modul 1: Grundläggande Algebra & Funktioner</h1>
+        <p>
+          Repetition och grundläggande verktyg inför kursens första kapiteltest. Här tränar du på negativa tal, bråkräkning med variabler, förenkling av algebraiska uttryck, formelomvandling och funktionsbegreppet.
+        </p>
+      </div>
+      <div>
+        <a href="index.html" class="solver-btn" style="text-decoration: none; display: inline-block; background: var(--bg-surface-elevated); color: var(--text-primary); border: 1px solid var(--border-color); box-shadow: none;">
+          ← Alla moduler
+        </a>
+      </div>
+    </section>
+
+    <!-- Modulöversikt & Centrala moment -->
+    <section class="content-panel" style="margin-bottom: 2rem;">
+      <h2 class="panel-title">📖 Moment som ingår i Modul 1</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem;">
+        <div class="formula-card">
+          <h4 style="color: var(--color-math);">1. Taluppfattning & Bråk</h4>
+          <p class="formula-desc">Räkneregler för negativa tal, prioriteringsordning och bråkräkning med minsta gemensamma nämnare (MGN).</p>
+        </div>
+        <div class="formula-card">
+          <h4 style="color: var(--color-math);">2. Uttryck & Formler</h4>
+          <p class="formula-desc">Multiplikation in i parenteser med teckenbyte och balansmetoden för att lösa ut variabler.</p>
+        </div>
+        <div class="formula-card">
+          <h4 style="color: var(--color-math);">3. Funktionsbegreppet</h4>
+          <p class="formula-desc">Funktionsvärden f(x), värdetabeller, koordinatsystem samt skillnaden mellan uttryck, ekvation och funktion.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERAKTIVT TEST FÖR MODUL 1 -->
+    <section class="content-panel" id="single-module-quiz-section" style="border-color: rgba(56, 189, 248, 0.3); background: linear-gradient(135deg, rgba(56, 189, 248, 0.04) 0%, rgba(99, 102, 241, 0.02) 100%);">
+      <div style="margin-bottom: 1.5rem;">
+        <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--color-math); letter-spacing: 0.05em; background: rgba(56, 189, 248, 0.15); padding: 0.2rem 0.6rem; border-radius: 999px;">
+          Självrättande Test
+        </span>
+        <h2 class="panel-title" style="margin-top: 0.5rem; margin-bottom: 0.25rem;">
+          ✍️ Testa dina kunskaper i Modul 1
+        </h2>
+        <p style="color: var(--text-secondary);">
+          Svara på frågorna nedan för att kontrollera om du är redo för Test Kapitel 1. Du får direkt pedagogisk återkoppling vid varje svar.
+        </p>
+      </div>
+
+      <!-- Quiz-Behållare -->
+      <div class="quiz-container visible" id="single-module-quiz-container" style="display: block;">
+        <div class="quiz-meta-header">
+          <span id="single-module-topic-title" style="font-weight: 700; font-family: var(--font-heading); font-size: 1.15rem; color: var(--color-math);">
+            🔣 Modul 1: Algebra & Funktioner
+          </span>
+          <span class="question-badge" id="single-module-progress-text">Fråga 1 av 6</span>
+        </div>
+
+        <div class="quiz-progress-bar-bg">
+          <div class="quiz-progress-fill" id="single-module-progress-fill"></div>
+        </div>
+
+        <div id="single-module-card-content">
+          <!-- Renderas dynamiskt av mat2a-quiz.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Modulnavigering -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 3rem;">
+      <a href="index.html" class="filter-btn" style="text-decoration: none;">
+        ← Tillbaka till Matematik 2a
+      </a>
+      <a href="modul-2.html" class="filter-btn active" style="text-decoration: none;">
+        Gå till Modul 2: Räta Linjen & System ➔
+      </a>
+    </div>
+
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>Håkan.com</strong> / Matematik 2a – Modul 1.
+      </div>
+      <ul class="footer-links">
+        <li><a href="../../index.html">Startsida</a></li>
+        <li><a href="index.html">Matte 2a Översikt</a></li>
+        <li><a href="modul-2.html">Modul 2</a></li>
+        <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer">kemi1.se ↗</a></li>
+        <li><a href="mailto:stark@håkan.com" class="footer-contact-link">✉ stark@håkan.com</a></li>
+        <li><a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="kofi-btn">☕ Stöd på Ko-fi ↗</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script src="mat2a-quiz.js"></script>
+</body>
+</html>
