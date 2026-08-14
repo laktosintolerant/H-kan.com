@@ -360,8 +360,6 @@
           <li><a href="../../index.html" class="nav-link">← Startsida</a></li>
           <li><a href="../matematik-2a/index.html" class="nav-link">Matematik 2a</a></li>
           <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link">kemi1.se ↗</a></li>
-          <li><a href="mailto:stark@håkan.com" class="nav-link">✉ Kontakt</a></li>
-          <li><a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="nav-link kofi-nav-item">☕ Ko-fi ↗</a></li>
         </ul>
 
         <!-- Ljust/Mörkt läge växlare -->
@@ -797,7 +795,7 @@
     }
 
     // Välj ett nytt område
-    function selectTopic(index) {
+    function selectTopic(index, shouldScroll = true) {
       currentTopicIndex = index;
       currentQuestionIndex = 0;
       userAnswers = [];
@@ -807,7 +805,9 @@
       loadQuestion();
       
       quizContainerEl.classList.add('visible');
-      quizContainerEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (shouldScroll) {
+        quizContainerEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
 
     // Ladda aktuell fråga
@@ -969,9 +969,9 @@
       `;
     }
 
-    // Initiera första visningen
+    // Initiera första visningen (utan automatisk scrollning på laddning)
     renderTopics();
-    selectTopic(0);
+    selectTopic(0, false);
   </script>
 </body>
 </html>
