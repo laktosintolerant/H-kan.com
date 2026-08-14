@@ -689,8 +689,7 @@
     q.options.forEach((opt, idx) => {
       optionsHTML += `
         <button class="option-btn" onclick="window.Mat2aQuiz.handleOptionSelect(${idx})" id="m2a-opt-btn-${idx}">
-          <span class="opt-label">${String.fromCharCode(65 + idx)}.</span>
-          <span class="opt-text">${opt.text}</span>
+          <span>${opt.text}</span>
           <span class="opt-indicator" id="m2a-opt-ind-${idx}"></span>
         </button>
       `;
