@@ -224,10 +224,55 @@
   }
 
   // --------------------------------------------------------------------------
+  // 3. MOBILMENY / DROPDOWN NAVIGATION
+  // --------------------------------------------------------------------------
+  function initMobileNav() {
+    const toggleBtn = document.getElementById('mobile-nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (!toggleBtn || !navLinks) return;
+
+    const hamburgerIcon = toggleBtn.querySelector('.hamburger-icon');
+    const closeIcon = toggleBtn.querySelector('.close-icon');
+
+    function toggleNav(show) {
+      const isExpanded = show !== undefined ? show : !navLinks.classList.contains('open');
+      navLinks.classList.toggle('open', isExpanded);
+      toggleBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+      toggleBtn.setAttribute('aria-label', isExpanded ? 'Stäng meny' : 'Öppna meny');
+
+      if (hamburgerIcon && closeIcon) {
+        hamburgerIcon.style.display = isExpanded ? 'none' : 'block';
+        closeIcon.style.display = isExpanded ? 'block' : 'none';
+      }
+    }
+
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleNav();
+    });
+
+    // Stäng vid klick utanför
+    document.addEventListener('click', (e) => {
+      if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
+        toggleNav(false);
+      }
+    });
+
+    // Stäng vid klick på en nav-länk
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        toggleNav(false);
+      });
+    });
+  }
+
+  // --------------------------------------------------------------------------
   // INITIERING VID SIDLADDNING
   // --------------------------------------------------------------------------
   document.addEventListener('DOMContentLoaded', () => {
     initTheme();
+    initMobileNav();
     initProjectsHub();
   });
 

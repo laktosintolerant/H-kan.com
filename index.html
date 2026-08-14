@@ -40,11 +40,22 @@
       </a>
 
       <nav class="nav-group">
+        <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Öppna meny" aria-expanded="false">
+          <svg class="hamburger-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24" style="display:none;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+
         <ul class="nav-links">
           <li><a href="index.html" class="nav-link active">Hem</a></li>
           <li><a href="subpages/matematik-1a/index.html" class="nav-link">Matematik 1a</a></li>
           <li><a href="subpages/matematik-2a/index.html" class="nav-link">Matematik 2a</a></li>
           <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link">kemi1.se ↗</a></li>
+          <li><a href="mailto:stark@håkan.com" class="nav-link">✉ Kontakt</a></li>
+          <li><a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="nav-link kofi-nav-item">☕ Ko-fi ↗</a></li>
         </ul>
 
         <!-- Ljust/Mörkt läge växlare -->
@@ -71,23 +82,8 @@
         </h1>
 
         <p class="hero-lead">
-          Välkommen till min samlingsportal. Här samlar jag interaktiva resurser och verktyg för <strong>Matematik 2a</strong>, länkar till <strong>kemi1.se</strong> samt nya AI-utvecklade pedagogiska moduler.
+          Välkommen till min samlingsportal. Här samlar jag interaktiva resurser och verktyg för <strong>Matematik 1a</strong>, <strong>Matematik 2a</strong>, länkar till <strong>kemi1.se</strong> samt nya AI-utvecklade pedagogiska moduler.
         </p>
-
-        <div class="hero-stats">
-          <div class="stat-item">
-            <span class="stat-number">2+</span>
-            <span class="stat-label">Huvudämnen</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">100%</span>
-            <span class="stat-label">AI-optimerad</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">Dark & Light</span>
-            <span class="stat-label">Temastöd</span>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -139,9 +135,11 @@
         <strong>Håkan.com</strong> – Samlingsportal för matematik, kemi och digitala projekt.
       </div>
       <ul class="footer-links">
+        <li><a href="subpages/matematik-1a/index.html">Matematik 1a</a></li>
         <li><a href="subpages/matematik-2a/index.html">Matematik 2a</a></li>
         <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer">kemi1.se ↗</a></li>
-        <li><a href="#projects-section">Alla projekt</a></li>
+        <li><a href="mailto:stark@håkan.com" class="footer-contact-link">✉ stark@håkan.com</a></li>
+        <li><a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="kofi-btn">☕ Stöd på Ko-fi ↗</a></li>
       </ul>
     </div>
   </footer>
