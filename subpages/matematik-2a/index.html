@@ -84,50 +84,64 @@
         </p>
       </div>
       <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="#mat2a-moduler-sektion" class="solver-btn" style="text-decoration: none; display: inline-block;">
+          🧠 Snabbtest & Moduler
+        </a>
         <a href="funktioner-grafer.html" class="solver-btn" style="text-decoration: none; display: inline-block; background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);">
-          Funktioner & Grafer (GeoGebra) 📉
+          📉 Grafer & GeoGebra
         </a>
-        <a href="#pq-solver" class="solver-btn" style="text-decoration: none; display: inline-block;">
-          PQ-Lösaren ⚡
-        </a>
-      </div>
-    </section>
-
-    <!-- ======================================================================
-         NYHET: INTERAKTIV VERKTYGSLÅDA (GEOGEBRA & REGLAGE)
-         ====================================================================== -->
-    <section class="content-panel" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(56, 189, 248, 0.05) 100%); border-color: rgba(168, 85, 247, 0.25);">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-        <div>
-          <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--color-ai); letter-spacing: 0.05em; background: rgba(168, 85, 247, 0.15); padding: 0.2rem 0.6rem; border-radius: 999px;">Ny interaktiv modul</span>
-          <h2 class="panel-title" style="margin-top: 0.5rem; margin-bottom: 0.4rem;">📉 Verktygslåda för Funktioner & Grafer (GeoGebra)</h2>
-          <p style="color: var(--text-secondary); max-width: 700px;">
-            Dra i skjutreglage för $k$ och $m$ i räta linjen ($y = kx + m$) samt $a, b, c$ i andragradsfunktioner ($y = ax^2 + bx + c$) för att se hur grafen förändras i realtid. Inkluderar även GeoGebra-grafräknare.
-          </p>
-        </div>
-        <a href="funktioner-grafer.html" class="filter-btn active" style="background: var(--color-ai); border-color: var(--color-ai); text-decoration: none; font-weight: 700; padding: 0.75rem 1.5rem;">
-          Öppna Verktygslådan →
+        <a href="#pq-solver" class="solver-btn" style="text-decoration: none; display: inline-block; background: var(--bg-surface-elevated); color: var(--text-primary); border: 1px solid var(--border-color); box-shadow: none;">
+          ⚡ PQ-Lösaren
         </a>
       </div>
     </section>
 
     <!-- ======================================================================
-         REPETITION FRÅN MATEMATIK 1A
+         SNABBVERKTYG & GÅNGVÄGAR (2 KOLUMNER)
          ====================================================================== -->
-    <section class="content-panel" id="ma1-repetition" style="background: rgba(56, 189, 248, 0.05); border-color: rgba(56, 189, 248, 0.25);">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div class="quick-tools-grid">
+      <!-- Kort 1: Grafer & GeoGebra -->
+      <div class="quick-tool-card highlight-purple">
         <div>
-          <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--color-math); letter-spacing: 0.05em; background: rgba(56, 189, 248, 0.15); padding: 0.2rem 0.6rem; border-radius: 999px;">Repetition & Grundförståelse</span>
-          <h2 class="panel-title" style="margin-top: 0.5rem; margin-bottom: 0.4rem;">🔄 Repetition från Matematik 1a</h2>
-          <p style="color: var(--text-secondary); max-width: 700px;">
-            Innan du fördjupar dig i Matematik 2a kan du göra korta modulbaserade snabbtest för att repetera negativa tal, prioriteringsregler, bråkräkning, grundläggande algebra och ekvationer.
+          <div class="quick-tool-header">
+            <span class="quick-tool-icon">📉</span>
+            <div>
+              <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--color-ai); letter-spacing: 0.05em;">Interaktivt Verktyg</span>
+              <h3 class="quick-tool-title">Funktioner & Grafer (GeoGebra)</h3>
+            </div>
+          </div>
+          <p class="quick-tool-desc" style="margin-top: 0.75rem;">
+            Dra i skjutreglage för <em>k</em> och <em>m</em> i räta linjen samt <em>a, b, c</em> i andragradsfunktioner i realtid, eller öppna GeoGebras inbäddade grafräknare i helskärm.
           </p>
         </div>
-        <a href="../matematik-1a/index.html" class="filter-btn active" style="background: var(--color-math); border-color: var(--color-math); text-decoration: none; font-weight: 700; padding: 0.75rem 1.5rem;">
-          Öppna Ma 1a Snabbtest ⚡ →
-        </a>
+        <div>
+          <a href="funktioner-grafer.html" class="filter-btn active" style="background: var(--color-ai); border-color: var(--color-ai); text-decoration: none; font-weight: 700; display: inline-block; width: 100%; text-align: center;">
+            Öppna Funktionsverktyget →
+          </a>
+        </div>
       </div>
-    </section>
+
+      <!-- Kort 2: Matte 1a Repetition -->
+      <div class="quick-tool-card highlight-blue">
+        <div>
+          <div class="quick-tool-header">
+            <span class="quick-tool-icon">🔄</span>
+            <div>
+              <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--color-math); letter-spacing: 0.05em;">Grundförståelse</span>
+              <h3 class="quick-tool-title">Repetition från Matematik 1a</h3>
+            </div>
+          </div>
+          <p class="quick-tool-desc" style="margin-top: 0.75rem;">
+            Behöver du värma upp grunderna? Gör snabbtest inom negativa tal, bråkräkning, prioriteringsregler, procent och enkla linjära ekvationer.
+          </p>
+        </div>
+        <div>
+          <a href="../matematik-1a/index.html" class="filter-btn active" style="background: var(--color-math); border-color: var(--color-math); text-decoration: none; font-weight: 700; display: inline-block; width: 100%; text-align: center;">
+            Öppna Ma 1a Snabbtest ⚡ →
+          </a>
+        </div>
+      </div>
+    </div>
 
     <!-- ======================================================================
          MODULBASERADE SNABBTEST & INTERAKTIV REPETITION (MATEMATIK 2A)
@@ -196,8 +210,8 @@
         </div>
         <h3>2. Räta Linjen & System (v. 40–47)</h3>
         <ul>
-          <li>Räta linjens ekvation (\(y = kx + m\))</li>
-          <li>Parallella & vinkelräta linjer (\(k_1 \cdot k_2 = -1\))</li>
+          <li>Räta linjens ekvation (<span class="math-expr">y = kx + m</span>)</li>
+          <li>Parallella & vinkelräta linjer (<span class="math-expr">k₁ · k₂ = −1</span>)</li>
           <li>Grafisk lösning av ekvationssystem</li>
           <li>Substitutionsmetoden</li>
           <li>Additionsmetoden & textuppgifter</li>
@@ -243,16 +257,16 @@
     <section class="content-panel" id="pq-solver">
       <h2 class="panel-title">⚡ Interaktiv PQ-Lösare & Parabelanalys</h2>
       <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-        Mata in koefficienterna för ekvationen \(ax^2 + px + q = 0\). Verktyget beräknar nollställen, visar hela steg-för-steg-lösningen och plottar kurvan med vändpunkt i realtid.
+        Mata in koefficienterna för ekvationen <span class="math-expr">ax² + px + q = 0</span>. Verktyget beräknar nollställen, visar hela steg-för-steg-lösningen och plottar kurvan med vändpunkt i realtid.
       </p>
 
       <!-- Snabbval / Exempel -->
       <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
         <span style="font-size: 0.85rem; color: var(--text-muted);">Testa exempel:</span>
-        <button class="preset-btn" data-a="1" data-p="-6" data-q="8">x² - 6x + 8 = 0 (2 rötter)</button>
+        <button class="preset-btn" data-a="1" data-p="-6" data-q="8">x² − 6x + 8 = 0 (2 rötter)</button>
         <button class="preset-btn" data-a="1" data-p="4" data-q="4">x² + 4x + 4 = 0 (Dubbelrot)</button>
-        <button class="preset-btn" data-a="1" data-p="-2" data-q="5">x² - 2x + 5 = 0 (Komplexa)</button>
-        <button class="preset-btn" data-a="2" data-p="-8" data-q="6">2x² - 8x + 6 = 0 (a = 2)</button>
+        <button class="preset-btn" data-a="1" data-p="-2" data-q="5">x² − 2x + 5 = 0 (Komplexa)</button>
+        <button class="preset-btn" data-a="2" data-p="-8" data-q="6">2x² − 8x + 6 = 0 (a = 2)</button>
       </div>
 
       <div class="solver-layout">
@@ -305,37 +319,37 @@
       <div class="formula-cards-grid">
         <div class="formula-card">
           <h4>PQ-formeln</h4>
-          <div class="formula-math">x = -(p/2) ± √((p/2)² - q)</div>
+          <div class="formula-math">x = −(p/2) ± √((p/2)² − q)</div>
           <p class="formula-desc">Gäller för andragradsekvationer på formen x² + px + q = 0.</p>
         </div>
 
         <div class="formula-card">
           <h4>Räta linjens lutning (k-värde)</h4>
-          <div class="formula-math">k = (y₂ - y₁) / (x₂ - x₁)</div>
+          <div class="formula-math">k = (y₂ − y₁) / (x₂ − x₁)</div>
           <p class="formula-desc">Riktningskoefficient mellan två punkter (x₁, y₁) och (x₂, y₂).</p>
         </div>
 
         <div class="formula-card">
           <h4>Vinkelräta linjer</h4>
-          <div class="formula-math">k₁ · k₂ = -1</div>
+          <div class="formula-math">k₁ · k₂ = −1</div>
           <p class="formula-desc">Villkor för att två linjer ska skära varandra under 90° vinkel.</p>
         </div>
 
         <div class="formula-card">
           <h4>Andragradsfunktionens symmetrilinje</h4>
-          <div class="formula-math">x = -p / 2</div>
+          <div class="formula-math">x = −p / 2</div>
           <p class="formula-desc">Ligger alltid mitt emellan funktionens nollställen.</p>
         </div>
 
         <div class="formula-card">
           <h4>Pythagoras sats & Avstånd</h4>
-          <div class="formula-math">d = √((x₂ - x₁)² + (y₂ - y₁)²)</div>
+          <div class="formula-math">d = √((x₂ − x₁)² + (y₂ − y₁)²)</div>
           <p class="formula-desc">Avståndet mellan två punkter i ett rätvinkligt koordinatsystem.</p>
         </div>
 
         <div class="formula-card">
           <h4>Normalfördelning (Intervallregler)</h4>
-          <div class="formula-math">μ ± 1σ ≈ 68.2% &nbsp;|&nbsp; μ ± 2σ ≈ 95.4%</div>
+          <div class="formula-math">μ ± 1σ ≈ 68,2% &nbsp;|&nbsp; μ ± 2σ ≈ 95,4%</div>
           <p class="formula-desc">Andel av observationerna som ryms kring medelvärdet μ och standardavvikelsen σ.</p>
         </div>
       </div>

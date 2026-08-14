@@ -15,7 +15,7 @@
   const MAT2A_TOPICS = [
     {
       id: 'modul-1-algebra-funktioner',
-      title: 'Modul 1: Algebra & Funktioner (v. 35–39)',
+      title: 'Modul 1: Algebra & Funktioner',
       badge: 'Test Kap 1',
       icon: '🔣',
       description: 'Negativa tal, bråk, algebraiska uttryck, formler, ekvationer och funktionsbegreppet.',
@@ -24,7 +24,7 @@
         {
           id: 'm1-q1',
           difficulty: 'Grund',
-          question: 'Vad blir förenklingen av bråkuttrycket: <span class="math-expr">\\frac{3x}{4} - \\frac{x}{6}</span> ?',
+          question: 'Vad blir förenklingen av bråkuttrycket: <span class="math-expr">3x/4 − x/6</span> ?',
           options: [
             { text: '7x / 12', correct: true },
             { text: '2x / 2 = x', correct: false },
@@ -37,86 +37,86 @@
               'MGN för 4 och 6 är 12.',
               'Förläng första bråket med 3: (3x · 3) / (4 · 3) = 9x / 12',
               'Förläng andra bråket med 2: (x · 2) / (6 · 2) = 2x / 12',
-              'Subtrahera täljarna: (9x - 2x) / 12 = 7x / 12'
+              'Subtrahera täljarna: (9x − 2x) / 12 = 7x / 12'
             ]
           }
         },
         {
           id: 'm1-q2',
           difficulty: 'Grund',
-          question: 'Förenkla uttrycket genom att multiplicera in i parenteserna och kombinera termer: <span class="math-expr">4(2x - 3) - 3(x - 5)</span>',
+          question: 'Förenkla uttrycket genom att multiplicera in i parenteserna och kombinera termer: <span class="math-expr">4(2x − 3) − 3(x − 5)</span>',
           options: [
             { text: '5x + 3', correct: true },
-            { text: '5x - 27', correct: false },
-            { text: '5x - 3', correct: false },
+            { text: '5x − 27', correct: false },
+            { text: '5x − 3', correct: false },
             { text: '11x + 3', correct: false }
           ],
           explanation: {
-            summary: 'Var särskilt uppmärksam på minustecknet framför den andra parentesen: -3 multiplicerat med -5 ger +15.',
+            summary: 'Var särskilt uppmärksam på minustecknet framför den andra parentesen: −3 multiplicerat med −5 ger +15.',
             steps: [
-              'Multiplicera in 4 i första parentesen: 4 · 2x - 4 · 3 = 8x - 12',
-              'Multiplicera in -3 i andra parentesen: -3 · x - 3 · (-5) = -3x + 15',
-              'Sätt ihop uttrycket: 8x - 12 - 3x + 15',
-              'Kombinera x-termer och siffertermer: (8x - 3x) + (-12 + 15) = 5x + 3'
+              'Multiplicera in 4 i första parentesen: 4 · 2x − 4 · 3 = 8x − 12',
+              'Multiplicera in −3 i andra parentesen: −3 · x − 3 · (−5) = −3x + 15',
+              'Sätt ihop uttrycket: 8x − 12 − 3x + 15',
+              'Kombinera x-termer och siffertermer: (8x − 3x) + (−12 + 15) = 5x + 3'
             ]
           }
         },
         {
           id: 'm1-q3',
           difficulty: 'Medel',
-          question: 'Lös ut accelerationen <span class="math-expr">a</span> ur den fysikaliska hastighetsformeln: <span class="math-expr">v = v_0 + at</span>',
+          question: 'Lös ut accelerationen <span class="math-expr">a</span> ur formeln: <span class="math-expr">v = v₀ + a · t</span>',
           options: [
-            { text: 'a = (v - v₀) / t', correct: true },
+            { text: 'a = (v − v₀) / t', correct: true },
             { text: 'a = (v + v₀) / t', correct: false },
-            { text: 'a = v - v₀ - t', correct: false },
-            { text: 'a = (v / t) - v₀', correct: false }
+            { text: 'a = v − v₀ − t', correct: false },
+            { text: 'a = (v / t) − v₀', correct: false }
           ],
           explanation: {
-            summary: 'Använd balansmetoden för att isolera a ensamt på ena sidan.',
+            summary: 'Använd balansmetoden för att isolera a ensamt på ena sidan av likhetstecknet.',
             steps: [
-              'Börja med: v = v₀ + at',
-              'Subtrahera v₀ från båda sidor: v - v₀ = at',
-              'Dividera båda sidor med tiden t (där t ≠ 0): a = (v - v₀) / t'
+              'Börja med formeln: v = v₀ + a · t',
+              'Subtrahera v₀ från båda sidor: v − v₀ = a · t',
+              'Dividera båda sidor med tiden t (där t ≠ 0): a = (v − v₀) / t'
             ]
           }
         },
         {
           id: 'm1-q4',
           difficulty: 'Medel',
-          question: 'För funktionen <span class="math-expr">f(x) = 3x^2 - 5x + 2</span>, vad är funktionsvärdet <span class="math-expr">f(-2)</span> ?',
+          question: 'För funktionen <span class="math-expr">f(x) = 3x² − 5x + 2</span>, vad är funktionsvärdet <span class="math-expr">f(−2)</span> ?',
           options: [
             { text: '24', correct: true },
             { text: '4', correct: false },
             { text: '0', correct: false },
-            { text: '-20', correct: false }
+            { text: '−20', correct: false }
           ],
           explanation: {
-            summary: 'När vi beräknar f(-2) ersätter vi varje förekomst av x med (-2). Kom ihåg att (-2)² = +4.',
+            summary: 'När vi beräknar f(−2) ersätter vi varje x med (−2). Kom ihåg att (−2)² = +4 och −5 · (−2) = +10.',
             steps: [
-              'f(-2) = 3 · (-2)² - 5 · (-2) + 2',
-              '(-2)² = 4  =>  3 · 4 = 12',
-              '-5 · (-2) = +10',
-              'Summera: 12 + 10 + 2 = 24'
+              'f(−2) = 3 · (−2)² − 5 · (−2) + 2',
+              '(−2)² = 4  =>  3 · 4 = 12',
+              '−5 · (−2) = +10',
+              'Summera alla delar: 12 + 10 + 2 = 24'
             ]
           }
         },
         {
           id: 'm1-q5',
           difficulty: 'Medel',
-          question: 'Givet funktionen <span class="math-expr">g(x) = 5x - 7</span>, för vilket värde på <span class="math-expr">x</span> gäller att <span class="math-expr">g(x) = 18</span> ?',
+          question: 'Givet funktionen <span class="math-expr">g(x) = 5x − 7</span>, för vilket värde på <span class="math-expr">x</span> gäller att <span class="math-expr">g(x) = 18</span> ?',
           options: [
             { text: 'x = 5', correct: true },
-            { text: 'x = 2.2', correct: false },
+            { text: 'x = 2,2', correct: false },
             { text: 'x = 83', correct: false },
-            { text: 'x = -5', correct: false }
+            { text: 'x = −5', correct: false }
           ],
           explanation: {
-            summary: 'Att lösa g(x) = 18 innebär att vi söker det invärde x som ger utvärdet 18.',
+            summary: 'Att lösa g(x) = 18 innebär att vi ställer upp en ekvation för att bestämma vilket invärde x som ger funktionsvärdet 18.',
             steps: [
-              'Sätt upp ekvationen: 5x - 7 = 18',
+              'Sätt upp ekvationen: 5x − 7 = 18',
               'Addera 7 på båda sidor: 5x = 25',
               'Dividera med 5: x = 25 / 5 = 5',
-              'Kontroll: g(5) = 5(5) - 7 = 25 - 7 = 18 (Stämmer!)'
+              'Kontrollräkning: g(5) = 5(5) − 7 = 25 − 7 = 18 (Stämmer!)'
             ]
           }
         },
@@ -131,7 +131,7 @@
             { text: 'Ekvationer används bara för geometri och uttryck bara för funktioner.', correct: false }
           ],
           explanation: {
-            summary: 'Ett uttryck (t.ex. 3x + 5) anger en matematisk sammansättning av tal och variabler. En ekvation (t.ex. 3x + 5 = 14) är ett påstående om likhet som binder samman två uttryck.',
+            summary: 'Ett uttryck (t.ex. 3x + 5) anger en sammansättning av tal och variabler. En ekvation (t.ex. 3x + 5 = 14) är ett påstående om likhet som binder samman två uttryck.',
             steps: [
               'Uttryck: saknar likhetstecken (förenklas eller beräknas för givna variabelvärden).',
               'Ekvation: innehåller ett likhetstecken (löses för att hitta de variabelvärden som gör likheten sann).',
@@ -143,7 +143,7 @@
     },
     {
       id: 'modul-2-rata-linjen-system',
-      title: 'Modul 2: Räta Linjen & Ekvationssystem (v. 40–47)',
+      title: 'Modul 2: Räta Linjen & Ekvationssystem',
       badge: 'Prov Kap 1',
       icon: '⚖️',
       description: 'Räta linjens ekvation y = kx + m, grafisk lösning, substitutions- och additionsmetoden.',
@@ -155,17 +155,17 @@
           question: 'En rät linje passerar genom punkterna <span class="math-expr">(1, 3)</span> och <span class="math-expr">(4, 12)</span>. Vad är linjens lutning (<span class="math-expr">k</span>-värde)?',
           options: [
             { text: 'k = 3', correct: true },
-            { text: 'k = -3', correct: false },
+            { text: 'k = −3', correct: false },
             { text: 'k = 1/3', correct: false },
             { text: 'k = 9', correct: false }
           ],
           explanation: {
             summary: 'Riktningskoefficienten k beräknas med ändringskvoten Δy / Δx.',
             steps: [
-              'Formel: k = (y₂ - y₁) / (x₂ - x₁)',
+              'Formel: k = (y₂ − y₁) / (x₂ − x₁)',
               'Sätt in punkterna (x₁, y₁) = (1, 3) och (x₂, y₂) = (4, 12):',
-              'Δy = 12 - 3 = 9',
-              'Δx = 4 - 1 = 3',
+              'Δy = 12 − 3 = 9',
+              'Δx = 4 − 1 = 3',
               'k = 9 / 3 = 3'
             ]
           }
@@ -173,40 +173,40 @@
         {
           id: 'm2-q2',
           difficulty: 'Grund',
-          question: 'En rät linje har lutningen <span class="math-expr">k = -2</span> och går genom punkten <span class="math-expr">(3, 4)</span>. Vad är linjens ekvation?',
+          question: 'En rät linje har lutningen <span class="math-expr">k = −2</span> och går genom punkten <span class="math-expr">(3, 4)</span>. Vad är linjens ekvation?',
           options: [
-            { text: 'y = -2x + 10', correct: true },
-            { text: 'y = -2x - 2', correct: false },
-            { text: 'y = -2x + 4', correct: false },
+            { text: 'y = −2x + 10', correct: true },
+            { text: 'y = −2x − 2', correct: false },
+            { text: 'y = −2x + 4', correct: false },
             { text: 'y = 2x + 10', correct: false }
           ],
           explanation: {
             summary: 'Använd räta linjens ekvation y = kx + m och bestäm m-värdet genom att sätta in den kända punkten.',
             steps: [
-              'y = kx + m med k = -2 ger: y = -2x + m',
+              'y = kx + m med k = −2 ger: y = −2x + m',
               'Sätt in x = 3 och y = 4:',
-              '4 = -2 · 3 + m',
-              '4 = -6 + m  =>  m = 4 + 6 = 10',
-              'Linjens ekvation är alltså: y = -2x + 10'
+              '4 = −2 · 3 + m',
+              '4 = −6 + m  =>  m = 4 + 6 = 10',
+              'Linjens ekvation är alltså: y = −2x + 10'
             ]
           }
         },
         {
           id: 'm2-q3',
           difficulty: 'Medel',
-          question: 'Två linjer är <em>vinkelräta</em> mot varandra. Den ena linjen har ekvationen <span class="math-expr">y = 4x - 5</span>. Vad måste den andra linjens <span class="math-expr">k</span>-värde vara?',
+          question: 'Två linjer är <em>vinkelräta</em> mot varandra. Den ena linjen har ekvationen <span class="math-expr">y = 4x − 5</span>. Vad måste den andra linjens <span class="math-expr">k</span>-värde vara?',
           options: [
-            { text: 'k = -1/4 = -0.25', correct: true },
+            { text: 'k = −1/4 = −0,25', correct: true },
             { text: 'k = 4', correct: false },
-            { text: 'k = -4', correct: false },
-            { text: 'k = 1/4 = 0.25', correct: false }
+            { text: 'k = −4', correct: false },
+            { text: 'k = 1/4 = 0,25', correct: false }
           ],
           explanation: {
-            summary: 'Villkoret för att två linjer ska vara vinkelräta (ortogonala) är k₁ · k₂ = -1.',
+            summary: 'Villkoret för att två linjer ska vara vinkelräta (ortogonala) är k₁ · k₂ = −1.',
             steps: [
               'Givet k₁ = 4:',
-              '4 · k₂ = -1',
-              'k₂ = -1 / 4 = -0.25',
+              '4 · k₂ = −1',
+              'k₂ = −1 / 4 = −0,25',
               '(Om linjerna istället hade varit parallella hade k₂ varit lika med 4).'
             ]
           }
@@ -214,7 +214,7 @@
         {
           id: 'm2-q4',
           difficulty: 'Medel',
-          question: 'Lös ekvationssystemet med substitutionsmetoden: <br><span class="math-expr">y = 2x - 1</span><br><span class="math-expr">3x + 2y = 12</span>',
+          question: 'Lös ekvationssystemet med substitutionsmetoden: <br><span class="math-expr">y = 2x − 1</span><br><span class="math-expr">3x + 2y = 12</span>',
           options: [
             { text: 'x = 2, y = 3', correct: true },
             { text: 'x = 3, y = 5', correct: false },
@@ -222,32 +222,32 @@
             { text: 'x = 4, y = 7', correct: false }
           ],
           explanation: {
-            summary: 'Ersätt y i den andra ekvationen med uttrycket (2x - 1).',
+            summary: 'Ersätt y i den andra ekvationen med uttrycket (2x − 1).',
             steps: [
-              'Sätt in y = (2x - 1) i 3x + 2y = 12:',
-              '3x + 2(2x - 1) = 12',
-              '3x + 4x - 2 = 12  =>  7x - 2 = 12',
+              'Sätt in y = (2x − 1) i 3x + 2y = 12:',
+              '3x + 2(2x − 1) = 12',
+              '3x + 4x − 2 = 12  =>  7x − 2 = 12',
               '7x = 14  =>  x = 2',
-              'Beräkna y med första ekvationen: y = 2(2) - 1 = 4 - 1 = 3',
-              'Svar: x = 2, y = 3'
+              'Beräkna y med första ekvationen: y = 2(2) − 1 = 4 − 1 = 3',
+              'Lösning: x = 2, y = 3'
             ]
           }
         },
         {
           id: 'm2-q5',
           difficulty: 'Medel',
-          question: 'Lös ekvationssystemet med additionsmetoden: <br><span class="math-expr">2x + y = 9</span><br><span class="math-expr">3x - y = 6</span>',
+          question: 'Lös ekvationssystemet med additionsmetoden: <br><span class="math-expr">2x + y = 9</span><br><span class="math-expr">3x − y = 6</span>',
           options: [
             { text: 'x = 3, y = 3', correct: true },
             { text: 'x = 4, y = 1', correct: false },
             { text: 'x = 2, y = 5', correct: false },
-            { text: 'x = 5, y = -1', correct: false }
+            { text: 'x = 5, y = −1', correct: false }
           ],
           explanation: {
-            summary: 'Eftersom koefficienterna framför y är +1 och -1 slås y ut direkt när vi adderar ekvationerna.',
+            summary: 'Eftersom koefficienterna framför y är +1 och −1 slås y ut direkt när vi adderar ekvationerna.',
             steps: [
-              'Addera vänsterled med vänsterled och högerled med högerled:',
-              '(2x + y) + (3x - y) = 9 + 6',
+              'Addera ekvationerna ledvis:',
+              '(2x + y) + (3x − y) = 9 + 6',
               '5x + 0 = 15  =>  5x = 15',
               'x = 15 / 5 = 3',
               'Sätt in x = 3 i första ekvationen: 2(3) + y = 9  =>  6 + y = 9  =>  y = 3',
@@ -258,7 +258,7 @@
         {
           id: 'm2-q6',
           difficulty: 'Fördjupning',
-          question: 'Hur många lösningar har ekvationssystemet: <br><span class="math-expr">2x - y = 4</span><br><span class="math-expr">4x - 2y = 6</span> ?',
+          question: 'Hur många lösningar har ekvationssystemet: <br><span class="math-expr">2x − y = 4</span><br><span class="math-expr">4x − 2y = 6</span> ?',
           options: [
             { text: 'Saknar lösning (0 lösningar)', correct: true },
             { text: 'Exakt en unik lösning', correct: false },
@@ -268,9 +268,9 @@
           explanation: {
             summary: 'Skriv om ekvationerna på formen y = kx + m för att jämföra lutning och skärningspunkt med y-axeln.',
             steps: [
-              'Ekvation 1: 2x - y = 4  =>  y = 2x - 4 (k = 2, m = -4)',
-              'Ekvation 2: 4x - 2y = 6  =>  2y = 4x - 6  =>  y = 2x - 3 (k = 2, m = -3)',
-              'Linjerna har samma lutning (k = 2) men olika m-värden (-4 resp -3).',
+              'Ekvation 1: 2x − y = 4  =>  y = 2x − 4 (k = 2, m = −4)',
+              'Ekvation 2: 4x − 2y = 6  =>  2y = 4x − 6  =>  y = 2x − 3 (k = 2, m = −3)',
+              'Linjerna har samma lutning (k = 2) men olika m-värden (−4 resp −3).',
               'De är alltså parallella och kommer aldrig att skära varandra. Systemet saknar därför lösning!'
             ]
           }
@@ -279,7 +279,7 @@
     },
     {
       id: 'modul-3-potenser-pq-andragrad',
-      title: 'Modul 3: Potenser & Andragradsfunktioner (v. 48–v. 6)',
+      title: 'Modul 3: Potenser & Andragradsfunktioner',
       badge: 'Prov Kap 2',
       icon: '📈',
       description: 'Potenslagar, kvadrerings- & konjugatreglerna, PQ-formeln, andragradsfunktionens graf och extrempunkter.',
@@ -288,7 +288,7 @@
         {
           id: 'm3-q1',
           difficulty: 'Grund',
-          question: 'Förenkla uttrycket med hjälp av potenslagarna: <span class="math-expr">\\frac{(2^3)^4 \\cdot 2^{-5}}{2^3}</span>',
+          question: 'Förenkla uttrycket med hjälp av potenslagarna: <span class="math-expr">((2³)\u2074 · 2⁻⁵) / 2³</span>',
           options: [
             { text: '2⁴ = 16', correct: true },
             { text: '2⁷ = 128', correct: false },
@@ -296,11 +296,11 @@
             { text: '2⁻⁴', correct: false }
           ],
           explanation: {
-            summary: 'Tillämpa potenslagarna: (a^x)^y = a^(x·y), a^x · a^y = a^(x+y) och a^x / a^y = a^(x-y).',
+            summary: 'Tillämpa potenslagarna: (a^x)^y = a^(x·y), a^x · a^y = a^(x+y) och a^x / a^y = a^(x−y).',
             steps: [
               '(2³)\u2074 = 2^(3·4) = 2¹²',
-              'Täljaren: 2¹² · 2⁻⁵ = 2^(12 - 5) = 2⁷',
-              'Dela med nämnaren: 2⁷ / 2³ = 2^(7 - 3) = 2⁴',
+              'Täljaren: 2¹² · 2⁻⁵ = 2^(12 − 5) = 2⁷',
+              'Dela med nämnaren: 2⁷ / 2³ = 2^(7 − 3) = 2⁴',
               '2⁴ = 2 · 2 · 2 · 2 = 16'
             ]
           }
@@ -308,81 +308,81 @@
         {
           id: 'm3-q2',
           difficulty: 'Grund',
-          question: 'Utveckla och förenkla uttrycket: <span class="math-expr">(x + 4)^2 - (x - 3)(x + 3)</span>',
+          question: 'Utveckla och förenkla uttrycket: <span class="math-expr">(x + 4)² − (x − 3)(x + 3)</span>',
           options: [
             { text: '8x + 25', correct: true },
             { text: '8x + 7', correct: false },
             { text: '2x² + 8x + 7', correct: false },
-            { text: '8x - 25', correct: false }
+            { text: '8x − 25', correct: false }
           ],
           explanation: {
-            summary: 'Använd första kvadreringsregeln på (x + 4)² och konjugatregeln på (x - 3)(x + 3).',
+            summary: 'Använd första kvadreringsregeln på (x + 4)² och konjugatregeln på (x − 3)(x + 3).',
             steps: [
               'Första kvadreringsregeln: (x + 4)² = x² + 2·x·4 + 4² = x² + 8x + 16',
-              'Konjugatregeln: (x - 3)(x + 3) = x² - 3² = x² - 9',
-              'Subtrahera: (x² + 8x + 16) - (x² - 9)',
-              'Ta bort parentes: x² + 8x + 16 - x² + 9 = 8x + 25'
+              'Konjugatregeln: (x − 3)(x + 3) = x² − 3² = x² − 9',
+              'Subtrahera: (x² + 8x + 16) − (x² − 9)',
+              'Ta bort parentes med teckenbyte: x² + 8x + 16 − x² + 9 = 8x + 25'
             ]
           }
         },
         {
           id: 'm3-q3',
           difficulty: 'Medel',
-          question: 'Lös andragradsekvationen med PQ-formeln: <span class="math-expr">x^2 - 8x + 12 = 0</span>',
+          question: 'Lös andragradsekvationen med PQ-formeln: <span class="math-expr">x² − 8x + 12 = 0</span>',
           options: [
             { text: 'x₁ = 6, x₂ = 2', correct: true },
-            { text: 'x₁ = -6, x₂ = -2', correct: false },
-            { text: 'x₁ = 4, x₂ = -4', correct: false },
+            { text: 'x₁ = −6, x₂ = −2', correct: false },
+            { text: 'x₁ = 4, x₂ = −4', correct: false },
             { text: 'x₁ = 8, x₂ = 12', correct: false }
           ],
           explanation: {
-            summary: 'PQ-formeln: x = -(p/2) ± √((p/2)² - q). Här är p = -8 och q = 12.',
+            summary: 'PQ-formeln: x = −(p/2) ± √((p/2)² − q). Här är p = −8 och q = 12.',
             steps: [
-              '-p/2 = -(-8/2) = 4',
-              'Under rottecknet: (p/2)² - q = (-4)² - 12 = 16 - 12 = 4',
+              '−p/2 = −(−8/2) = 4',
+              'Under rottecknet: (p/2)² − q = (−4)² − 12 = 16 − 12 = 4',
               'x = 4 ± √4  =>  x = 4 ± 2',
               'x₁ = 4 + 2 = 6',
-              'x₂ = 4 - 2 = 2'
+              'x₂ = 4 − 2 = 2'
             ]
           }
         },
         {
           id: 'm3-q4',
           difficulty: 'Medel',
-          question: 'Lös andragradsekvationen: <span class="math-expr">2x^2 + 12x - 14 = 0</span>',
+          question: 'Lös andragradsekvationen: <span class="math-expr">2x² + 12x − 14 = 0</span>',
           options: [
-            { text: 'x₁ = 1, x₂ = -7', correct: true },
-            { text: 'x₁ = 7, x₂ = -1', correct: false },
-            { text: 'x₁ = 2, x₂ = -14', correct: false },
-            { text: 'x₁ = 14, x₂ = -2', correct: false }
+            { text: 'x₁ = 1, x₂ = −7', correct: true },
+            { text: 'x₁ = 7, x₂ = −1', correct: false },
+            { text: 'x₁ = 2, x₂ = −14', correct: false },
+            { text: 'x₁ = 14, x₂ = −2', correct: false }
           ],
           explanation: {
             summary: 'Innan PQ-formeln kan användas MÅSTE koefficienten framför x² vara 1. Dividera därför hela ekvationen med 2 först.',
             steps: [
-              'Dela alla termer med 2: x² + 6x - 7 = 0',
-              'Nu är p = 6 och q = -7',
-              'x = -(6/2) ± √((6/2)² - (-7)) = -3 ± √(9 + 7)',
-              'x = -3 ± √16 = -3 ± 4',
-              'x₁ = -3 + 4 = 1',
-              'x₂ = -3 - 4 = -7'
+              'Dela alla termer med 2: x² + 6x − 7 = 0',
+              'Nu är p = 6 och q = −7',
+              'x = −(6/2) ± √((6/2)² − (−7)) = −3 ± √(9 + 7)',
+              'x = −3 ± √16 = −3 ± 4',
+              'x₁ = −3 + 4 = 1',
+              'x₂ = −3 − 4 = −7'
             ]
           }
         },
         {
           id: 'm3-q5',
           difficulty: 'Grund',
-          question: 'Lös andragradsekvationen med nollproduktmetoden: <span class="math-expr">3x(2x - 8) = 0</span>',
+          question: 'Lös andragradsekvationen med nollproduktmetoden: <span class="math-expr">3x(2x − 8) = 0</span>',
           options: [
             { text: 'x₁ = 0, x₂ = 4', correct: true },
             { text: 'x₁ = 3, x₂ = 8', correct: false },
-            { text: 'x₁ = 0, x₂ = -4', correct: false },
+            { text: 'x₁ = 0, x₂ = −4', correct: false },
             { text: 'x₁ = 0, x₂ = 8/3', correct: false }
           ],
           explanation: {
             summary: 'Nollproduktmetoden: Om en produkt av två faktorer är noll måste minst en faktor vara noll.',
             steps: [
               'Faktor 1: 3x = 0  =>  x₁ = 0',
-              'Faktor 2: 2x - 8 = 0  =>  2x = 8  =>  x₂ = 4',
+              'Faktor 2: 2x − 8 = 0  =>  2x = 8  =>  x₂ = 4',
               'Rötterna är x₁ = 0 och x₂ = 4.'
             ]
           }
@@ -390,20 +390,20 @@
         {
           id: 'm3-q6',
           difficulty: 'Fördjupning',
-          question: 'För andragradsfunktionen <span class="math-expr">f(x) = x^2 - 6x + 5</span>, vad är symmetrilinjens ekvation och extrempunktens koordinater?',
+          question: 'För andragradsfunktionen <span class="math-expr">f(x) = x² − 6x + 5</span>, vad är symmetrilinjens ekvation och extrempunktens koordinater?',
           options: [
-            { text: 'Symmetrilinje x = 3, minimipunkt (3, -4)', correct: true },
-            { text: 'Symmetrilinje x = -3, minimipunkt (-3, 32)', correct: false },
+            { text: 'Symmetrilinje x = 3, minimipunkt (3, −4)', correct: true },
+            { text: 'Symmetrilinje x = −3, minimipunkt (−3, 32)', correct: false },
             { text: 'Symmetrilinje x = 6, minimipunkt (6, 5)', correct: false },
-            { text: 'Symmetrilinje x = 3, maximipunkt (3, -4)', correct: false }
+            { text: 'Symmetrilinje x = 3, maximipunkt (3, −4)', correct: false }
           ],
           explanation: {
-            summary: 'Symmetrilinjen ligger alltid vid x = -p/2. Eftersom koefficienten framför x² är positiv (a = 1 > 0) är kurvan U-formad och har en minimipunkt.',
+            summary: 'Symmetrilinjen ligger alltid vid x = −p/2. Eftersom koefficienten framför x² är positiv (a = 1 > 0) är kurvan U-formad och har en minimipunkt.',
             steps: [
-              'Symmetrilinje: x = -(-6)/2 = 3',
+              'Symmetrilinje: x = −(−6)/2 = 3',
               'Beräkna minimivärdet genom att sätta in x = 3 i f(x):',
-              'f(3) = 3² - 6(3) + 5 = 9 - 18 + 5 = -4',
-              'Extrempunkten är därför minimipunkten (3, -4).'
+              'f(3) = 3² − 6(3) + 5 = 9 − 18 + 5 = −4',
+              'Extrempunkten är därför minimipunkten (3, −4).'
             ]
           }
         },
@@ -412,17 +412,17 @@
           difficulty: 'Medel',
           question: 'Värdet på en moped minskar exponentiellt med 15% varje år. Inköpspriset var 20 000 kr. Vilken funktionsmodell beskriver mopedens värde <span class="math-expr">y</span> efter <span class="math-expr">x</span> år?',
           options: [
-            { text: 'y = 20 000 · 0.85^x', correct: true },
-            { text: 'y = 20 000 · 1.15^x', correct: false },
-            { text: 'y = 20 000 - 0.15x', correct: false },
-            { text: 'y = 20 000 · 0.15^x', correct: false }
+            { text: 'y = 20 000 · 0,85^x', correct: true },
+            { text: 'y = 20 000 · 1,15^x', correct: false },
+            { text: 'y = 20 000 − 0,15x', correct: false },
+            { text: 'y = 20 000 · 0,15^x', correct: false }
           ],
           explanation: {
             summary: 'Exponentialfunktionen har formen y = C · a^x där C är startvärdet och a är förändringsfaktorn.',
             steps: [
               'Startvärde: C = 20 000 kr',
-              'Minskning med 15% ger förändringsfaktorn: a = 1 - 0.15 = 0.85',
-              'Modellen blir: y = 20 000 · 0.85^x'
+              'Minskning med 15% ger förändringsfaktorn: a = 1 − 0,15 = 0,85',
+              'Modellen blir: y = 20 000 · 0,85^x'
             ]
           }
         }
@@ -430,7 +430,7 @@
     },
     {
       id: 'modul-4-geometri-statistik',
-      title: 'Modul 4: Geometri & Statistik (v. 12–17)',
+      title: 'Modul 4: Geometri & Statistik',
       badge: 'Prov Kap 3 + Statistik',
       icon: '📊',
       description: 'Vinklar, likformighet, Pythagoras sats, läges- & spridningsmått och normalfördelning.',
@@ -449,8 +449,8 @@
           explanation: {
             summary: 'Avståndsformeln bygger direkt på Pythagoras sats: d = √((Δx)² + (Δy)²).',
             steps: [
-              'Δx = 4 - 1 = 3',
-              'Δy = 6 - 2 = 4',
+              'Δx = 4 − 1 = 3',
+              'Δy = 6 − 2 = 4',
               'd = √(3² + 4²) = √(9 + 16) = √25 = 5 längdenheter'
             ]
           }
@@ -488,8 +488,8 @@
           explanation: {
             summary: 'Vinkelsumman i en triangel är 180°. En yttervinkel är summan av de två motstående inre vinklarna.',
             steps: [
-              'Tredje inre vinkeln: 180° - (45° + 70°) = 180° - 115° = 65°',
-              'Yttervinkeln = 180° - 65° = 115° (vilket är lika med 45° + 70° enligt yttervinkelsatsen).'
+              'Tredje inre vinkeln: 180° − (45° + 70°) = 180° − 115° = 65°',
+              'Yttervinkeln = 180° − 65° = 115° (vilket är lika med 45° + 70° enligt yttervinkelsatsen).'
             ]
           }
         },
@@ -499,7 +499,7 @@
           question: 'En talserie med månadslöner (i tusen kr) är: <span class="math-expr">24, 26, 27, 28, 30, 31, 98</span>. Vilket lägesmått ger den mest representativa bilden av typiska lönen, och vad är medianen?',
           options: [
             { text: 'Medianen (28 tkr), eftersom den inte snedvrids av det extrema värdet 98 tkr', correct: true },
-            { text: 'Medelvärdet (37.7 tkr), eftersom alla observationer räknas med', correct: false },
+            { text: 'Medelvärdet (37,7 tkr), eftersom alla observationer räknas med', correct: false },
             { text: 'Typvärdet (24 tkr)', correct: false },
             { text: 'Variationsbredden (74 tkr)', correct: false }
           ],
@@ -508,14 +508,14 @@
             steps: [
               'Talserien har 7 värden och är redan sorterad: 24, 26, 27, [28], 30, 31, 98.',
               'Mittersta värdet (position 4) är 28 tkr.',
-              'Medelvärdet är (24+26+27+28+30+31+98)/7 = 264/7 ≈ 37.7 tkr, vilket ger en missvisande hög bild på grund av extremvärdet 98.'
+              'Medelvärdet är (24+26+27+28+30+31+98)/7 = 264/7 ≈ 37,7 tkr, vilket ger en missvisande hög bild på grund av extremvärdet 98.'
             ]
           }
         },
         {
           id: 'm4-q5',
           difficulty: 'Medel',
-          question: 'Ett lådagram visar att undre kvartilen är <span class="math-expr">Q_1 = 14</span> och övre kvartilen är <span class="math-expr">Q_3 = 26</span>. Vad är kvartilavståndet och vad beskriver det?',
+          question: 'Ett lådagram visar att undre kvartilen är <span class="math-expr">Q₁ = 14</span> och övre kvartilen är <span class="math-expr">Q₃ = 26</span>. Vad är kvartilavståndet och vad beskriver det?',
           options: [
             { text: 'Kvartilavståndet är 12 och rymmer de mittersta 50% av observationerna', correct: true },
             { text: 'Kvartilavståndet är 20 och rymmer 100% av observationerna', correct: false },
@@ -523,9 +523,9 @@
             { text: 'Kvartilavståndet är 40', correct: false }
           ],
           explanation: {
-            summary: 'Kvartilavståndet (IQR) är skillnaden mellan övre och undre kvartilen: IQR = Q₃ - Q₁.',
+            summary: 'Kvartilavståndet (IQR) är skillnaden mellan övre och undre kvartilen: IQR = Q₃ − Q₁.',
             steps: [
-              'IQR = Q₃ - Q₁ = 26 - 14 = 12',
+              'IQR = Q₃ − Q₁ = 26 − 14 = 12',
               'Mellan Q₁ och Q₃ ligger exakt hälften (50%) av alla mätvärden.',
               'Lådans bredd i ett lådagram motsvarar just kvartilavståndet.'
             ]
@@ -534,19 +534,19 @@
         {
           id: 'm4-q6',
           difficulty: 'Medel',
-          question: 'Längden hos en grupp gymnasieelever är normalfördelad med medelvärdet <span class="math-expr">\\mu = 175</span> cm och standardavvikelsen <span class="math-expr">\\sigma = 6</span> cm. Ungefär hur stor andel av eleverna är mellan <span class="math-expr">169</span> cm och <span class="math-expr">181</span> cm långa?',
+          question: 'Längden hos en grupp gymnasieelever är normalfördelad med medelvärdet <span class="math-expr">μ = 175</span> cm och standardavvikelsen <span class="math-expr">σ = 6</span> cm. Ungefär hur stor andel av eleverna är mellan <span class="math-expr">169</span> cm och <span class="math-expr">181</span> cm långa?',
           options: [
-            { text: 'Cirka 68.2%', correct: true },
-            { text: 'Cirka 95.4%', correct: false },
-            { text: 'Cirka 50.0%', correct: false },
-            { text: 'Cirka 34.1%', correct: false }
+            { text: 'Cirka 68,2%', correct: true },
+            { text: 'Cirka 95,4%', correct: false },
+            { text: 'Cirka 50,0%', correct: false },
+            { text: 'Cirka 34,1%', correct: false }
           ],
           explanation: {
-            summary: 'I en normalfördelning ligger cirka 68.2% av observationerna inom ±1 standardavvikelse från medelvärdet (μ ± 1σ).',
+            summary: 'I en normalfördelning ligger cirka 68,2% av observationerna inom ±1 standardavvikelse från medelvärdet (μ ± 1σ).',
             steps: [
-              'Undre gräns: μ - 1σ = 175 - 6 = 169 cm',
+              'Undre gräns: μ − 1σ = 175 − 6 = 169 cm',
               'Övre gräns: μ + 1σ = 175 + 6 = 181 cm',
-              'Intervallet [169, 181] motsvarar exakt [μ - σ, μ + σ], vilket enligt normalfördelningens regler innehåller cirka 68.2% av observationerna.'
+              'Intervallet [169, 181] motsvarar exakt [μ − σ, μ + σ], vilket enligt normalfördelningens regler innehåller cirka 68,2% av observationerna.'
             ]
           }
         },
@@ -561,11 +561,11 @@
             { text: '84 poäng', correct: false }
           ],
           explanation: {
-            summary: 'Under medelvärdet ligger 50% av fördelningen. Mellan medelvärdet och +1 standardavvikelse ligger ytterligare ca 34.1%.',
+            summary: 'Under medelvärdet ligger 50% av fördelningen. Mellan medelvärdet och +1 standardavvikelse ligger ytterligare ca 34,1%.',
             steps: [
               'Andel under medelvärdet (μ) = 50%',
-              'Andel mellan μ och μ + 1σ = 34.1%',
-              'Total andel under μ + 1σ = 50% + 34.1% = 84.1% ≈ 84%',
+              'Andel mellan μ och μ + 1σ = 34,1%',
+              'Total andel under μ + 1σ = 50% + 34,1% = 84,1% ≈ 84%',
               'Poängen för 84:e percentilen = μ + 1σ = 50 + 10 = 60 poäng.'
             ]
           }
