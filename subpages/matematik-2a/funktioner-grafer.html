@@ -130,11 +130,30 @@
 
     .geogebra-iframe-wrapper {
       width: 100%;
-      height: 550px;
+      height: clamp(680px, 80vh, 900px);
       border-radius: var(--radius-md);
       overflow: hidden;
       border: 1px solid var(--border-color);
-      box-shadow: var(--card-shadow);
+      box-shadow: var(--card-shadow-hover);
+      background: var(--bg-surface);
+      position: relative;
+      transition: height var(--transition-normal);
+    }
+
+    .geogebra-iframe-wrapper:fullscreen {
+      width: 100vw !important;
+      height: 100vh !important;
+      border-radius: 0 !important;
+      border: none !important;
+    }
+
+    .geogebra-controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
     }
   </style>
 </head>
@@ -397,18 +416,31 @@
          ====================================================================== -->
     <div class="tab-content" id="tab-geogebra" style="display: none;">
       <section class="content-panel">
-        <h2 class="panel-title">🌐 Interaktiv GeoGebra Grafräknare</h2>
-        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-          Använd GeoGebras officiella grafräknare direkt i webbläsaren för att skriva in egna ekvationer, rita funktionsgrafer, hitta skärningspunkter och tangentlinjer.
-        </p>
+        <div class="geogebra-controls-bar">
+          <div>
+            <h2 class="panel-title" style="margin-bottom: 0.25rem;">🌐 GeoGebra Calculator Suite</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+              Åtkomst direkt till alla huvudverktyg: <strong>Algebra</strong>, <strong>Verktyg</strong>, <strong>Tabell</strong> och <strong>Kalkylblad</strong>.
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button id="btn-geogebra-fullscreen" class="filter-btn" style="cursor: pointer;">
+              ⛶ Helskärm
+            </button>
+            <a href="https://www.geogebra.org/suite?lang=sv" target="_blank" rel="noopener noreferrer" class="filter-btn active" style="text-decoration: none;">
+              Öppna i ny flik ↗
+            </a>
+          </div>
+        </div>
 
-        <!-- Inbäddad GeoGebra Applet -->
-        <div class="geogebra-iframe-wrapper">
+        <!-- Inbäddad GeoGebra Calculator Suite -->
+        <div class="geogebra-iframe-wrapper" id="geogebra-wrapper">
           <iframe 
-            src="https://www.geogebra.org/calculator" 
+            src="https://www.geogebra.org/suite?lang=sv" 
             style="width: 100%; height: 100%; border: none;"
-            title="GeoGebra Grafräknare"
+            title="GeoGebra Calculator Suite"
             allowfullscreen
+            allow="fullscreen; autoplay; VR"
           ></iframe>
         </div>
       </section>

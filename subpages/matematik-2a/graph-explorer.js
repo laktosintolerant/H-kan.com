@@ -582,8 +582,37 @@
     return num.toFixed(2).replace(/\.?0+$/, '');
   }
 
+  function initGeoGebraFullscreen() {
+    const fsBtn = document.getElementById('btn-geogebra-fullscreen');
+    const wrapper = document.getElementById('geogebra-wrapper');
+
+    if (!fsBtn || !wrapper) return;
+
+    fsBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        if (wrapper.requestFullscreen) {
+          wrapper.requestFullscreen();
+        } else if (wrapper.webkitRequestFullscreen) {
+          wrapper.webkitRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+      }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      const isFs = !!document.fullscreenElement;
+      fsBtn.textContent = isFs ? '❌ Stäng helskärm' : '⛶ Helskärm';
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     initGraphExplorer();
+    initGeoGebraFullscreen();
   });
 
 })();
