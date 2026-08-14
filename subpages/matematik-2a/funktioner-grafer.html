@@ -140,9 +140,14 @@
       transition: height var(--transition-normal);
     }
 
-    .geogebra-iframe-wrapper:fullscreen {
+    .geogebra-iframe-wrapper:fullscreen,
+    .geogebra-iframe-wrapper.is-fullscreen {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
       width: 100vw !important;
       height: 100vh !important;
+      z-index: 99999 !important;
       border-radius: 0 !important;
       border: none !important;
     }
@@ -418,29 +423,30 @@
       <section class="content-panel">
         <div class="geogebra-controls-bar">
           <div>
-            <h2 class="panel-title" style="margin-bottom: 0.25rem;">🌐 GeoGebra Calculator Suite</h2>
+            <h2 class="panel-title" style="margin-bottom: 0.25rem;">🌐 GeoGebra Grafräknare</h2>
             <p style="color: var(--text-secondary); font-size: 0.9rem;">
-              Åtkomst direkt till alla huvudverktyg: <strong>Algebra</strong>, <strong>Verktyg</strong>, <strong>Tabell</strong> och <strong>Kalkylblad</strong>.
+              Interaktiv grafräknare för att rita kurvor, analysera funktioner och beräkna skärningspunkter.
             </p>
           </div>
           <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
             <button id="btn-geogebra-fullscreen" class="filter-btn" style="cursor: pointer;">
               ⛶ Helskärm
             </button>
-            <a href="https://www.geogebra.org/suite?lang=sv" target="_blank" rel="noopener noreferrer" class="filter-btn active" style="text-decoration: none;">
+            <a href="https://www.geogebra.org/graphing" target="_blank" rel="noopener noreferrer" class="filter-btn active" style="text-decoration: none;">
               Öppna i ny flik ↗
             </a>
           </div>
         </div>
 
-        <!-- Inbäddad GeoGebra Calculator Suite -->
+        <!-- Inbäddad GeoGebra Grafräknare -->
         <div class="geogebra-iframe-wrapper" id="geogebra-wrapper">
           <iframe 
-            src="https://www.geogebra.org/suite?lang=sv" 
+            id="geogebra-iframe"
+            src="https://www.geogebra.org/graphing" 
             style="width: 100%; height: 100%; border: none;"
-            title="GeoGebra Calculator Suite"
-            allowfullscreen
-            allow="fullscreen; autoplay; VR"
+            title="GeoGebra Grafräknare"
+            allowfullscreen="true"
+            allow="fullscreen"
           ></iframe>
         </div>
       </section>

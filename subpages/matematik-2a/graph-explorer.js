@@ -588,26 +588,43 @@
 
     if (!fsBtn || !wrapper) return;
 
-    fsBtn.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
+    function toggleFullscreen() {
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || wrapper.classList.contains('is-fullscreen'));
+
+      if (!isFs) {
         if (wrapper.requestFullscreen) {
-          wrapper.requestFullscreen();
+          wrapper.requestFullscreen().catch(() => {
+            wrapper.classList.add('is-fullscreen');
+            fsBtn.textContent = '❌ Stäng helskärm';
+          });
         } else if (wrapper.webkitRequestFullscreen) {
           wrapper.webkitRequestFullscreen();
+        } else {
+          wrapper.classList.add('is-fullscreen');
+          fsBtn.textContent = '❌ Stäng helskärm';
         }
       } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+          if (document.exitFullscreen) {
+            document.exitFullscreen().catch(() => {});
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          }
         }
+        wrapper.classList.remove('is-fullscreen');
+        fsBtn.textContent = '⛶ Helskärm';
       }
-    });
+    }
 
-    document.addEventListener('fullscreenchange', () => {
-      const isFs = !!document.fullscreenElement;
+    fsBtn.addEventListener('click', toggleFullscreen);
+
+    const updateBtnText = () => {
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || wrapper.classList.contains('is-fullscreen'));
       fsBtn.textContent = isFs ? '❌ Stäng helskärm' : '⛶ Helskärm';
-    });
+    };
+
+    document.addEventListener('fullscreenchange', updateBtnText);
+    document.addEventListener('webkitfullscreenchange', updateBtnText);
   }
 
   document.addEventListener('DOMContentLoaded', () => {
