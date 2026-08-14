@@ -29,7 +29,7 @@
   max-width: 650px;
 }
 
-/* Snabbverktyg & Länkkort (2 kolumner) */
+/* Snabbverktyg & Länkkort (Kompakta & Stilrena) */
 .quick-tools-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -41,64 +41,99 @@
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 1.5rem;
+  padding: 1.25rem 1.4rem;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 1rem;
+  align-items: center;
+  gap: 1.25rem;
+  text-decoration: none;
+  color: inherit;
   transition: all var(--transition-fast);
   position: relative;
-  overflow: hidden;
-}
-
-.quick-tool-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--color-math);
   box-shadow: var(--card-shadow);
 }
 
+.quick-tool-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--card-shadow-hover);
+}
+
 .quick-tool-card.highlight-purple {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.06) 0%, rgba(99, 102, 241, 0.03) 100%);
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(99, 102, 241, 0.03) 100%);
   border-color: rgba(168, 85, 247, 0.25);
 }
 
 .quick-tool-card.highlight-purple:hover {
   border-color: var(--color-ai);
+  box-shadow: 0 4px 18px rgba(168, 85, 247, 0.2);
 }
 
 .quick-tool-card.highlight-blue {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.06) 0%, rgba(14, 165, 233, 0.03) 100%);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(14, 165, 233, 0.03) 100%);
   border-color: rgba(56, 189, 248, 0.25);
 }
 
 .quick-tool-card.highlight-blue:hover {
   border-color: var(--color-math);
+  box-shadow: 0 4px 18px rgba(56, 189, 248, 0.2);
 }
 
-.quick-tool-header {
+.quick-tool-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface-elevated);
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  border: 1px solid var(--border-color);
 }
 
-.quick-tool-icon {
-  font-size: 1.75rem;
-  line-height: 1;
+.quick-tool-info {
+  flex-grow: 1;
+}
+
+.quick-tool-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-math);
+  display: inline-block;
+  margin-bottom: 0.2rem;
+}
+
+.quick-tool-badge.purple {
+  color: var(--color-ai);
 }
 
 .quick-tool-title {
   font-family: var(--font-heading);
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin: 0;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.3;
 }
 
 .quick-tool-desc {
-  font-size: 0.92rem;
+  font-size: 0.84rem;
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.4;
   margin: 0;
+}
+
+.quick-tool-arrow {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  transition: transform var(--transition-fast), color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.quick-tool-card:hover .quick-tool-arrow {
+  transform: translateX(4px);
+  color: var(--text-primary);
 }
 
 /* Modul-grid / Momentöversikt */

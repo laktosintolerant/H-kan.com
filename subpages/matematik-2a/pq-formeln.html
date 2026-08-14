@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="sv" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PQ-Formeln & Parabelanalys – Matematik 2a | Håkan.com</title>
+  <meta name="description" content="Interaktiv steg-för-steg-lösare för andragradsekvationer med PQ-formeln, nollställen, symmetrilinje, vändpunkt och parabelgraf.">
+  
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="mat-style.css">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('hakan_site_theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       TOP NAVIGATION
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../../index.html" class="brand-logo">
+        <div class="brand-icon">H</div>
+        <span class="brand-text">Håkan.com</span>
+        <span class="brand-badge">MATTE 2A</span>
+      </a>
+
+      <nav class="nav-group">
+        <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Öppna meny" aria-expanded="false">
+          <svg class="hamburger-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24" style="display:none;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+
+        <ul class="nav-links">
+          <li><a href="../../index.html" class="nav-link">🏠 Hem</a></li>
+          <li><a href="../matematik-1a/index.html" class="nav-link">📐 Matematik 1a</a></li>
+          <li><a href="index.html" class="nav-link">📊 Matematik 2a</a></li>
+          <li><a href="pq-formeln.html" class="nav-link active">⚡ PQ-Lösaren</a></li>
+          <li><a href="funktioner-grafer.html" class="nav-link">📉 Funktioner & Grafer</a></li>
+          <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link">🧪 kemi1.se ↗</a></li>
+          <li class="mobile-only-link"><a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="nav-link kofi-nav-item">☕ Stöd på Ko-fi ↗</a></li>
+          <li class="mobile-only-link"><a href="mailto:stark@håkan.com" class="nav-link">✉ Kontakt</a></li>
+        </ul>
+
+        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Växla tema"></button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       HUVUDINNEHÅLL
+       ======================================================================== -->
+  <main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+    
+    <!-- Brödsmulor -->
+    <div class="breadcrumbs">
+      <a href="../../index.html">Hem</a>
+      <span class="divider">/</span>
+      <a href="index.html">Matematik 2a</a>
+      <span class="divider">/</span>
+      <span style="color: var(--text-primary); font-weight: 600;">PQ-Lösaren & Parabelanalys</span>
+    </div>
+
+    <!-- Hero Banner -->
+    <section class="math-banner" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(99, 102, 241, 0.06) 100%);">
+      <div class="math-banner-content">
+        <div style="display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+          <span class="topic-badge-pill" style="font-size: 0.82rem; padding: 0.25rem 0.75rem;">Interaktivt Verktyg</span>
+          <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Matematik nivå 2a</span>
+        </div>
+        <h1 style="font-size: 2.1rem; margin-bottom: 0.6rem;">⚡ PQ-Lösaren & Parabelanalys</h1>
+        <p>
+          Mata in koefficienterna för ekvationen <span class="math-expr">ax² + px + q = 0</span>. Verktyget beräknar nollställen, visar hela steg-för-steg-lösningen och plottar kurvan med vändpunkt och symmetrilinje i realtid.
+        </p>
+      </div>
+      <div>
+        <a href="index.html" class="solver-btn" style="text-decoration: none; display: inline-block; background: var(--bg-surface-elevated); color: var(--text-primary); border: 1px solid var(--border-color); box-shadow: none;">
+          ← Tillbaka till översikten
+        </a>
+      </div>
+    </section>
+
+    <!-- PQ-Lösare Verktyg -->
+    <section class="content-panel" id="pq-solver-panel">
+      <!-- Snabbval / Exempel -->
+      <div style="margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Testa exempel:</span>
+        <button class="preset-btn" data-a="1" data-p="-6" data-q="8">x² − 6x + 8 = 0 (2 rötter)</button>
+        <button class="preset-btn" data-a="1" data-p="4" data-q="4">x² + 4x + 4 = 0 (Dubbelrot)</button>
+        <button class="preset-btn" data-a="1" data-p="-2" data-q="5">x² − 2x + 5 = 0 (Komplexa)</button>
+        <button class="preset-btn" data-a="2" data-p="-8" data-q="6">2x² − 8x + 6 = 0 (a = 2)</button>
+      </div>
+
+      <div class="solver-layout">
+        <!-- Inmatning & Graf -->
+        <div class="solver-inputs">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;">
+            <div class="input-group">
+              <label for="input-a">Koefficient a:</label>
+              <input type="number" id="input-a" class="input-field" value="1" step="any">
+            </div>
+            <div class="input-group">
+              <label for="input-p">p (eller b):</label>
+              <input type="number" id="input-p" class="input-field" value="-6" step="any">
+            </div>
+            <div class="input-group">
+              <label for="input-q">q (eller c):</label>
+              <input type="number" id="input-q" class="input-field" value="8" step="any">
+            </div>
+          </div>
+
+          <button id="btn-solve" class="solver-btn">Beräkna & visualisera ✨</button>
+
+          <!-- Grafvisning -->
+          <div class="canvas-wrapper">
+            <h4 style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem;">Funktionsgraf f(x)</h4>
+            <canvas id="graphCanvas"></canvas>
+          </div>
+        </div>
+
+        <!-- Resultat & Steg-för-steg -->
+        <div class="solver-results">
+          <div class="result-box-highlight">
+            <h4>Resultat (Rötter / Nollställen):</h4>
+            <div class="roots-display" id="roots-output">Beräknar...</div>
+          </div>
+
+          <h4 style="margin-bottom: 0.75rem; font-size: 0.95rem;">Steg-för-steg uträkning:</h4>
+          <div class="steps-list" id="steps-output">
+            <!-- Fylls i av mat-solver.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Teorigång för PQ-formeln -->
+    <section class="content-panel" style="margin-top: 2rem;">
+      <h2 class="panel-title">📚 Så fungerar PQ-formeln</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-top: 1rem;">
+        <div class="formula-card">
+          <h4>1. Standardform</h4>
+          <div class="formula-math">x² + px + q = 0</div>
+          <p class="formula-desc">Ekvationen måste stå på standardform med koefficienten 1 framför x² och 0 i högerledet.</p>
+        </div>
+        <div class="formula-card">
+          <h4>2. PQ-formeln</h4>
+          <div class="formula-math">x = −(p/2) ± √((p/2)² − q)</div>
+          <p class="formula-desc">Ta halva p med ombytt tecken, och addera/subtrahera roten ur diskriminanten ((p/2)² − q).</p>
+        </div>
+        <div class="formula-card">
+          <h4>3. Symmetrilinje & Vändpunkt</h4>
+          <div class="formula-math">x = −p / 2</div>
+          <p class="formula-desc">Parabelns symmetrilinje sammanfaller alltid med termen före rottecknet: x = −p/2.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Relaterade moduler -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 3rem;">
+      <a href="index.html" class="filter-btn" style="text-decoration: none;">
+        ← Tillbaka till Matematik 2a
+      </a>
+      <a href="modul-3.html" class="filter-btn active" style="text-decoration: none;">
+        Öva PQ-formeln i Modul 3 ➔
+      </a>
+    </div>
+
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>Håkan.com</strong> / Matematik 2a – PQ-Lösaren.
+      </div>
+      <ul class="footer-links">
+        <li><a href="../../index.html">Startsida</a></li>
+        <li><a href="index.html">Matte 2a Översikt</a></li>
+        <li><a href="modul-3.html">Modul 3 (PQ)</a></li>
+        <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer">kemi1.se ↗</a></li>
+        <li><a href="mailto:stark@håkan.com" class="footer-contact-link">✉ stark@håkan.com</a></li>
+        <li><a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="kofi-btn">☕ Stöd på Ko-fi ↗</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script src="mat-solver.js"></script>
+</body>
+</html>
