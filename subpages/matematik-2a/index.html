@@ -130,51 +130,109 @@
     </section>
 
     <!-- ======================================================================
-         SEKTION 1: KURSENS CENTRALA MOMENT
+         MODULBASERADE SNABBTEST & INTERAKTIV REPETITION (MATEMATIK 2A)
          ====================================================================== -->
-    <h2 class="panel-title">📚 Centrala kursmoduler i Matematik 2a</h2>
+    <section class="content-panel" id="mat2a-moduler-sektion" style="border-color: rgba(56, 189, 248, 0.3); background: linear-gradient(135deg, rgba(56, 189, 248, 0.04) 0%, rgba(99, 102, 241, 0.02) 100%);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+        <div>
+          <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--color-math); letter-spacing: 0.05em; background: rgba(56, 189, 248, 0.15); padding: 0.2rem 0.6rem; border-radius: 999px;">
+            Självrättande Modulprov & Repetition
+          </span>
+          <h2 class="panel-title" style="margin-top: 0.5rem; margin-bottom: 0.25rem;">
+            🧠 Modulbaserade Snabbtest (Matematik nivå 2a)
+          </h2>
+          <p style="color: var(--text-secondary); max-width: 750px;">
+            Klicka på en modul nedan för att starta ett interaktivt test anpassat efter kursplaneringen. Du får omedelbar pedagogisk återkoppling och steg-för-steg-lösningar på varje uppgift!
+          </p>
+        </div>
+      </div>
+
+      <!-- Modulväljare (Grid) -->
+      <div class="topic-selector-grid" id="mat2a-topic-selector-grid">
+        <!-- Genereras dynamiskt av mat2a-quiz.js -->
+      </div>
+
+      <!-- Interaktiv Quiz-Behållare -->
+      <div class="quiz-container" id="mat2a-quiz-container">
+        <div class="quiz-meta-header">
+          <span id="mat2a-quiz-topic-title" style="font-weight: 700; font-family: var(--font-heading); font-size: 1.15rem; color: var(--color-math);">Område</span>
+          <span class="question-badge" id="mat2a-question-progress-text">Fråga 1 av 6</span>
+        </div>
+
+        <div class="quiz-progress-bar-bg">
+          <div class="quiz-progress-fill" id="mat2a-quiz-progress-fill"></div>
+        </div>
+
+        <div id="mat2a-quiz-card-content">
+          <!-- Fråga, alternativ och feedback renderas här -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SEKTION 1: KURSENS CENTRALA MOMENT (GROVPLANERING)
+         ====================================================================== -->
+    <h2 class="panel-title">📚 Kursens moment & provindelning</h2>
     <div class="modules-grid">
       <div class="module-card">
-        <div class="module-card-icon">🔣</div>
-        <h3>1. Algebra & Ekvationer</h3>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+          <div class="module-card-icon">🔣</div>
+          <span class="topic-badge-pill">Test Kap 1</span>
+        </div>
+        <h3>1. Algebra & Funktioner (v. 35–39)</h3>
         <ul>
-          <li>Andragradsekvationer & PQ-formeln</li>
-          <li>Nollproduktmetoden & faktorisering</li>
-          <li>Kvadratkomplettering</li>
-          <li>Komplexa tal (icke-reella rötter)</li>
+          <li>Negativa tal, prioriteringsregler & bråk</li>
+          <li>Algebraiska uttryck & formler</li>
+          <li>Ekvationslösning</li>
+          <li>Koordinatsystem, värdetabell & graf</li>
+          <li>Uttryck vs Ekvation vs Funktion</li>
         </ul>
       </div>
 
       <div class="module-card">
-        <div class="module-card-icon">⚖️</div>
-        <h3>2. Linjära Ekvationssystem</h3>
-        <ul>
-          <li>Grafisk lösningsmetod</li>
-          <li>Substitutionsmetoden</li>
-          <li>Additionsmetoden</li>
-          <li>Tillämpningar och textuppgifter</li>
-        </ul>
-      </div>
-
-      <div class="module-card">
-        <div class="module-card-icon">📈</div>
-        <h3>3. Funktioner & Parabler</h3>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+          <div class="module-card-icon">⚖️</div>
+          <span class="topic-badge-pill">Prov Kap 1</span>
+        </div>
+        <h3>2. Räta Linjen & System (v. 40–47)</h3>
         <ul>
           <li>Räta linjens ekvation (\(y = kx + m\))</li>
-          <li>Andragradsfunktioner (\(y = ax^2 + bx + c\))</li>
-          <li>Symmetrilinje och extrempunkter</li>
-          <li>Definitions- & värdemängd</li>
+          <li>Parallella & vinkelräta linjer (\(k_1 \cdot k_2 = -1\))</li>
+          <li>Grafisk lösning av ekvationssystem</li>
+          <li>Substitutionsmetoden</li>
+          <li>Additionsmetoden & textuppgifter</li>
         </ul>
       </div>
 
       <div class="module-card">
-        <div class="module-card-icon">📊</div>
-        <h3>4. Logaritmer & Statistik</h3>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+          <div class="module-card-icon">📈</div>
+          <span class="topic-badge-pill">Prov Kap 2</span>
+        </div>
+        <h3>3. Potenser & Parabler (v. 48–v. 6)</h3>
         <ul>
-          <li>Tiotalslogaritmer (\(\lg x\))</li>
-          <li>Logaritmlagar och exponentialekvationer</li>
-          <li>Läges- och spridningsmått</li>
-          <li>Normalfördelning & standardavvikelse</li>
+          <li>Potenslagar & potensekvationer</li>
+          <li>Konjugat- & kvadreringsreglerna</li>
+          <li>Enkla andragradsekvationer & faktorisering</li>
+          <li>PQ-formeln & problemlösning</li>
+          <li>Andragradsfunktioner (symmetrilinje & extrempunkt)</li>
+          <li>Exponential- & potensfunktioner</li>
+        </ul>
+      </div>
+
+      <div class="module-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+          <div class="module-card-icon">📊</div>
+          <span class="topic-badge-pill">Prov Kap 3 + Stat</span>
+        </div>
+        <h3>4. Geometri & Statistik (v. 12–17)</h3>
+        <ul>
+          <li>Vinklar, vinkelsumma & yttervinklar</li>
+          <li>Likformighet & topptriangelsatsen</li>
+          <li>Pythagoras sats & avståndsformeln</li>
+          <li>Lägesmått (medelvärde, median, typvärde)</li>
+          <li>Spridningsmått (kvartiler & kvartilavstånd)</li>
+          <li>Normalfördelning & percentiler</li>
         </ul>
       </div>
     </div>
@@ -248,7 +306,7 @@
         <div class="formula-card">
           <h4>PQ-formeln</h4>
           <div class="formula-math">x = -(p/2) ± √((p/2)² - q)</div>
-          <p class="formula-desc">Gäller för ekvationer på formen x² + px + q = 0.</p>
+          <p class="formula-desc">Gäller för andragradsekvationer på formen x² + px + q = 0.</p>
         </div>
 
         <div class="formula-card">
@@ -258,9 +316,9 @@
         </div>
 
         <div class="formula-card">
-          <h4>Tiotalslogaritmer</h4>
-          <div class="formula-math">10^(lg x) = x &nbsp;|&nbsp; lg(a · b) = lg a + lg b</div>
-          <p class="formula-desc">Definition och additionslag för tiotalslogaritmer (x > 0).</p>
+          <h4>Vinkelräta linjer</h4>
+          <div class="formula-math">k₁ · k₂ = -1</div>
+          <p class="formula-desc">Villkor för att två linjer ska skära varandra under 90° vinkel.</p>
         </div>
 
         <div class="formula-card">
@@ -270,15 +328,15 @@
         </div>
 
         <div class="formula-card">
-          <h4>Pythagoras sats</h4>
-          <div class="formula-math">a² + b² = c²</div>
-          <p class="formula-desc">Samband mellan kateterna a, b och hypotenusan c i en rätvinklig triangel.</p>
+          <h4>Pythagoras sats & Avstånd</h4>
+          <div class="formula-math">d = √((x₂ - x₁)² + (y₂ - y₁)²)</div>
+          <p class="formula-desc">Avståndet mellan två punkter i ett rätvinkligt koordinatsystem.</p>
         </div>
 
         <div class="formula-card">
-          <h4>Standardavvikelse (Stickprov)</h4>
-          <div class="formula-math">s = √( Σ(x - x̄)² / (n - 1) )</div>
-          <p class="formula-desc">Mått på hur observationerna sprider sig kring medelvärdet.</p>
+          <h4>Normalfördelning (Intervallregler)</h4>
+          <div class="formula-math">μ ± 1σ ≈ 68.2% &nbsp;|&nbsp; μ ± 2σ ≈ 95.4%</div>
+          <p class="formula-desc">Andel av observationerna som ryms kring medelvärdet μ och standardavvikelsen σ.</p>
         </div>
       </div>
     </section>
@@ -289,6 +347,9 @@
     <section class="content-panel">
       <h2 class="panel-title">🔗 Relaterade resurser & läromedel</h2>
       <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="funktioner-grafer.html" class="filter-btn active" style="text-decoration: none;">
+          📉 GeoGebra & Funktionsgrafer
+        </a>
         <a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="filter-btn" style="text-decoration: none;">
           🧪 Besök kemi1.se (Gymnasiekemi) ↗
         </a>
@@ -322,5 +383,6 @@
   <!-- Scripts -->
   <script src="../../assets/js/main.js"></script>
   <script src="mat-solver.js"></script>
+  <script src="mat2a-quiz.js"></script>
 </body>
 </html>
