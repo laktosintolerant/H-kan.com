@@ -43,8 +43,11 @@
     // Lös initialt exempel
     solveEquation();
 
-    // Rita om graf om fönstret ändrar storlek
+    // Rita om graf om fönstret ändrar storlek eller tema ändras
     window.addEventListener('resize', () => {
+      drawGraph();
+    });
+    window.addEventListener('themechange', () => {
       drawGraph();
     });
   }

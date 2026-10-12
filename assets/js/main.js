@@ -44,6 +44,7 @@
       localStorage.setItem(THEME_STORAGE_KEY, theme);
     }
     updateThemeToggleIcons(theme);
+    window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
   }
 
   function updateThemeToggleIcons(theme) {

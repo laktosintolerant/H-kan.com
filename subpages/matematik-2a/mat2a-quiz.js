@@ -599,8 +599,126 @@
     quizCardContentEl = document.getElementById('single-module-card-content') || document.getElementById('mat2a-quiz-card-content');
   }
 
+  const PROGRESS_KEY_PREFIX = 'hakan_m2a_progress_';
+
+  function saveProgress(topicId, score, total, percentage) {
+    try {
+      localStorage.setItem(PROGRESS_KEY_PREFIX + topicId, JSON.stringify({
+        topicId,
+        score,
+        total,
+        percentage,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      console.warn('LocalStorage save error:', e);
+    }
+  }
+
+  function getProgress(topicId) {
+    try {
+      const data = localStorage.getItem(PROGRESS_KEY_PREFIX + topicId);
+      return data ? JSON.parse(data) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function resetProgress(topicId) {
+    try {
+      localStorage.removeItem(PROGRESS_KEY_PREFIX + topicId);
+      bindElements();
+      if (topicGridEl) renderTopics();
+      updateOverviewBadges();
+    } catch (e) {}
+  }
+
+  function updateOverviewBadges() {
+    MAT2A_TOPICS.forEach((topic, idx) => {
+      const prog = getProgress(topic.id);
+      const link = document.querySelector(`.modules-grid .module-card a[href*="modul-${idx + 1}.html"]`);
+      if (link) {
+        const card = link.closest('.module-card');
+        if (card) {
+          let badgeEl = card.querySelector('.progress-badge-pill');
+          if (prog) {
+            if (!badgeEl) {
+              badgeEl = document.createElement('span');
+              badgeEl.className = 'progress-badge-pill';
+              const headerBox = card.querySelector('div[style*="justify-content: space-between"]') || card.querySelector('div');
+              if (headerBox) {
+                headerBox.appendChild(badgeEl);
+              }
+            }
+            badgeEl.innerHTML = `✓ ${prog.score}/${prog.total} (${prog.percentage}%)${prog.percentage === 100 ? ' ⭐' : ''}`;
+          } else if (badgeEl) {
+            badgeEl.remove();
+          }
+        }
+      }
+    });
+  }
+
+  function triggerMathRender(container) {
+    if (window.renderMathInElement) {
+      try {
+        window.renderMathInElement(container || document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      } catch (err) {
+        // Fallback gracefull
+      }
+    }
+  }
+
+  let keyboardInitialized = false;
+  function initKeyboardNav() {
+    if (keyboardInitialized) return;
+    keyboardInitialized = true;
+
+    window.addEventListener('keydown', (e) => {
+      const activeEl = document.activeElement;
+      const tag = activeEl ? activeEl.tagName.toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || activeEl?.isContentEditable) return;
+
+      if (currentTopicIndex < 0 || currentTopicIndex >= MAT2A_TOPICS.length) return;
+      const topic = MAT2A_TOPICS[currentTopicIndex];
+      if (!topic || currentQuestionIndex >= topic.questions.length) return;
+      const q = topic.questions[currentQuestionIndex];
+      if (!q) return;
+
+      if (!isAnswered) {
+        let optIdx = -1;
+        if (e.key === '1' || e.code === 'Digit1') optIdx = 0;
+        else if (e.key === '2' || e.code === 'Digit2') optIdx = 1;
+        else if (e.key === '3' || e.code === 'Digit3') optIdx = 2;
+        else if (e.key === '4' || e.code === 'Digit4') optIdx = 3;
+        else if (e.key.toLowerCase() === 'a') optIdx = 0;
+        else if (e.key.toLowerCase() === 'b') optIdx = 1;
+        else if (e.key.toLowerCase() === 'c') optIdx = 2;
+        else if (e.key.toLowerCase() === 'd') optIdx = 3;
+
+        if (optIdx >= 0 && optIdx < q.options.length) {
+          e.preventDefault();
+          handleOptionSelect(optIdx);
+        }
+      } else {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          nextQuestion();
+        }
+      }
+    });
+  }
+
   function initQuizEngine() {
     bindElements();
+    initKeyboardNav();
+    updateOverviewBadges();
 
     // Check if the page is a standalone single module subpage
     const bodyModuleAttr = document.body.getAttribute('data-module-index');
@@ -620,6 +738,7 @@
 
   function initSingleModule(topicIndex) {
     bindElements();
+    initKeyboardNav();
     currentTopicIndex = topicIndex;
     currentQuestionIndex = 0;
     userAnswers = [];
@@ -642,10 +761,18 @@
       card.className = `topic-card ${index === currentTopicIndex ? 'active' : ''}`;
       card.onclick = () => selectTopic(index, true);
 
+      const prog = getProgress(topic.id);
+      const progBadge = prog 
+        ? `<span class="progress-badge-pill">✓ ${prog.score}/${prog.total} (${prog.percentage}%)${prog.percentage === 100 ? ' ⭐' : ''}</span>`
+        : '';
+
       card.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
           <div class="topic-icon">${topic.icon}</div>
-          <span class="topic-badge-pill">${escapeHtml(topic.badge)}</span>
+          <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem;">
+            <span class="topic-badge-pill">${escapeHtml(topic.badge)}</span>
+            ${progBadge}
+          </div>
         </div>
         <div class="topic-title">${escapeHtml(topic.title)}</div>
         <div class="topic-weeks">📅 ${escapeHtml(topic.weeks)}</div>
@@ -689,7 +816,10 @@
     q.options.forEach((opt, idx) => {
       optionsHTML += `
         <button class="option-btn" onclick="window.Mat2aQuiz.handleOptionSelect(${idx})" id="m2a-opt-btn-${idx}">
-          <span>${opt.text}</span>
+          <div style="display: flex; align-items: center;">
+            <span class="opt-key-badge">${idx + 1}</span>
+            <span>${opt.text}</span>
+          </div>
           <span class="opt-indicator" id="m2a-opt-ind-${idx}"></span>
         </button>
       `;
@@ -708,10 +838,11 @@
         <div class="feedback-panel" id="m2a-feedback-panel" style="display: none;"></div>
         <div class="quiz-actions" id="m2a-quiz-actions" style="display: none;">
           <button class="next-btn" onclick="window.Mat2aQuiz.nextQuestion()">
-            ${currentQuestionIndex === topic.questions.length - 1 ? 'Visa modulresultat 🏁' : 'Nästa fråga ➔'}
+            ${currentQuestionIndex === topic.questions.length - 1 ? 'Visa modulresultat 🏁 (Enter)' : 'Nästa fråga ➔ (Enter)'}
           </button>
         </div>
       `;
+      triggerMathRender(quizCardContentEl);
     }
   }
 
@@ -773,6 +904,7 @@
           </div>
         `;
       }
+      triggerMathRender(feedbackPanel);
     }
 
     const actionsEl = document.getElementById('m2a-quiz-actions');
@@ -797,6 +929,10 @@
     const correctCount = userAnswers.filter(a => a.isCorrect).length;
     const totalCount = topic.questions.length;
     const percentage = Math.round((correctCount / totalCount) * 100);
+
+    // Spara i LocalStorage
+    saveProgress(topic.id, correctCount, totalCount, percentage);
+    updateOverviewBadges();
 
     if (quizProgressFillEl) quizProgressFillEl.style.width = '100%';
     if (questionProgressTextEl) questionProgressTextEl.textContent = 'Modul Slutförd!';
@@ -853,14 +989,21 @@
             ${feedbackMsg}
           </p>
 
-          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
             <button class="next-btn" onclick="window.Mat2aQuiz.selectTopic(${currentTopicIndex})">
               🔄 Gör om denna modul
             </button>
             ${nextButtonHTML}
           </div>
+
+          <div>
+            <button class="reset-progress-btn" onclick="window.Mat2aQuiz.resetProgress('${topic.id}'); window.Mat2aQuiz.selectTopic(${currentTopicIndex});">
+              🗑️ Nollställ sparad poäng för denna modul
+            </button>
+          </div>
         </div>
       `;
+      triggerMathRender(quizCardContentEl);
     }
   }
 
@@ -880,6 +1023,9 @@
     selectTopic,
     handleOptionSelect,
     nextQuestion,
+    resetProgress,
+    getProgress,
+    updateOverviewBadges,
     TOPICS: MAT2A_TOPICS
   };
 

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="sv" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verktygsmall | Håkan.com</title>
+  <meta name="description" content="Mall för nya interaktiva läromedel och AI-byggda verktyg på Håkan.com.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%2338bdf8%22/><text x=%2250%22 y=%2268%22 font-family=%22system-ui, sans-serif%22 font-size=%2260%22 font-weight=%22900%22 fill=%22%230a0d14%22 text-anchor=%22middle%22>H</text></svg>">
+
+  <!-- Huvudstilmall -->
+  <link rel="stylesheet" href="../../assets/css/style.css">
+
+  <!-- Förhindra theme-flicker vid första laddning -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('hakan_site_theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       TOP NAVIGATION
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../../index.html" class="brand-logo" id="header-brand-logo">
+        <div class="brand-icon">H</div>
+        <span class="brand-text">Håkan.com</span>
+        <span class="brand-badge">PORTAL</span>
+      </a>
+
+      <nav class="nav-group">
+        <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Öppna meny" aria-expanded="false">
+          <svg class="hamburger-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24" style="display:none;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+
+        <ul class="nav-links">
+          <li><a href="../matematik-1a/index.html" class="nav-link">📐 Matematik 1a</a></li>
+          <li><a href="../matematik-2a/index.html" class="nav-link">📊 Matematik 2a</a></li>
+          <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link">🧪 kemi1.se ↗</a></li>
+          <li class="mobile-only-link"><a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="nav-link kofi-nav-item">☕ Stöd på Ko-fi ↗</a></li>
+          <li class="mobile-only-link"><a href="mailto:stark@håkan.com" class="nav-link">✉ Kontakt</a></li>
+        </ul>
+
+        <!-- Ljust/Mörkt läge växlare -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Växla tema"></button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       HUVUDINNEHÅLL
+       ======================================================================== -->
+  <main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+    
+    <!-- Brödsmulor -->
+    <div class="breadcrumbs">
+      <a href="../../index.html">Hem</a>
+      <span class="divider">/</span>
+      <span>Kategori</span>
+      <span class="divider">/</span>
+      <span style="color: var(--text-primary); font-weight: 600;">Verktygsnamn</span>
+    </div>
+
+    <!-- Hero Banner -->
+    <section class="math-banner" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(168, 85, 247, 0.08) 100%);">
+      <div class="math-banner-content">
+        <div style="display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+          <span class="topic-badge-pill">Verktyg</span>
+          <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Underkategori</span>
+        </div>
+        <h1 style="font-size: 2.1rem; margin-bottom: 0.6rem;">Rubrik för verktyget</h1>
+        <p>
+          Beskrivning av vad verktyget gör och hur eleven kan använda det för att experimentera och förstå teorin.
+        </p>
+      </div>
+      <div>
+        <a href="../../index.html" class="solver-btn" style="text-decoration: none; display: inline-block; background: var(--bg-surface-elevated); color: var(--text-primary); border: 1px solid var(--border-color); box-shadow: none;">
+          ← Tillbaka till portalen
+        </a>
+      </div>
+    </section>
+
+    <!-- Interaktiv sektion / Verktyg -->
+    <section class="content-panel">
+      <h2 class="panel-title">Verktygets funktioner</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+        Här placeras reglage, inmatningsfält, canvas eller pedagogisk text.
+      </p>
+
+      <!-- EXEMPEL PÅ KONTROLLPANEL -->
+      <div style="background: var(--bg-surface-elevated); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+        <p>Innehåll här...</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>Håkan.com</strong> – Samlingsportal för matematik, kemi och digitala projekt.
+      </div>
+      <ul class="footer-links">
+        <li><a href="../../index.html">Startsida</a></li>
+        <li><a href="../matematik-1a/index.html">Matematik 1a</a></li>
+        <li><a href="../matematik-2a/index.html">Matematik 2a</a></li>
+        <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer">kemi1.se ↗</a></li>
+        <li><a href="mailto:stark@håkan.com" class="footer-contact-link">✉ stark@håkan.com</a></li>
+        <li><a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="kofi-btn">☕ Stöd på Ko-fi ↗</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- Grundläggande Portal-skript -->
+  <script src="../../assets/js/main.js"></script>
+</body>
+</html>

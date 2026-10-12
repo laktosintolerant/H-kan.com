@@ -84,7 +84,7 @@ const PROJECTS_DATA = [
     category: 'Matematik',
     description: 'Interaktiv steg-för-steg-lösare för andragradsekvationer. Visar reella och komplexa rötter, diskriminantanalys samt dynamisk funktionsgraf.',
     icon: '⚡',
-    url: 'subpages/matematik-2a/index.html#pq-solver',
+    url: 'subpages/matematik-2a/pq-formeln.html',
     isExternal: false,
     badge: 'Matematikverktyg',
     badgeType: 'internal',

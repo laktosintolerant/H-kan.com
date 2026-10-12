@@ -46,6 +46,10 @@
       if (activeTab === 'linear') drawLinearCanvas();
       if (activeTab === 'quadratic') drawQuadCanvas();
     });
+    window.addEventListener('themechange', () => {
+      if (activeTab === 'linear') drawLinearCanvas();
+      if (activeTab === 'quadratic') drawQuadCanvas();
+    });
   }
 
   // --------------------------------------------------------------------------
