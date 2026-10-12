@@ -817,7 +817,7 @@
       optionsHTML += `
         <button class="option-btn" onclick="window.Mat2aQuiz.handleOptionSelect(${idx})" id="m2a-opt-btn-${idx}">
           <div style="display: flex; align-items: center;">
-            <span class="opt-key-badge">${idx + 1}</span>
+            <span class="opt-key-badge">[${idx + 1}]</span>
             <span>${opt.text}</span>
           </div>
           <span class="opt-indicator" id="m2a-opt-ind-${idx}"></span>
