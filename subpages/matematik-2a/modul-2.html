@@ -8,7 +8,30 @@
   
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%2338bdf8%22/><text x=%2250%22 y=%2268%22 font-family=%22system-ui, sans-serif%22 font-size=%2260%22 font-weight=%22900%22 fill=%22%230a0d14%22 text-anchor=%22middle%22>H</text></svg>">
   <link rel="stylesheet" href="../../assets/css/style.css">
-  <link rel="stylesheet" href="mat-style.css">
+  <link rel="stylesheet" href="mat-style.css?v=2.4">
+
+  <style>
+    /* Kritiska stilar för teoridragspel för att garantera layout oavsett webbläsarcache */
+    details.theory-accordion summary::-webkit-details-marker,
+    details.theory-accordion summary::marker {
+      display: none !important;
+      content: "" !important;
+    }
+    .theory-summary {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      list-style: none !important;
+      cursor: pointer !important;
+    }
+    .theory-toggle-icon {
+      width: 20px !important;
+      height: 20px !important;
+      min-width: 20px !important;
+      max-width: 20px !important;
+      flex-shrink: 0 !important;
+    }
+  </style>
 
   <!-- KaTeX för matematisk formelrendering -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
@@ -115,14 +138,14 @@
 
         <!-- Avsnitt 2.1 -->
         <details class="theory-accordion" open>
-          <summary class="theory-summary">
+          <summary class="theory-summary" style="display: flex; align-items: center; justify-content: space-between; list-style: none; cursor: pointer;">
             <div class="theory-summary-title">
               <span class="theory-icon">📏</span>
               <span>2.1 Räta linjens ekvation, tolkning av k & m samt parallella linjer</span>
             </div>
             <div style="display: flex; align-items: center; gap: 0.75rem;">
               <span class="theory-badge-pill">Räta linjen</span>
-              <svg class="theory-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+              <svg class="theory-toggle-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px; min-width: 20px; max-width: 20px; flex-shrink: 0;"><path d="M19 9l-7 7-7-7"/></svg>
             </div>
           </summary>
           <div class="theory-body">
@@ -179,14 +202,14 @@
 
         <!-- Avsnitt 2.2 -->
         <details class="theory-accordion">
-          <summary class="theory-summary">
+          <summary class="theory-summary" style="display: flex; align-items: center; justify-content: space-between; list-style: none; cursor: pointer;">
             <div class="theory-summary-title">
               <span class="theory-icon">⚖️</span>
               <span>2.2 Ekvationssystem – Grafisk och algebraisk lösning</span>
             </div>
             <div style="display: flex; align-items: center; gap: 0.75rem;">
               <span class="theory-badge-pill">System</span>
-              <svg class="theory-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+              <svg class="theory-toggle-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px; min-width: 20px; max-width: 20px; flex-shrink: 0;"><path d="M19 9l-7 7-7-7"/></svg>
             </div>
           </summary>
           <div class="theory-body">

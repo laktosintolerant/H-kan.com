@@ -808,7 +808,12 @@
 }
 
 .theory-summary::-webkit-details-marker {
-  display: none;
+  display: none !important;
+}
+
+.theory-summary::marker {
+  display: none !important;
+  content: "" !important;
 }
 
 .theory-summary:hover {
@@ -842,11 +847,10 @@
 }
 
 .theory-toggle-icon {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  max-width: 20px !important;
   color: var(--text-muted);
   transition: transform var(--transition-fast), color var(--transition-fast);
   flex-shrink: 0;
