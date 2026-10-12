@@ -618,6 +618,46 @@
   font-family: var(--font-mono);
 }
 
+.opt-key-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--badge-bg, rgba(56, 189, 248, 0.12));
+  border: 1.5px solid var(--border-color);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--accent-primary, #38bdf8);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+  margin-right: 1rem;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.option-btn:hover:not(:disabled) .opt-key-badge {
+  color: #ffffff;
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  transform: scale(1.05);
+}
+
+.option-btn.correct .opt-key-badge {
+  background: #10b981 !important;
+  color: #ffffff !important;
+  border-color: #10b981 !important;
+}
+
+.option-btn.incorrect .opt-key-badge {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
+}
+
 /* Feedback-panel */
 .feedback-panel {
   border-radius: var(--radius-md);
@@ -726,3 +766,193 @@
   text-transform: uppercase;
   margin-top: 0.2rem;
 }
+
+/* ==========================================================================
+   TEORIAVSNITT & INTERAKTIVA DRAGSPELSKORT (ACCORDIONS)
+   ========================================================================== */
+.theory-accordion-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.theory-accordion {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.theory-accordion:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.theory-accordion[open] {
+  border-color: var(--color-math);
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.08);
+}
+
+.theory-summary {
+  padding: 1.15rem 1.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  user-select: none;
+  background: var(--bg-surface);
+  list-style: none;
+  transition: background var(--transition-fast);
+}
+
+.theory-summary::-webkit-details-marker {
+  display: none;
+}
+
+.theory-summary:hover {
+  background: var(--bg-surface-elevated);
+}
+
+.theory-summary-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-heading);
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.theory-badge-pill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--color-math);
+  flex-shrink: 0;
+}
+
+.theory-icon {
+  font-size: 1.25rem;
+}
+
+.theory-toggle-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: transform var(--transition-fast), color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.theory-accordion[open] .theory-toggle-icon {
+  transform: rotate(180deg);
+  color: var(--color-math);
+}
+
+.theory-body {
+  padding: 1.25rem 1.5rem 1.75rem;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.theory-body h4 {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 1.25rem 0 0.5rem 0;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theory-body h4:first-child {
+  margin-top: 0;
+}
+
+.theory-formula-highlight {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--color-math);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1.2rem;
+  margin: 0.85rem 0 1.25rem;
+  font-size: 1.05rem;
+  overflow-x: auto;
+}
+
+.theory-step-list {
+  padding-left: 1.4rem;
+  margin: 0.6rem 0 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.theory-step-list li {
+  color: var(--text-secondary);
+}
+
+.theory-step-list li strong {
+  color: var(--text-primary);
+}
+
+.theory-example {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.05) 0%, rgba(99, 102, 241, 0.02) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: var(--radius-md);
+  padding: 1.15rem 1.35rem;
+  margin: 1.25rem 0;
+}
+
+.theory-example-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  color: var(--color-math);
+  font-size: 0.92rem;
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.theory-example-content {
+  font-size: 0.94rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.theory-warning {
+  background: rgba(245, 158, 11, 0.07);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-left: 4px solid #f59e0b;
+  border-radius: var(--radius-sm);
+  padding: 0.9rem 1.15rem;
+  margin: 1rem 0 0.5rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--text-primary);
+}
+
+.theory-warning-icon {
+  font-size: 1.15rem;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+

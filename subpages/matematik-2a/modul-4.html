@@ -86,37 +86,255 @@
           Förberedelse inför Prov Kapitel 3 och statistikdelen. Omfattar vinklar, likformighet, topptriangelsatsen, Pythagoras sats, lägesmått (medelvärde/median), spridningsmått (kvartilavstånd/lådagram) samt normalfördelning och percentiler.
         </p>
       </div>
-      <div>
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="#single-module-quiz-section" class="solver-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
+          ✍️ Hoppa till quizet ↓
+        </a>
         <a href="index.html" class="solver-btn" style="text-decoration: none; display: inline-block; background: var(--bg-surface-elevated); color: var(--text-primary); border: 1px solid var(--border-color); box-shadow: none;">
           ← Alla moduler
         </a>
       </div>
     </section>
 
-    <!-- Formler & Sammanfattning -->
+    <!-- ======================================================================
+         TEORIAVSNITT FÖR MODUL 4
+         ====================================================================== -->
     <section class="content-panel" style="margin-bottom: 2rem;">
-      <h2 class="panel-title">📖 Nyckelformler för Modul 4</h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem;">
-        <div class="formula-card">
-          <h4>Avståndsformeln (Pythagoras)</h4>
-          <div class="formula-math">d = √((Δx)² + (Δy)²)</div>
-          <p class="formula-desc">Avståndet mellan punkterna (x₁, y₁) och (x₂, y₂) i planet.</p>
-        </div>
-        <div class="formula-card">
-          <h4>Kvartilavstånd (IQR)</h4>
-          <div class="formula-math">IQR = Q₃ − Q₁</div>
-          <p class="formula-desc">Skillnaden mellan övre och undre kvartilen (rymmer de mittersta 50%).</p>
-        </div>
-        <div class="formula-card">
-          <h4>Normalfördelning</h4>
-          <div class="formula-math">μ ± 1σ ≈ 68,2%</div>
-          <p class="formula-desc">Cirka 68,2% inom 1 standardavvikelse och ca 95,4% inom 2 standardavvikelser.</p>
-        </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+        <h2 class="panel-title" style="margin-bottom: 0;">📖 Teori, Metoder & Räkneexempel</h2>
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Klicka på avsnitten för att öppna/stänga genomgången</span>
+      </div>
+      <p style="color: var(--text-secondary); margin-bottom: 1.25rem;">
+        Repetera vinkelsatser, likformighet, cirkelns satser, längd-/area-/volymskala, lägesmått samt normalfördelning inför Prov Kapitel 3 och statistikdelen.
+      </p>
+
+      <div class="theory-accordion-group">
+
+        <!-- Avsnitt 4.1 -->
+        <details class="theory-accordion" open>
+          <summary class="theory-summary">
+            <div class="theory-summary-title">
+              <span class="theory-icon">📐</span>
+              <span>4.1 Trianglar, Likformighet, Skalor & Pythagoras sats</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span class="theory-badge-pill">Geometri</span>
+              <svg class="theory-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+            </div>
+          </summary>
+          <div class="theory-body">
+            <h4>Vinklar i trianglar</h4>
+            <ul class="theory-step-list">
+              <li><strong>Vinkelsumma:</strong> Vinklarna i en triangel har alltid summan $180^\circ$.</li>
+              <li><strong>Yttervinkelsatsen:</strong> Yttervinkeln $v$ till en triangel är lika med summan av de två motstående inre vinklarna:
+                $$v = \alpha + \beta$$
+              </li>
+            </ul>
+
+            <h4>Likformighet & Topptriangelsatsen</h4>
+            <p>
+              Två figurer är <strong>likformiga</strong> om de har exakt samma form (alla motsvarande vinklar är lika stora). Då är förhållandet mellan motsvarande sidor konstant:
+            </p>
+            <div class="theory-formula-highlight">
+              $$\frac{a_1}{a_2} = \frac{b_1}{b_2} = \text{längdskala } k$$
+            </div>
+
+            <h4>Längdskala, Areaskala och Volymskala</h4>
+            <div class="theory-formula-highlight">
+              $$\text{Areaskala} = (\text{Längdskala})^2 \qquad \text{Volymskala} = (\text{Längdskala})^3$$
+            </div>
+            <p>
+              <em>Exempel:</em> Om en ritning görs i längdskalan $1:5$, så förstoras arean med faktorn $5^2 = 25$ och volymen med $5^3 = 125$.
+            </p>
+
+            <h4>Pythagoras sats & Avståndsformeln</h4>
+            <ul class="theory-step-list">
+              <li><strong>Pythagoras sats:</strong> För en rätvinklig triangel med kateterna $a$ och $b$ samt hypotenusan $c$: $a^2 + b^2 = c^2$.</li>
+              <li><strong>Avståndsformeln i koordinatsystem:</strong> Avståndet $d$ mellan punkterna $(x_1, y_1)$ och $(x_2, y_2)$ härleds direkt ur Pythagoras:
+                $$d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$$
+              </li>
+            </ul>
+
+            <div class="theory-example">
+              <div class="theory-example-header">💡 Räkneexempel: Avstånd i koordinatsystem</div>
+              <div class="theory-example-content">
+                <strong>Uppgift:</strong> Beräkna avståndet mellan punkterna $A(1, 2)$ och $B(4, 6)$.<br><br>
+                <strong>Lösning:</strong>
+                <ol style="padding-left: 1.2rem; margin: 0.5rem 0;">
+                  <li>$\Delta x = x_2 - x_1 = 4 - 1 = 3$</li>
+                  <li>$\Delta y = y_2 - y_1 = 6 - 2 = 4$</li>
+                  <li>Sätt in i avståndsformeln:
+                    $$d = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = \sqrt{25} = 5$$
+                  </li>
+                </ol>
+                <strong>Svar:</strong> Avståndet är 5 längdenheter.
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- Avsnitt 4.2 -->
+        <details class="theory-accordion">
+          <summary class="theory-summary">
+            <div class="theory-summary-title">
+              <span class="theory-icon">⭕</span>
+              <span>4.2 Cirkelns geometri – Randvinkelsatsen & Thales sats</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span class="theory-badge-pill">Cirkelsatser</span>
+              <svg class="theory-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+            </div>
+          </summary>
+          <div class="theory-body">
+            <h4>Centrala begrepp i cirkeln</h4>
+            <ul class="theory-step-list">
+              <li><strong>Korda:</strong> En rät linje som sammanbinder två punkter på cirkelns periferi (rand).</li>
+              <li><strong>Medelpunktsvinkel ($v_m$):</strong> En vinkel vars spets ligger i cirkelns mittpunkt.</li>
+              <li><strong>Randvinkel ($v_r$):</strong> En vinkel vars spets ligger på cirkelns rand (periferi).</li>
+            </ul>
+
+            <h4>Randvinkelsatsen</h4>
+            <div class="theory-formula-highlight">
+              $$\text{Medelpunktsvinkeln är dubbelt så stor som randvinkeln på samma båge: } v_m = 2 \cdot v_r$$
+            </div>
+            <p>
+              Detta innebär också att <em>alla randvinklar som står på samma cirkelbåge är lika stora</em>, oavsett var på cirkeln deras spets befinner sig.
+            </p>
+
+            <h4>Thales sats (Randvinkel i en halvcirkel)</h4>
+            <div class="theory-formula-highlight">
+              $$\text{En randvinkel som spänner över en diameter (halvcirkel) är alltid } 90^\circ$$
+            </div>
+            <p>
+              Eftersom diametern bildar en medelpunktsvinkel på $180^\circ$, ger randvinkelsatsen direkt att randvinkeln blir $\frac{180^\circ}{2} = 90^\circ$.
+            </p>
+
+            <div class="theory-example">
+              <div class="theory-example-header">💡 Räkneexempel: Randvinkelsatsen</div>
+              <div class="theory-example-content">
+                <strong>Uppgift:</strong> En randvinkel som står på en cirkelbåge är $38^\circ$. Vad är medelpunktsvinkeln som spänner över samma cirkelbåge?<br><br>
+                <strong>Lösning:</strong>
+                <p style="margin: 0.5rem 0;">
+                  Enligt randvinkelsatsen är medelpunktsvinkeln $v_m = 2 \cdot v_r$:
+                  $$v_m = 2 \cdot 38^\circ = 76^\circ$$
+                </p>
+                <strong>Svar:</strong> $76^\circ$
+              </div>
+            </div>
+
+            <div class="theory-warning">
+              <span class="theory-warning-icon">⚠️</span>
+              <div>
+                <strong>Kontrollera att de står på samma cirkelbåge!</strong><br>
+                Randvinkelsatsen gäller <em>endast</em> om både medelpunktsvinkeln och randvinkeln utgår från exakt samma två punkter på cirkelns rand (samma båge).
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- Avsnitt 4.3 -->
+        <details class="theory-accordion">
+          <summary class="theory-summary">
+            <div class="theory-summary-title">
+              <span class="theory-icon">📊</span>
+              <span>4.3 Statistik – Lägesmått & Lådagram</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span class="theory-badge-pill">Statistik</span>
+              <svg class="theory-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+            </div>
+          </summary>
+          <div class="theory-body">
+            <h4>Lägesmått – Att sammanfatta data</h4>
+            <ul class="theory-step-list">
+              <li><strong>Medelvärde:</strong> Summan av alla värden delat med antalet observationer. Känsligt för extrema avvikare.</li>
+              <li><strong>Median:</strong> Det mittersta värdet när talen sorterats i storleksordning (vid jämnt antal observationer: medelvärdet av de två mittersta). Bäst när datamaterialet innehåller extremvärden (t.ex. inkomster eller huspriser).</li>
+              <li><strong>Typvärde:</strong> Det värde som förekommer flest gånger.</li>
+            </ul>
+
+            <h4>Lådagram (Box plot) & Kvartiler</h4>
+            <p>
+              Ett lådagram delar in ett sorterat datamaterial i fyra fjärdedelar (varje del innehåller 25% av mätvärdena):
+            </p>
+            <div class="theory-formula-highlight">
+              $$\text{Kvartilavstånd (IQR)} = Q_3 - Q_1$$
+            </div>
+            <ul class="theory-step-list">
+              <li><strong>Minsta värde & Största värde:</strong> Ändarna på lådagrammets "morrhår".</li>
+              <li><strong>Nedre kvartil ($Q_1$):</strong> 25% av värdena ligger under denna gräns.</li>
+              <li><strong>Median ($Q_2$):</strong> Strecket inuti lådan (50% ligger under, 50% över).</li>
+              <li><strong>Övre kvartil ($Q_3$):</strong> 75% av värdena ligger under denna gräns.</li>
+              <li><strong>Själva lådan:</strong> Rymmer de mittersta 50% av alla observationer.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Avsnitt 4.4 -->
+        <details class="theory-accordion">
+          <summary class="theory-summary">
+            <div class="theory-summary-title">
+              <span class="theory-icon">🔔</span>
+              <span>4.4 Normalfördelning & Standardavvikelse</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span class="theory-badge-pill">Normalfördelning</span>
+              <svg class="theory-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+            </div>
+          </summary>
+          <div class="theory-body">
+            <h4>Klockkurvan och dess parametrar</h4>
+            <p>
+              Många biologiska och tekniska mätningar (kroppslängd, provresultat, skostorlekar) är <strong>normalfördelade</strong>. Fördelningen är helt symmetrisk och bestäms av två mått:
+            </p>
+            <ul class="theory-step-list">
+              <li><strong>Medelvärdet ($\mu$):</strong> Kurvans högsta punkt och symmetrilinje i mitten.</li>
+              <li><strong>Standardavvikelsen ($\sigma$):</strong> Ett mått på mätvärdenas spridning kring medelvärdet (kurvans bredd).</li>
+            </ul>
+
+            <h4>De gyllene procentreglerna (Standardintervallen)</h4>
+            <div class="theory-formula-highlight">
+              $$\text{Inom } \mu \pm 1\sigma: \quad \approx 68{,}2\% \quad (34{,}1\% \text{ på vardera sida})$$
+              $$\text{Inom } \mu \pm 2\sigma: \quad \approx 95{,}4\% \quad (\text{ytterligare } 13{,}6\% \text{ per sida})$$
+              $$\text{Inom } \mu \pm 3\sigma: \quad \approx 99{,}7\% \quad (\text{ytterligare } 2{,}15\% \text{ per sida})$$
+            </div>
+
+            <h4>Percentiler</h4>
+            <p>
+              En percentil anger hur stor andel av observationerna som ligger <em>under</em> ett visst värde:
+            </p>
+            <ul class="theory-step-list">
+              <li>Värdet vid medelvärdet $\mu$ är den <strong>50:e percentilen</strong>.</li>
+              <li>Värdet vid $\mu + 1\sigma$ är den <strong>84:e percentilen</strong> ($50\% + 34{,}1\% = 84{,}1\%$).</li>
+              <li>Värdet vid $\mu + 2\sigma$ är ungefär den <strong>97,7:e percentilen</strong> ($84{,}1\% + 13{,}6\% = 97{,}7\%$).</li>
+            </ul>
+
+            <div class="theory-example">
+              <div class="theory-example-header">💡 Räkneexempel: Kroppslängd och normalfördelning</div>
+              <div class="theory-example-content">
+                <strong>Uppgift:</strong> Längden hos en grupp gymnasieelever är normalfördelad med medelvärdet $\mu = 175\text{ cm}$ och standardavvikelsen $\sigma = 6\text{ cm}$.<br><br>
+                <strong>a) Hur stor andel av eleverna är mellan 169 cm och 181 cm långa?</strong><br>
+                $169 = 175 - 6 = \mu - 1\sigma$ och $181 = 175 + 6 = \mu + 1\sigma$.<br>
+                Detta motsvarar intervallet $\mu \pm 1\sigma$, vilket är cirka <strong>$68{,}2\%$</strong>.<br><br>
+                <strong>b) Hur stor andel är längre än 181 cm?</strong><br>
+                $50\%$ är längre än medelvärdet $175\text{ cm}$. Från $175$ till $181\text{ cm}$ finns $34{,}1\%$.<br>
+                Andelen över $181\text{ cm}$ är: $50\% - 34{,}1\% = \mathbf{15{,}9\%}$.
+              </div>
+            </div>
+
+            <div class="theory-warning">
+              <span class="theory-warning-icon">⚠️</span>
+              <div>
+                <strong>Fallgrop vid percentiler:</strong> Kom ihåg att räkna från kurvans absoluta vänsterkant (0%), inte från mitten! Vid $\mu + 1\sigma$ har du alla $50\%$ till vänster om medelvärdet PLUS de $34{,}1\%$ mellan medelvärdet och $+1\sigma$, dvs totalt ca $84\%$.
+              </div>
+            </div>
+          </div>
+        </details>
+
       </div>
     </section>
 
     <!-- INTERAKTIVT TEST FÖR MODUL 4 -->
-    <section class="content-panel" id="single-module-quiz-section" style="border-color: rgba(56, 189, 248, 0.3); background: linear-gradient(135deg, rgba(56, 189, 248, 0.04) 0%, rgba(99, 102, 241, 0.02) 100%);">
+    <section class="content-panel" id="single-module-quiz-section" style="scroll-margin-top: 2rem; border-color: rgba(56, 189, 248, 0.3); background: linear-gradient(135deg, rgba(56, 189, 248, 0.04) 0%, rgba(99, 102, 241, 0.02) 100%);">
       <div style="margin-bottom: 1.5rem;">
         <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--color-math); letter-spacing: 0.05em; background: rgba(56, 189, 248, 0.15); padding: 0.2rem 0.6rem; border-radius: 999px;">
           Självrättande Test
@@ -135,7 +353,7 @@
           <span id="single-module-topic-title" style="font-weight: 700; font-family: var(--font-heading); font-size: 1.15rem; color: var(--color-math);">
             📊 Modul 4: Geometri & Statistik
           </span>
-          <span class="question-badge" id="single-module-progress-text">Fråga 1 av 7</span>
+          <span class="question-badge" id="single-module-progress-text">Fråga 1 av 8</span>
         </div>
 
         <div class="quiz-progress-bar-bg">

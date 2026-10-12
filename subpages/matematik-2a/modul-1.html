@@ -86,34 +86,196 @@
           Repetition och grundläggande verktyg inför kursens första kapiteltest. Här tränar du på negativa tal, bråkräkning med variabler, förenkling av algebraiska uttryck, formelomvandling och funktionsbegreppet.
         </p>
       </div>
-      <div>
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="#single-module-quiz-section" class="solver-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
+          ✍️ Hoppa till quizet ↓
+        </a>
         <a href="index.html" class="solver-btn" style="text-decoration: none; display: inline-block; background: var(--bg-surface-elevated); color: var(--text-primary); border: 1px solid var(--border-color); box-shadow: none;">
           ← Alla moduler
         </a>
       </div>
     </section>
 
-    <!-- Modulöversikt & Centrala moment -->
+    <!-- ======================================================================
+         TEORIAVSNITT FÖR MODUL 1
+         ====================================================================== -->
     <section class="content-panel" style="margin-bottom: 2rem;">
-      <h2 class="panel-title">📖 Moment som ingår i Modul 1</h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem;">
-        <div class="formula-card">
-          <h4 style="color: var(--color-math);">1. Taluppfattning & Bråk</h4>
-          <p class="formula-desc">Räkneregler för negativa tal, prioriteringsordning och bråkräkning med minsta gemensamma nämnare (MGN).</p>
-        </div>
-        <div class="formula-card">
-          <h4 style="color: var(--color-math);">2. Uttryck & Formler</h4>
-          <p class="formula-desc">Multiplikation in i parenteser med teckenbyte och balansmetoden för att lösa ut variabler.</p>
-        </div>
-        <div class="formula-card">
-          <h4 style="color: var(--color-math);">3. Funktionsbegreppet</h4>
-          <p class="formula-desc">Funktionsvärden f(x), värdetabeller, koordinatsystem samt skillnaden mellan uttryck, ekvation och funktion.</p>
-        </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+        <h2 class="panel-title" style="margin-bottom: 0;">📖 Teori, Metoder & Räkneexempel</h2>
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Klicka på avsnitten för att öppna/stänga genomgången</span>
+      </div>
+      <p style="color: var(--text-secondary); margin-bottom: 1.25rem;">
+        Repetera de centrala metoderna inför Test Kapitel 1. Här hittar du räkneregler, steg-för-steg-lösningar och vanliga fallgropar.
+      </p>
+
+      <div class="theory-accordion-group">
+
+        <!-- Avsnitt 1.1 -->
+        <details class="theory-accordion" open>
+          <summary class="theory-summary">
+            <div class="theory-summary-title">
+              <span class="theory-icon">🔣</span>
+              <span>1.1 Teckenregler och bråkräkning med variabler</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span class="theory-badge-pill">Grunder</span>
+              <svg class="theory-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+            </div>
+          </summary>
+          <div class="theory-body">
+            <h4>Räkneregler för tecken & parenteser</h4>
+            <p>När du multiplicerar och förenklar uttryck gäller följande grundregler:</p>
+            <ul class="theory-step-list">
+              <li><strong>Lika tecken ger plus:</strong> $(-a) \cdot (-b) = a \cdot b$ och $\frac{-a}{-b} = \frac{a}{b}$</li>
+              <li><strong>Olika tecken ger minus:</strong> $a \cdot (-b) = -ab$ och $\frac{-a}{b} = -\frac{a}{b}$</li>
+              <li><strong>Minustecken framför parentes:</strong> Ändrar tecken på alla termer inuti: $-(a - b) = -a + b$</li>
+            </ul>
+
+            <h4>Bråkräkning med siffernämnare</h4>
+            <p>
+              I Matematik 2a har bråkuttryck nästan alltid siffernämnare. För att addera eller subtrahera bråk måste de ha samma nämnare – vi bestämmer <strong>Minsta Gemensamma Nämnare (MGN)</strong>.
+            </p>
+            <div class="theory-formula-highlight">
+              $$\frac{ax}{b} \pm \frac{cx}{d} = \frac{ax \cdot d \pm cx \cdot b}{b \cdot d}$$
+            </div>
+
+            <ol class="theory-step-list">
+              <li><strong>Hitta MGN</strong> för siffernämnarna (t.ex. MGN för 4 och 6 är 12).</li>
+              <li><strong>Förläng</strong> både täljare och nämnare i varje bråk så att alla får samma nämnare.</li>
+              <li><strong>Sätt på gemensamt bråkstreck</strong>. Sätt alltid en parentes runt täljare som subtraheras!</li>
+              <li><strong>Förenkla täljaren</strong> genom att kombinera termer, och förkorta bråket om möjligt.</li>
+            </ol>
+
+            <div class="theory-example">
+              <div class="theory-example-header">💡 Räkneexempel: Subtraktion av bråk</div>
+              <div class="theory-example-content">
+                <strong>Uppgift:</strong> Förenkla uttrycket $\frac{3x}{4} - \frac{x - 2}{6}$<br><br>
+                <strong>Lösning:</strong>
+                <ol style="padding-left: 1.2rem; margin: 0.5rem 0;">
+                  <li>MGN för 4 och 6 är 12.</li>
+                  <li>Förläng första bråket med 3: $\frac{3x \cdot 3}{4 \cdot 3} = \frac{9x}{12}$</li>
+                  <li>Förläng andra bråket med 2: $\frac{2(x - 2)}{6 \cdot 2} = \frac{2x - 4}{12}$</li>
+                  <li>Sätt på gemensamt streck med parentes: $\frac{9x - (2x - 4)}{12}$</li>
+                  <li>Byt tecken och förenkla: $\frac{9x - 2x + 4}{12} = \frac{7x + 4}{12}$</li>
+                </ol>
+                <strong>Svar:</strong> $\frac{7x + 4}{12}$
+              </div>
+            </div>
+
+            <div class="theory-warning">
+              <span class="theory-warning-icon">⚠️</span>
+              <div>
+                <strong>Se upp för minustecknet framför bråket!</strong><br>
+                Ett vanligt fel är att skriva $9x - 2x - 4$. Minustecknet framför bråkstrecket påverkar <em>hela</em> täljaren: $-(2x - 4) = -2x + 4$.
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- Avsnitt 1.2 -->
+        <details class="theory-accordion">
+          <summary class="theory-summary">
+            <div class="theory-summary-title">
+              <span class="theory-icon">⚖️</span>
+              <span>1.2 Ekvationslösning & Formelomvandling</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span class="theory-badge-pill">Metod</span>
+              <svg class="theory-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+            </div>
+          </summary>
+          <div class="theory-body">
+            <h4>Balansmetoden</h4>
+            <p>
+              Grunden för all ekvationslösning och formelomvandling är <strong>balansmetoden</strong>: det du gör i vänsterledet ($VL$) måste du göra exakt likadant i högerledet ($HL$).
+            </p>
+
+            <h4>Steg-för-steg: Lösa ut en variabel ur en formel</h4>
+            <ol class="theory-step-list">
+              <li><strong>Multiplicera bort nämnare</strong> om det finns bråk i formeln.</li>
+              <li><strong>Flytta bort fria termer</strong> från den sida där den sökta variabeln finns (subtrahera eller addera till båda sidor).</li>
+              <li><strong>Dividera med koefficienten</strong> (faktorn framför variabeln) så att variabeln blir helt ensam.</li>
+            </ol>
+
+            <div class="theory-example">
+              <div class="theory-example-header">💡 Räkneexempel: Lösa ut variabel</div>
+              <div class="theory-example-content">
+                <strong>Uppgift:</strong> Lös ut accelerationen $a$ ur hastighetsformeln $v = v_0 + at$<br><br>
+                <strong>Lösning:</strong>
+                <ol style="padding-left: 1.2rem; margin: 0.5rem 0;">
+                  <li>Subtrahera starthastigheten $v_0$ från båda sidor:
+                    $$v - v_0 = at$$
+                  </li>
+                  <li>Dividera båda sidor med tiden $t$ (där $t \neq 0$):
+                    $$\frac{v - v_0}{t} = a$$
+                  </li>
+                </ol>
+                <strong>Svar:</strong> $a = \frac{v - v_0}{t}$
+              </div>
+            </div>
+
+            <div class="theory-warning">
+              <span class="theory-warning-icon">⚠️</span>
+              <div>
+                <strong>Vanlig fallgrop:</strong> Dividera inte för tidigt! Om du dividerar $v = v_0 + at$ med $t$ direkt måste du dividera <em>varje enskild term</em> ($v/t = v_0/t + a$), vilket gör uträkningen onödigt krånglig. Flytta alltid termer med $+$ och $-$ först!
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- Avsnitt 1.3 -->
+        <details class="theory-accordion">
+          <summary class="theory-summary">
+            <div class="theory-summary-title">
+              <span class="theory-icon">📈</span>
+              <span>1.3 Funktionsbegreppet $f(x)$ & Skillnad på begrepp</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span class="theory-badge-pill">Begrepp</span>
+              <svg class="theory-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+            </div>
+          </summary>
+          <div class="theory-body">
+            <h4>Skillnaden mellan Uttryck, Ekvation och Funktion</h4>
+            <ul class="theory-step-list">
+              <li><strong>Algebraiskt uttryck:</strong> En matematisk formel utan likhetstecken (t.ex. $4x - 7$). Kan förenklas eller beräknas för ett givet $x$, men kan inte "lösas".</li>
+              <li><strong>Ekvation:</strong> Två uttryck som sätts lika med varandra (t.ex. $4x - 7 = 13$). Innehåller en likhet och har en eller flera lösningar ($x = 5$).</li>
+              <li><strong>Funktion:</strong> En regel eller ett samband mellan två variabler: invärde ($x$) och utvärde ($y = f(x)$). Varje tillåtet $x$-värde ger exakt ett $y$-värde.</li>
+            </ul>
+
+            <h4>Funktionsvärde vs att lösa en ekvation</h4>
+            <div class="theory-formula-highlight">
+              $$\text{Beräkna } f(a): \text{ Sätt in } x = a \text{ i formeln.}$$
+              $$\text{Lös } f(x) = b: \text{ Sätt hela uttrycket lika med } b \text{ och lös ut } x.$$
+            </div>
+
+            <div class="theory-example">
+              <div class="theory-example-header">💡 Räkneexempel: Beräkna funktionsvärde</div>
+              <div class="theory-example-content">
+                <strong>Givet funktionen:</strong> $f(x) = 3x^2 - 5x + 2$<br><br>
+                <strong>a) Bestäm $f(-2)$:</strong><br>
+                Ersätt varje $x$ med $(-2)$:
+                $$f(-2) = 3(-2)^2 - 5(-2) + 2 = 3(4) + 10 + 2 = 12 + 10 + 2 = 24$$
+                <strong>b) För funktionen $g(x) = 5x - 7$, bestäm $x$ då $g(x) = 18$:</strong><br>
+                Sätt uttrycket lika med 18:
+                $$5x - 7 = 18 \implies 5x = 25 \implies x = 5$$
+              </div>
+            </div>
+
+            <div class="theory-warning">
+              <span class="theory-warning-icon">⚠️</span>
+              <div>
+                <strong>Parentes kring negativa tal:</strong> När du beräknar $f(-2)$ för en term med $x^2$, tänk på att $(-2)^2 = +4$, medan $-2^2 = -4$. Använd alltid parentes runt negativa tal när du sätter in dem!
+              </div>
+            </div>
+          </div>
+        </details>
+
       </div>
     </section>
 
     <!-- INTERAKTIVT TEST FÖR MODUL 1 -->
-    <section class="content-panel" id="single-module-quiz-section" style="border-color: rgba(56, 189, 248, 0.3); background: linear-gradient(135deg, rgba(56, 189, 248, 0.04) 0%, rgba(99, 102, 241, 0.02) 100%);">
+    <section class="content-panel" id="single-module-quiz-section" style="scroll-margin-top: 2rem; border-color: rgba(56, 189, 248, 0.3); background: linear-gradient(135deg, rgba(56, 189, 248, 0.04) 0%, rgba(99, 102, 241, 0.02) 100%);">
       <div style="margin-bottom: 1.5rem;">
         <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--color-math); letter-spacing: 0.05em; background: rgba(56, 189, 248, 0.15); padding: 0.2rem 0.6rem; border-radius: 999px;">
           Självrättande Test
@@ -132,7 +294,7 @@
           <span id="single-module-topic-title" style="font-weight: 700; font-family: var(--font-heading); font-size: 1.15rem; color: var(--color-math);">
             🔣 Modul 1: Algebra & Funktioner
           </span>
-          <span class="question-badge" id="single-module-progress-text">Fråga 1 av 6</span>
+          <span class="question-badge" id="single-module-progress-text">Fråga 1 av 8</span>
         </div>
 
         <div class="quiz-progress-bar-bg">

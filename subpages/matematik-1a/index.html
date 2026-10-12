@@ -232,6 +232,46 @@
       cursor: default;
     }
 
+    .opt-key-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      border-radius: var(--radius-sm);
+      background: var(--badge-bg);
+      border: 1.5px solid var(--border-color);
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      flex-shrink: 0;
+      margin-right: 1rem;
+      transition: all var(--transition-fast);
+      user-select: none;
+    }
+
+    .option-btn:hover:not(:disabled) .opt-key-badge {
+      color: #ffffff;
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      transform: scale(1.05);
+    }
+
+    .option-btn.correct .opt-key-badge {
+      background: #10b981 !important;
+      color: #ffffff !important;
+      border-color: #10b981 !important;
+    }
+
+    .option-btn.incorrect .opt-key-badge {
+      background: #ef4444 !important;
+      color: #ffffff !important;
+      border-color: #ef4444 !important;
+    }
+
     /* Feedback-panel */
     .feedback-panel {
       border-radius: var(--radius-md);
@@ -925,7 +965,7 @@
         optionsHTML += `
           <button class="option-btn" onclick="handleOptionSelect(${idx})" id="opt-btn-${idx}">
             <div style="display: flex; align-items: center;">
-              <span class="opt-key-badge">[${idx + 1}]</span>
+              <span class="opt-key-badge">${idx + 1}</span>
               <span>${opt.text}</span>
             </div>
             <span class="opt-indicator" id="opt-ind-${idx}"></span>

@@ -975,25 +975,40 @@ img, svg {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 34px;
-  height: 24px;
-  padding: 0 6px;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
   border-radius: var(--radius-sm);
-  background: var(--bg-body);
-  border: 1px solid var(--border-color);
+  background: var(--badge-bg);
+  border: 1.5px solid var(--border-color);
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: var(--accent-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
-  margin-right: 0.85rem;
+  margin-right: 1rem;
   transition: all var(--transition-fast);
+  user-select: none;
 }
 
 .option-btn:hover:not(:disabled) .opt-key-badge {
-  color: var(--accent-primary);
+  color: #ffffff;
+  background: var(--accent-primary);
   border-color: var(--accent-primary);
-  background: var(--bg-surface-elevated);
+  transform: scale(1.05);
+}
+
+.option-btn.correct .opt-key-badge {
+  background: #10b981 !important;
+  color: #ffffff !important;
+  border-color: #10b981 !important;
+}
+
+.option-btn.incorrect .opt-key-badge {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
 }
 
 .progress-badge-pill {

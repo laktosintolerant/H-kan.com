@@ -138,6 +138,47 @@
               'Funktion: beskriver ett beroende/samband mellan en oberoende variabel (x) och en beroende variabel (y).'
             ]
           }
+        },
+        {
+          id: 'm1-q7',
+          difficulty: 'Grund',
+          question: 'Lös den linjära ekvationen: <span class="math-expr">5x − 7 = 2x + 8</span>',
+          options: [
+            { text: 'x = 5', correct: true },
+            { text: 'x = 1/3', correct: false },
+            { text: 'x = 15', correct: false },
+            { text: 'x = 3', correct: false }
+          ],
+          explanation: {
+            summary: 'Samla alla x-termer på ena sidan och siffertermerna på den andra sidan med hjälp av balansmetoden.',
+            steps: [
+              'Börja med: 5x − 7 = 2x + 8',
+              'Subtrahera 2x från båda led: 3x − 7 = 8',
+              'Addera 7 till båda led: 3x = 15',
+              'Dividera med 3: x = 15 / 3 = 5',
+              'Prövning: VL = 5(5) − 7 = 18. HL = 2(5) + 8 = 18. (Stämmer!)'
+            ]
+          }
+        },
+        {
+          id: 'm1-q8',
+          difficulty: 'Grund',
+          question: 'Kostnaden för att hyra en skåpbil ges av formeln <span class="math-expr">K(x) = 300 + 25x</span> kr, där <span class="math-expr">x</span> är antalet körda mil. Vad blir totalkostnaden om man kör 8 mil, dvs beräkna <span class="math-expr">K(8)</span>?',
+          options: [
+            { text: '500 kr', correct: true },
+            { text: '325 kr', correct: false },
+            { text: '200 kr', correct: false },
+            { text: '550 kr', correct: false }
+          ],
+          explanation: {
+            summary: 'Ersätt x med 8 i formeln och beräkna värdet enligt prioriteringsreglerna (multiplikation före addition).',
+            steps: [
+              'Sätt in x = 8: K(8) = 300 + 25 · 8',
+              'Multiplicera milersättningen först: 25 · 8 = 200 kr',
+              'Addera grundavgiften: 300 + 200 = 500 kr',
+              'Svar: Att köra 8 mil kostar 500 kr.'
+            ]
+          }
         }
       ]
     },
@@ -146,11 +187,68 @@
       title: 'Modul 2: Räta Linjen & Ekvationssystem',
       badge: 'Prov Kap 1',
       icon: '⚖️',
-      description: 'Räta linjens ekvation y = kx + m, grafisk lösning, substitutions- och additionsmetoden.',
+      description: 'Räta linjens ekvation y = kx + m, tolkning av k och m, parallella linjer, grafisk lösning samt substitutions- och additionsmetoden.',
       weeks: 'Vecka 40–47',
       questions: [
         {
           id: 'm2-q1',
+          difficulty: 'Grund',
+          question: 'Vilken lutning (<span class="math-expr">k</span>-värde) och vilket skärningsvärde med <span class="math-expr">y</span>-axeln (<span class="math-expr">m</span>-värde) har den räta linjen: <span class="math-expr">y = 4x − 7</span> ?',
+          options: [
+            { text: 'k = 4 och m = −7', correct: true },
+            { text: 'k = −7 och m = 4', correct: false },
+            { text: 'k = 4 och m = 7', correct: false },
+            { text: 'k = −4 och m = −7', correct: false }
+          ],
+          explanation: {
+            summary: 'I räta linjens ekvation på formen y = kx + m är talet framför x alltid linjens riktningskoefficient (k), och den fristående konstanten är m-värdet.',
+            steps: [
+              'Jämför ekvationen y = 4x − 7 med standardformen y = kx + m.',
+              'Lutningen k står framför x: k = 4 (grafen ökar med 4 enheter i y-led för varje steg i x-led).',
+              'Konstanten m anger var linjen skär y-axeln: m = −7 (linjen korsar y-axeln vid punkten (0, −7)). Glöm inte minustecknet framför 7!'
+            ]
+          }
+        },
+        {
+          id: 'm2-q2',
+          difficulty: 'Grund',
+          question: 'En hantverkare fakturerar enligt formeln <span class="math-expr">K = 450x + 600</span>, där <span class="math-expr">K</span> är totalkostnaden i kronor och <span class="math-expr">x</span> är antalet arbetade timmar. Vad representerar talen <strong>600</strong> och <strong>450</strong>?',
+          options: [
+            { text: '600 kr är startavgiften (fast kostnad, m-värde) och 450 kr är timpriset (rörlig kostnad, k-värde)', correct: true },
+            { text: '450 kr är startavgiften och 600 kr är timpriset', correct: false },
+            { text: '600 kr är maxpriset och 450 kr är totala antalet arbetstimmar', correct: false },
+            { text: 'Båda talen representerar timpriser för olika hantverkare', correct: false }
+          ],
+          explanation: {
+            summary: 'I en linjär kostnadsmodell motsvarar m-värdet alltid den fasta startkostnaden (då x = 0), och k-värdet är den rörliga kostnaden per enhet (här timpriset).',
+            steps: [
+              'Om hantverkaren arbetar 0 timmar (x = 0): K = 450 · 0 + 600 = 600 kr. 600 kr är alltså den fasta framkörningsavgiften/startavgiften (m-värdet).',
+              'För varje timme x ökar kostnaden med 450 kr. 450 kr är alltså timpriset (lutningen, k-värdet).',
+              'Att tolka fasta och rörliga kostnader som m- och k-värden är ett mycket centralt moment i Matematik 2a.'
+            ]
+          }
+        },
+        {
+          id: 'm2-q3',
+          difficulty: 'Grund',
+          question: 'Om en rät linje lutar nedåt från vänster till höger (grafen sjunker), vad gäller då för linjens riktningskoefficient (<span class="math-expr">k</span>-värde)?',
+          options: [
+            { text: 'k < 0 (lutningen är negativ)', correct: true },
+            { text: 'k > 0 (lutningen är positiv)', correct: false },
+            { text: 'k = 0 (linjen är horisontell)', correct: false },
+            { text: 'k = 1', correct: false }
+          ],
+          explanation: {
+            summary: 'Riktningskoefficienten anger linjens lutning och tecknet bestämmer om linjen stiger eller sjunker.',
+            steps: [
+              'k > 0 (positiv lutning): Grafen stiger från vänster till höger ("uppförsbacke").',
+              'k < 0 (negativ lutning): Grafen sjunker från vänster till höger ("nedförsbacke").',
+              'k = 0: Grafen är helt vågrät (horisontell linje, y = m).'
+            ]
+          }
+        },
+        {
+          id: 'm2-q4',
           difficulty: 'Grund',
           question: 'En rät linje passerar genom punkterna <span class="math-expr">(1, 3)</span> och <span class="math-expr">(4, 12)</span>. Vad är linjens lutning (<span class="math-expr">k</span>-värde)?',
           options: [
@@ -171,7 +269,27 @@
           }
         },
         {
-          id: 'm2-q2',
+          id: 'm2-q5',
+          difficulty: 'Grund',
+          question: 'En rät linje har lutningen <span class="math-expr">k = 2</span> och skär <span class="math-expr">y</span>-axeln i punkten <span class="math-expr">(0, 5)</span>. Vad är linjens ekvation?',
+          options: [
+            { text: 'y = 2x + 5', correct: true },
+            { text: 'y = 5x + 2', correct: false },
+            { text: 'y = 2x − 5', correct: false },
+            { text: 'y = −2x + 5', correct: false }
+          ],
+          explanation: {
+            summary: 'När linjens skärning med y-axeln är känd kan vi läsa av m-värdet direkt: punkten (0, 5) innebär att m = 5.',
+            steps: [
+              'Räta linjens ekvation är y = kx + m.',
+              'Givet att lutningen är k = 2.',
+              'Eftersom linjen skär y-axeln i (0, 5) är startvärdet m = 5.',
+              'Ekvationen blir direkt: y = 2x + 5.'
+            ]
+          }
+        },
+        {
+          id: 'm2-q6',
           difficulty: 'Grund',
           question: 'En rät linje har lutningen <span class="math-expr">k = −2</span> och går genom punkten <span class="math-expr">(3, 4)</span>. Vad är linjens ekvation?',
           options: [
@@ -181,7 +299,7 @@
             { text: 'y = 2x + 10', correct: false }
           ],
           explanation: {
-            summary: 'Använd räta linjens ekvation y = kx + m och bestäm m-värdet genom att sätta in den kända punkten.',
+            summary: 'Använd y = kx + m och sätt in k samt punktens koordinater för att beräkna m-värdet.',
             steps: [
               'y = kx + m med k = −2 ger: y = −2x + m',
               'Sätt in x = 3 och y = 4:',
@@ -192,27 +310,46 @@
           }
         },
         {
-          id: 'm2-q3',
-          difficulty: 'Medel',
-          question: 'Två linjer är <em>vinkelräta</em> mot varandra. Den ena linjen har ekvationen <span class="math-expr">y = 4x − 5</span>. Vad måste den andra linjens <span class="math-expr">k</span>-värde vara?',
+          id: 'm2-q7',
+          difficulty: 'Grund',
+          question: 'Två linjer är <em>parallella</em>. Den ena linjen har ekvationen <span class="math-expr">y = 3x − 2</span>. Vilken av följande linjer är parallell med den?',
           options: [
-            { text: 'k = −1/4 = −0,25', correct: true },
-            { text: 'k = 4', correct: false },
-            { text: 'k = −4', correct: false },
-            { text: 'k = 1/4 = 0,25', correct: false }
+            { text: 'y = 3x + 5', correct: true },
+            { text: 'y = −3x − 2', correct: false },
+            { text: 'y = (1/3)x + 5', correct: false },
+            { text: 'y = 2x + 3', correct: false }
           ],
           explanation: {
-            summary: 'Villkoret för att två linjer ska vara vinkelräta (ortogonala) är k₁ · k₂ = −1.',
+            summary: 'Parallella linjer har alltid exakt samma lutning, vilket betyder att de har samma k-värde (k₁ = k₂).',
             steps: [
-              'Givet k₁ = 4:',
-              '4 · k₂ = −1',
-              'k₂ = −1 / 4 = −0,25',
-              '(Om linjerna istället hade varit parallella hade k₂ varit lika med 4).'
+              'Linjen y = 3x − 2 har lutningen k = 3.',
+              'En linje som är parallell måste också ha k = 3.',
+              'Bland alternativen har endast linjen y = 3x + 5 lutningen k = 3.',
+              '(Eftersom linjerna har olika m-värden, −2 och +5, kommer de aldrig att skära varandra).'
             ]
           }
         },
         {
-          id: 'm2-q4',
+          id: 'm2-q8',
+          difficulty: 'Begrepp',
+          question: 'Två räta linjer ritas i ett koordinatsystem och skär varandra i punkten <span class="math-expr">(2, 7)</span>. Vad är lösningen till det linjära ekvationssystem som linjerna representerar?',
+          options: [
+            { text: 'x = 2 och y = 7', correct: true },
+            { text: 'x = 7 och y = 2', correct: false },
+            { text: 'x = 9 och y = 0', correct: false },
+            { text: 'Det går inte att avgöra utan att veta linjernas formler', correct: false }
+          ],
+          explanation: {
+            summary: 'Den grafiska lösningen till ett linjärt ekvationssystem är alltid linjernas gemensamma skärningspunkt (x, y).',
+            steps: [
+              'Skärningspunkten är den enda punkt som ligger på båda linjerna samtidigt.',
+              'Det innebär att koordinaterna i punkten gör båda ekvationerna sanna på en gång.',
+              'Skärningspunkten (2, 7) betyder direkt att lösningen är x = 2 och y = 7.'
+            ]
+          }
+        },
+        {
+          id: 'm2-q9',
           difficulty: 'Medel',
           question: 'Lös ekvationssystemet med substitutionsmetoden: <br><span class="math-expr">y = 2x − 1</span><br><span class="math-expr">3x + 2y = 12</span>',
           options: [
@@ -234,7 +371,7 @@
           }
         },
         {
-          id: 'm2-q5',
+          id: 'm2-q10',
           difficulty: 'Medel',
           question: 'Lös ekvationssystemet med additionsmetoden: <br><span class="math-expr">2x + y = 9</span><br><span class="math-expr">3x − y = 6</span>',
           options: [
@@ -256,9 +393,31 @@
           }
         },
         {
-          id: 'm2-q6',
-          difficulty: 'Fördjupning',
-          question: 'Hur många lösningar har ekvationssystemet: <br><span class="math-expr">2x − y = 4</span><br><span class="math-expr">4x − 2y = 6</span> ?',
+          id: 'm2-q11',
+          difficulty: 'Grund',
+          question: 'På ett bygge köper man in material i två omgångar: <br>• Inköp 1: <strong>2 paket skruv och 1 paket spik</strong> kostar <strong>140 kr</strong>.<br>• Inköp 2: <strong>1 paket skruv och 1 paket spik</strong> kostar <strong>90 kr</strong>.<br>Vad kostar ett paket skruv (<span class="math-expr">x</span>)?',
+          options: [
+            { text: '50 kr', correct: true },
+            { text: '40 kr', correct: false },
+            { text: '45 kr', correct: false },
+            { text: '70 kr', correct: false }
+          ],
+          explanation: {
+            summary: 'Ställ upp ett ekvationssystem där skillnaden mellan inköpen ger priset direkt.',
+            steps: [
+              'Låt x = pris per paket skruv och y = pris per paket spik.',
+              'Ekvation 1: 2x + y = 140',
+              'Ekvation 2: x + y = 90',
+              'Subtrahera ekvation 2 från ekvation 1: (2x − x) + (y − y) = 140 − 90',
+              'x = 50 kr.',
+              'Ett paket skruv kostar 50 kr (och ett paket spik kostar 90 − 50 = 40 kr).'
+            ]
+          }
+        },
+        {
+          id: 'm2-q12',
+          difficulty: 'Begrepp',
+          question: 'Två linjer har ekvationerna <span class="math-expr">y = 2x + 3</span> och <span class="math-expr">y = 2x − 5</span>. Hur många lösningar har ekvationssystemet som bildas av linjerna?',
           options: [
             { text: 'Saknar lösning (0 lösningar)', correct: true },
             { text: 'Exakt en unik lösning', correct: false },
@@ -266,12 +425,13 @@
             { text: 'Två lösningar', correct: false }
           ],
           explanation: {
-            summary: 'Skriv om ekvationerna på formen y = kx + m för att jämföra lutning och skärningspunkt med y-axeln.',
+            summary: 'Linjer som har samma lutning men olika m-värden är parallella och skär aldrig varandra.',
             steps: [
-              'Ekvation 1: 2x − y = 4  =>  y = 2x − 4 (k = 2, m = −4)',
-              'Ekvation 2: 4x − 2y = 6  =>  2y = 4x − 6  =>  y = 2x − 3 (k = 2, m = −3)',
-              'Linjerna har samma lutning (k = 2) men olika m-värden (−4 resp −3).',
-              'De är alltså parallella och kommer aldrig att skära varandra. Systemet saknar därför lösning!'
+              'Linje 1 har k = 2 och m = 3.',
+              'Linje 2 har k = 2 och m = −5.',
+              'Eftersom de har samma lutning (k₁ = k₂ = 2) är de parallella.',
+              'Eftersom m₁ ≠ m₂ möts linjerna aldrig i något gemensamt värdepar (x, y).',
+              'Ekvationssystemet saknar därför skärningspunkt och har 0 lösningar.'
             ]
           }
         }
@@ -425,6 +585,26 @@
               'Modellen blir: y = 20 000 · 0,85^x'
             ]
           }
+        },
+        {
+          id: 'm3-q8',
+          difficulty: 'Medel',
+          question: 'Lös exponentialekvationen med hjälp av tiologaritmer: <span class="math-expr">3 · 2^x = 48</span>',
+          options: [
+            { text: 'x = 4', correct: true },
+            { text: 'x = 8', correct: false },
+            { text: 'x = 16', correct: false },
+            { text: 'x = 2', correct: false }
+          ],
+          explanation: {
+            summary: 'Isolera potensen 2^x först genom att dividera med 3, och logaritmera sedan båda sidor.',
+            steps: [
+              'Dividera båda sidor med 3: 2^x = 48 / 3 = 16',
+              'Logaritmera båda led: lg(2^x) = lg(16)',
+              'Flytta ner exponenten: x · lg(2) = lg(16)',
+              'Beräkna x: x = lg(16) / lg(2) = 4 (eftersom 2⁴ = 16)'
+            ]
+          }
         }
       ]
     },
@@ -567,6 +747,26 @@
               'Andel mellan μ och μ + 1σ = 34,1%',
               'Total andel under μ + 1σ = 50% + 34,1% = 84,1% ≈ 84%',
               'Poängen för 84:e percentilen = μ + 1σ = 50 + 10 = 60 poäng.'
+            ]
+          }
+        },
+        {
+          id: 'm4-q8',
+          difficulty: 'Medel',
+          question: 'En förpackning förstoras så att alla dess sidor görs <strong>3 gånger så långa</strong> (längdskalan är 3 : 1). Hur många gånger större blir förpackningens <strong>volym</strong>?',
+          options: [
+            { text: '27 gånger större (3³ = 27)', correct: true },
+            { text: '9 gånger större (3² = 9)', correct: false },
+            { text: '3 gånger större (lika med längdskalan)', correct: false },
+            { text: '6 gånger större', correct: false }
+          ],
+          explanation: {
+            summary: 'Vid geometrisk förstoring/förminskning är volymskalan lika med längdskalan upphöjt till 3: Volymskala = (Längdskala)³.',
+            steps: [
+              'Längdskalan är k = 3.',
+              'Areaskalan motsvarar k² = 3² = 9 (ytarean ökar med 9 gånger).',
+              'Volymskalan motsvarar k³ = 3³ = 3 · 3 · 3 = 27 (volymen rymmer 27 gånger mer).',
+              'Detta samband mellan längd-, area- och volymskala är ett centralt kunskapsmål i Matematik 2a.'
             ]
           }
         }
@@ -720,6 +920,16 @@
     initKeyboardNav();
     updateOverviewBadges();
 
+    // Render KaTeX for theory sections and formulas
+    triggerMathRender(document.body);
+    document.querySelectorAll('.theory-accordion').forEach(details => {
+      details.addEventListener('toggle', () => {
+        if (details.open) {
+          triggerMathRender(details);
+        }
+      });
+    });
+
     // Check if the page is a standalone single module subpage
     const bodyModuleAttr = document.body.getAttribute('data-module-index');
     if (bodyModuleAttr !== null && bodyModuleAttr !== undefined && bodyModuleAttr !== '') {
@@ -817,7 +1027,7 @@
       optionsHTML += `
         <button class="option-btn" onclick="window.Mat2aQuiz.handleOptionSelect(${idx})" id="m2a-opt-btn-${idx}">
           <div style="display: flex; align-items: center;">
-            <span class="opt-key-badge">[${idx + 1}]</span>
+            <span class="opt-key-badge">${idx + 1}</span>
             <span>${opt.text}</span>
           </div>
           <span class="opt-indicator" id="m2a-opt-ind-${idx}"></span>
