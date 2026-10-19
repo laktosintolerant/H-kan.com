@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Håkan.com – Projekt, Matematik 1a, Matematik 2a & Kemi 1</title>
+  <title>Håkan.com – Projekt, Matematik 1a, Matematik 2a &amp; Kemi 1</title>
   <meta name="description" content="Samlingsportal för digitala läromedel, interaktiva verktyg, Matematik 1a, Matematik 2a och Kemi 1.">
   <link rel="canonical" href="https://xn--hkan-qoa.com/">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%2338bdf8%22/><text x=%2250%22 y=%2268%22 font-family=%22system-ui, sans-serif%22 font-size=%2260%22 font-weight=%22900%22 fill=%22%230a0d14%22 text-anchor=%22middle%22>H</text></svg>">
@@ -11,55 +11,101 @@
   <!-- Open Graph / Social Sharing Meta Tags -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://xn--hkan-qoa.com/">
-  <meta property="og:title" content="Håkan.com – Digital samlingsportal för Matematik & Kemi">
+  <meta property="og:title" content="Håkan.com – Digital samlingsportal för Matematik &amp; Kemi">
   <meta property="og:description" content="Samlingsportal för digitala läromedel, interaktiva verktyg, Matematik 1a, Matematik 2a och Kemi 1.">
   <meta property="og:site_name" content="Håkan.com">
 
   <link rel="stylesheet" href="assets/css/style.css">
   
-  <!-- Förhindra theme-flicker vid första laddning -->
+  <!-- Felsäker temainläsning (förhindrar FOUC och kraschar inte i strikt inkognitoläge) -->
   <script>
     (function() {
-      const savedTheme = localStorage.getItem('hakan_site_theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      let savedTheme = null;
+      try {
+        savedTheme = localStorage.getItem('hakan_site_theme');
+      } catch (err) {
+        // localStorage kan vara blockerat av webbläsarinställningar
+      }
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       const theme = savedTheme || (prefersDark ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', theme);
     })();
   </script>
+
+  <!-- Ladda ES-moduler icke-blockerande i head -->
+  <script type="module" src="assets/js/main.js"></script>
 </head>
 <body>
+
+  <!-- Tillgänglighet: Hoppa direkt till innehåll -->
+  <a href="#main-content" class="skip-link">Hoppa till huvudinnehåll</a>
 
   <!-- ========================================================================
        TOP NAVIGATION
        ======================================================================== -->
   <header class="site-header">
     <div class="container header-inner">
-      <a href="index.html" class="brand-logo" id="header-brand-logo">
-        <div class="brand-icon">H</div>
+      <a href="/" class="brand-logo" id="header-brand-logo" aria-label="Håkan.com startsida">
+        <div class="brand-icon" aria-hidden="true">H</div>
         <span class="brand-text">Håkan.com</span>
         <span class="brand-badge">PORTAL</span>
       </a>
 
-      <nav class="nav-group">
-        <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Öppna meny" aria-expanded="false">
-          <svg class="hamburger-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+      <nav class="nav-group" aria-label="Huvudnavigation">
+        <button 
+          type="button"
+          class="mobile-nav-toggle" 
+          id="mobile-nav-toggle" 
+          aria-label="Öppna meny" 
+          aria-expanded="false"
+          aria-controls="primary-navigation"
+        >
+          <svg class="hamburger-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
-          <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24" style="display:none;">
+          <svg class="close-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24" hidden>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
 
-        <ul class="nav-links">
-          <li><a href="subpages/matematik-1a/index.html" class="nav-link">📐 Matematik 1a</a></li>
-          <li><a href="subpages/matematik-2a/index.html" class="nav-link">📊 Matematik 2a</a></li>
-          <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link">🧪 kemi1.se ↗</a></li>
-          <li class="mobile-only-link"><a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="nav-link kofi-nav-item">☕ Stöd på Ko-fi ↗</a></li>
-          <li class="mobile-only-link"><a href="mailto:stark@håkan.com" class="nav-link">✉ Kontakt</a></li>
+        <ul class="nav-links" id="primary-navigation">
+          <li>
+            <a href="subpages/matematik-1a/index.html" class="nav-link">
+              <span aria-hidden="true">📐</span> Matematik 1a
+            </a>
+          </li>
+          <li>
+            <a href="subpages/matematik-2a/index.html" class="nav-link">
+              <span aria-hidden="true">📊</span> Matematik 2a
+            </a>
+          </li>
+          <li>
+            <a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link">
+              <span aria-hidden="true">🧪</span> kemi1.se <span aria-hidden="true">↗</span>
+              <span class="sr-only">(öppnas i ny flik)</span>
+            </a>
+          </li>
+          <li class="mobile-only-link">
+            <a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="nav-link kofi-nav-item">
+              <span aria-hidden="true">☕</span> Stöd på Ko-fi <span aria-hidden="true">↗</span>
+              <span class="sr-only">(öppnas i ny flik)</span>
+            </a>
+          </li>
+          <li class="mobile-only-link">
+            <a href="mailto:stark@xn--hkan-qoa.com" class="nav-link">
+              <span aria-hidden="true">✉</span> Kontakt
+            </a>
+          </li>
         </ul>
 
         <!-- Ljust/Mörkt läge växlare -->
-        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Växla tema">
+        <button 
+          type="button" 
+          class="theme-toggle-btn" 
+          id="theme-toggle-btn" 
+          aria-label="Växla mellan ljust och mörkt tema"
+          aria-pressed="false"
+        >
           <!-- Ikon renderas av JS -->
         </button>
       </nav>
@@ -69,15 +115,15 @@
   <!-- ========================================================================
        HERO SECTION
        ======================================================================== -->
-  <main>
-    <section class="hero-section">
+  <main id="main-content" tabindex="-1">
+    <section class="hero-section" aria-labelledby="hero-heading">
       <div class="container container-narrow">
         <div class="hero-pill">
-          <span class="hero-pill-dot"></span>
-          <span>Digital verktygslåda & samlingshemsida</span>
+          <span class="hero-pill-dot" aria-hidden="true"></span>
+          <span>Digital verktygslåda &amp; samlingshemsida</span>
         </div>
 
-        <h1 class="hero-title">
+        <h1 class="hero-title" id="hero-heading">
           Projekt, verktyg och läromedel i en <span class="gradient-text">gemensam hubb</span>
         </h1>
 
@@ -90,41 +136,42 @@
     <!-- ========================================================================
          PROJEKTÖVERSIKT, SÖK & FILTER
          ======================================================================== -->
-    <section class="container" id="projects-section">
+    <section class="container" id="projects-section" aria-label="Projekt och läromedel">
       <div class="controls-wrapper">
         <!-- Sökfält -->
-        <div class="search-box-container">
-          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="search-box-container" role="search">
+          <label for="search-input" class="sr-only">Sök bland projekt, verktyg, formler eller ämnen</label>
+          <svg class="search-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
           </svg>
           <input 
-            type="text" 
+            type="search" 
             id="search-input" 
             class="search-input" 
             placeholder="Sök bland projekt, verktyg, formler eller ämnen..."
-            aria-label="Sök bland projekt, verktyg, formler eller ämnen"
             autocomplete="off"
+            spellcheck="false"
+            aria-controls="projects-grid"
           >
-          <span class="search-shortcut" title="Tryck / för att söka">Tryck /</span>
+          <kbd class="search-shortcut" aria-hidden="true" title="Tryck / för att söka">Tryck /</kbd>
         </div>
 
         <!-- Filterknappar -->
-        <div class="filter-pills" id="filter-pills">
+        <div class="filter-pills" id="filter-pills" role="toolbar" aria-label="Filtrera projekt efter kategori">
           <!-- Renderas dynamiskt av JS -->
         </div>
 
+        <!-- Live-region för skärmläsare -->
         <div class="results-info">
-          <span id="results-count">Laddar resurser...</span>
+          <span id="results-count" role="status" aria-live="polite" aria-atomic="true">Laddar resurser...</span>
         </div>
       </div>
 
       <!-- Projektkort Grid -->
       <div class="projects-grid" id="projects-grid">
-        <!-- Renderas dynamiskt från assets/js/projects-data.js -->
+        <!-- Renderas dynamiskt av assets/js/main.js -->
       </div>
     </section>
-
-
   </main>
 
   <!-- ========================================================================
@@ -135,18 +182,31 @@
       <div>
         <strong>Håkan.com</strong> – Samlingsportal för matematik, kemi och digitala projekt.
       </div>
-      <ul class="footer-links">
-        <li><a href="subpages/matematik-1a/index.html">Matematik 1a</a></li>
-        <li><a href="subpages/matematik-2a/index.html">Matematik 2a</a></li>
-        <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer">kemi1.se ↗</a></li>
-        <li><a href="mailto:stark@håkan.com" class="footer-contact-link">✉ stark@håkan.com</a></li>
-        <li><a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="kofi-btn">☕ Stöd på Ko-fi ↗</a></li>
-      </ul>
+      <nav aria-label="Sidfotslänkar">
+        <ul class="footer-links">
+          <li><a href="subpages/matematik-1a/index.html">Matematik 1a</a></li>
+          <li><a href="subpages/matematik-2a/index.html">Matematik 2a</a></li>
+          <li>
+            <a href="https://kemi1.se" target="_blank" rel="noopener noreferrer">
+              kemi1.se <span aria-hidden="true">↗</span>
+              <span class="sr-only">(öppnas i ny flik)</span>
+            </a>
+          </li>
+          <li>
+            <a href="mailto:stark@xn--hkan-qoa.com" class="footer-contact-link">
+              <span aria-hidden="true">✉</span> stark@håkan.com
+            </a>
+          </li>
+          <li>
+            <a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="kofi-btn">
+              <span aria-hidden="true">☕</span> Stöd på Ko-fi <span aria-hidden="true">↗</span>
+              <span class="sr-only">(öppnas i ny flik)</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </footer>
 
-  <!-- Scripts -->
-  <script src="assets/js/projects-data.js"></script>
-  <script src="assets/js/main.js"></script>
 </body>
 </html>

@@ -1,286 +1,275 @@
-/**
- * ============================================================================
- * HÅKAN.COM - HUVUDSCRIPT (main.js)
- * Temahantering (Dark/Light), Dynamisk projektfiltrering, Sök & Interaktivitet
- * ============================================================================
- */
+import { PROJECTS_DATA, CATEGORIES } from './projects-data.js';
 
-(function () {
-  'use strict';
+const THEME_STORAGE_KEY = 'hakan_site_theme';
 
-  // --------------------------------------------------------------------------
-  // 1. TEMAHANTERING (LJUST / MÖRKT LÄGE)
-  // --------------------------------------------------------------------------
-  const THEME_STORAGE_KEY = 'hakan_site_theme';
+// Applikationstillstånd
+const state = {
+  activeCategory: 'Alla',
+  searchQuery: '',
+  theme: document.documentElement.getAttribute('data-theme') || 'dark'
+};
 
-  function initTheme() {
-    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    // Använd sparat tema, annars systeminställning, annars dark som standard
-    const activeTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-    setTheme(activeTheme, false);
+// Cachelagrade DOM-referenser
+const dom = {
+  grid: document.getElementById('projects-grid'),
+  filterPills: document.getElementById('filter-pills'),
+  searchInput: document.getElementById('search-input'),
+  resultsCount: document.getElementById('results-count'),
+  themeToggleBtn: document.getElementById('theme-toggle-btn'),
+  mobileNavToggle: document.getElementById('mobile-nav-toggle'),
+  navLinks: document.getElementById('primary-navigation')
+};
 
-    // Lyssna på ändringar i operativsystemets tema om användaren inte valt manuellt
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (!localStorage.getItem(THEME_STORAGE_KEY)) {
-        setTheme(e.matches ? 'dark' : 'light', false);
-      }
-    });
+/* ==========================================================================
+   HJÄLPFUNKTIONER (Prestanda)
+   ========================================================================== */
 
-    // Koppla event till temaknappar
-    document.querySelectorAll('.theme-toggle-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        setTheme(newTheme, true);
-      });
-    });
+function debounce(fn, delay = 120) {
+  let timerId = null;
+  return (...args) => {
+    clearTimeout(timerId);
+    timerId = setTimeout(() => fn(...args), delay);
+  };
+}
+
+/* ==========================================================================
+   TEMAHANTERING
+   ========================================================================== */
+
+function renderThemeButton() {
+  if (!dom.themeToggleBtn) return;
+  const isDark = state.theme === 'dark';
+  dom.themeToggleBtn.setAttribute('aria-pressed', String(isDark));
+  dom.themeToggleBtn.setAttribute(
+    'aria-label',
+    isDark ? 'Byt till ljust tema' : 'Byt till mörkt tema'
+  );
+  dom.themeToggleBtn.textContent = isDark ? '☀️' : '🌙';
+}
+
+function toggleTheme() {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', state.theme);
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, state.theme);
+  } catch {
+    // Ignorera om localStorage är blockerat
+  }
+  renderThemeButton();
+}
+
+/* ==========================================================================
+   FILTER & KORTRENDERING (Ingen innerHTML-injektion, 1 samlad DOM-uppdatering)
+   ========================================================================== */
+
+function renderFilterPills() {
+  if (!dom.filterPills) return;
+  const fragment = document.createDocumentFragment();
+
+  for (const category of CATEGORIES) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    const isActive = category === state.activeCategory;
+    btn.className = `filter-pill${isActive ? ' active' : ''}`;
+    btn.dataset.category = category;
+    btn.setAttribute('aria-pressed', String(isActive));
+    btn.textContent = category;
+    fragment.appendChild(btn);
   }
 
-  function setTheme(theme, saveToStorage = true) {
-    document.documentElement.setAttribute('data-theme', theme);
-    if (saveToStorage) {
-      localStorage.setItem(THEME_STORAGE_KEY, theme);
-    }
-    updateThemeToggleIcons(theme);
-    window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+  dom.filterPills.replaceChildren(fragment);
+}
+
+function updateFilterPillStates() {
+  if (!dom.filterPills) return;
+  const buttons = dom.filterPills.querySelectorAll('.filter-pill');
+  for (const btn of buttons) {
+    const isActive = btn.dataset.category === state.activeCategory;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-pressed', String(isActive));
+  }
+}
+
+function createProjectCard(project) {
+  const card = document.createElement('article');
+  card.className = 'project-card';
+  if (project.accentColor) {
+    card.style.setProperty('--card-accent', project.accentColor);
   }
 
-  function updateThemeToggleIcons(theme) {
-    const isDark = theme === 'dark';
-    const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
-    const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+  // Header (Ikon + Badge)
+  const header = document.createElement('div');
+  header.className = 'card-header';
 
-    document.querySelectorAll('.theme-toggle-btn').forEach((btn) => {
-      btn.innerHTML = isDark ? sunIcon : moonIcon;
-      btn.setAttribute('aria-label', isDark ? 'Växla till ljust läge' : 'Växla till mörkt läge');
-      btn.setAttribute('title', isDark ? 'Växla till ljust läge' : 'Växla till mörkt läge');
-    });
+  const icon = document.createElement('span');
+  icon.className = 'card-icon';
+  icon.setAttribute('aria-hidden', 'true');
+  icon.textContent = project.icon;
+
+  const badge = document.createElement('span');
+  badge.className = `card-badge badge-${project.badgeType}`;
+  badge.textContent = project.badge;
+
+  header.append(icon, badge);
+
+  // Titel & Länk
+  const title = document.createElement('h2');
+  title.className = 'card-title';
+
+  const link = document.createElement('a');
+  link.href = project.url;
+  link.className = 'card-link';
+  link.textContent = project.title;
+
+  if (project.isExternal) {
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    const srText = document.createElement('span');
+    srText.className = 'sr-only';
+    srText.textContent = ' (öppnas i ny flik)';
+    link.appendChild(srText);
   }
 
-  // --------------------------------------------------------------------------
-  // 2. DYNAMISK RENDERING & FILTRERING AV PROJEKT
-  // --------------------------------------------------------------------------
-  let currentCategory = 'Alla';
-  let currentSearchQuery = '';
+  title.appendChild(link);
 
-  function initProjectsHub() {
-    const gridEl = document.getElementById('projects-grid');
-    const filterPillsContainer = document.getElementById('filter-pills');
-    const searchInput = document.getElementById('search-input');
-    const resultsCountEl = document.getElementById('results-count');
+  // Beskrivning
+  const desc = document.createElement('p');
+  desc.className = 'card-description';
+  desc.textContent = project.description;
 
-    if (!gridEl || !window.PROJECTS_DATA) return;
+  // Taggar
+  const tagsList = document.createElement('ul');
+  tagsList.className = 'card-tags';
+  tagsList.setAttribute('aria-label', 'Taggar');
 
-    // Bygg filterknappar dynamiskt baserat på kategorier i datan
-    buildCategoryFilters(filterPillsContainer);
-
-    // Initial rendering
-    renderProjects(gridEl, resultsCountEl);
-
-    // Sök-lyssnare
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        currentSearchQuery = e.target.value.toLowerCase().trim();
-        renderProjects(gridEl, resultsCountEl);
-      });
-
-      // Tangentbordsgenväg för snabbsök (/)
-      window.addEventListener('keydown', (e) => {
-        const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
-        const isEditing = activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select' || document.activeElement.isContentEditable;
-        
-        if (e.key === '/' && !isEditing) {
-          e.preventDefault();
-          searchInput.focus();
-        } else if (e.key === 'Escape' && document.activeElement === searchInput) {
-          searchInput.value = '';
-          currentSearchQuery = '';
-          searchInput.blur();
-          renderProjects(gridEl, resultsCountEl);
-        }
-      });
-    }
+  for (const tag of project.tags) {
+    const tagItem = document.createElement('li');
+    tagItem.className = 'card-tag';
+    tagItem.textContent = tag;
+    tagsList.appendChild(tagItem);
   }
 
-  function buildCategoryFilters(container) {
-    if (!container) return;
+  card.append(header, title, desc, tagsList);
+  return card;
+}
 
-    // Räkna antal i varje kategori
-    const categoryCounts = { 'Alla': window.PROJECTS_DATA.length };
-    window.PROJECTS_DATA.forEach(p => {
-      categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1;
-    });
+function renderProjects() {
+  if (!dom.grid || !dom.resultsCount) return;
 
-    const categories = ['Alla', ...Object.keys(categoryCounts).filter(c => c !== 'Alla')];
+  const normalizedQuery = state.searchQuery.trim().toLowerCase();
 
-    container.innerHTML = categories.map(cat => {
-      const isActive = cat === currentCategory ? 'active' : '';
-      const count = categoryCounts[cat] || 0;
-      return `
-        <button class="filter-btn ${isActive}" data-category="${escapeHtml(cat)}">
-          <span>${escapeHtml(cat)}</span>
-          <span class="filter-count">${count}</span>
-        </button>
-      `;
-    }).join('');
-
-    // Koppla klickevent på filterknappar
-    container.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentCategory = btn.getAttribute('data-category');
-        const gridEl = document.getElementById('projects-grid');
-        const resultsCountEl = document.getElementById('results-count');
-        renderProjects(gridEl, resultsCountEl);
-      });
-    });
-  }
-
-  function renderProjects(gridEl, countEl) {
-    if (!gridEl) return;
-
-    const filtered = window.PROJECTS_DATA.filter(project => {
-      // 1. Kategorimatchning
-      const matchCategory = currentCategory === 'Alla' || project.category === currentCategory;
-
-      // 2. Sökmatchning
-      const matchSearch = !currentSearchQuery || (
-        project.title.toLowerCase().includes(currentSearchQuery) ||
-        project.description.toLowerCase().includes(currentSearchQuery) ||
-        project.category.toLowerCase().includes(currentSearchQuery) ||
-        (project.tags && project.tags.some(t => t.toLowerCase().includes(currentSearchQuery)))
-      );
-
-      return matchCategory && matchSearch;
-    });
-
-    // Uppdatera räknare
-    if (countEl) {
-      countEl.textContent = `Visar ${filtered.length} av ${window.PROJECTS_DATA.length} resurser`;
-    }
-
-    if (filtered.length === 0) {
-      gridEl.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-state-icon">🔍</div>
-          <h3>Inga projekt matchar din sökning</h3>
-          <p style="color: var(--text-secondary); margin-top: 0.5rem;">
-            Testa ett annat sökord eller välj kategorin "Alla" ovan.
-          </p>
-        </div>
-      `;
-      return;
-    }
-
-    gridEl.innerHTML = filtered.map(project => {
-      const isExt = project.isExternal;
-      const targetAttr = isExt ? 'target="_blank" rel="noopener noreferrer"' : '';
-      const actionText = isExt ? 'Besök webbplats ↗' : 'Öppna verktyg →';
-      const badgeClass = project.badgeType === 'external' ? 'card-badge external' : 'card-badge internal';
-
-      const tagsHtml = (project.tags || []).map(t => `<span class="tag-item">#${escapeHtml(t)}</span>`).join('');
-
-      return `
-        <a href="${escapeHtml(project.url)}" ${targetAttr} class="project-card" style="--card-accent: ${project.accentColor || 'var(--accent-primary)'};" id="card-${project.id}">
-          <div class="card-header">
-            <div class="card-icon-box">${project.icon || '📌'}</div>
-            <span class="${badgeClass}">
-              ${escapeHtml(project.badge || project.category)}
-            </span>
-          </div>
-
-          <h3 class="card-title">
-            ${escapeHtml(project.title)}
-          </h3>
-
-          <p class="card-desc">
-            ${escapeHtml(project.description)}
-          </p>
-
-          <div class="card-footer">
-            <div class="card-tags">
-              ${tagsHtml}
-            </div>
-            <span class="card-action-btn">
-              ${actionText}
-            </span>
-          </div>
-        </a>
-      `;
-    }).join('');
-  }
-
-  // Hjälpfunktion för att förhindra XSS i text
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-  }
-
-  // --------------------------------------------------------------------------
-  // 3. MOBILMENY / DROPDOWN NAVIGATION
-  // --------------------------------------------------------------------------
-  function initMobileNav() {
-    const toggleBtn = document.getElementById('mobile-nav-toggle');
-    const navLinks = document.querySelector('.nav-links');
-
-    if (!toggleBtn || !navLinks) return;
-
-    const hamburgerIcon = toggleBtn.querySelector('.hamburger-icon');
-    const closeIcon = toggleBtn.querySelector('.close-icon');
-
-    function toggleNav(show) {
-      const isExpanded = show !== undefined ? show : !navLinks.classList.contains('open');
-      navLinks.classList.toggle('open', isExpanded);
-      toggleBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
-      toggleBtn.setAttribute('aria-label', isExpanded ? 'Stäng meny' : 'Öppna meny');
-
-      if (hamburgerIcon && closeIcon) {
-        hamburgerIcon.style.display = isExpanded ? 'none' : 'block';
-        closeIcon.style.display = isExpanded ? 'block' : 'none';
-      }
-    }
-
-    toggleBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleNav();
-    });
-
-    // Stäng vid klick utanför
-    document.addEventListener('click', (e) => {
-      if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
-        toggleNav(false);
-      }
-    });
-
-    // Stäng vid klick på en nav-länk
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        toggleNav(false);
-      });
-    });
-  }
-
-  // --------------------------------------------------------------------------
-  // INITIERING VID SIDLADDNING
-  // --------------------------------------------------------------------------
-  document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
-    initMobileNav();
-    initProjectsHub();
+  const filtered = PROJECTS_DATA.filter((project) => {
+    const matchesCategory =
+      state.activeCategory === 'Alla' || project.category === state.activeCategory;
+    const matchesSearch =
+      normalizedQuery === '' || project._searchIndex.includes(normalizedQuery);
+    return matchesCategory && matchesSearch;
   });
 
-  // Exportera tema-funktioner globalt för undersidor
-  window.HakanPortal = {
-    setTheme,
-    initTheme
-  };
+  // Uppdatera resultaträknare
+  const count = filtered.length;
+  dom.resultsCount.textContent =
+    count === 1 ? 'Visar 1 resurs' : `Visar ${count} resurser`;
 
-})();
+  // Bygg DOM i minnet via DocumentFragment (en enda reflow)
+  const fragment = document.createDocumentFragment();
+
+  if (count === 0) {
+    const emptyState = document.createElement('div');
+    emptyState.className = 'empty-state';
+    emptyState.textContent = 'Inga resurser matchade din sökning.';
+    fragment.appendChild(emptyState);
+  } else {
+    for (const project of filtered) {
+      fragment.appendChild(createProjectCard(project));
+    }
+  }
+
+  dom.grid.replaceChildren(fragment);
+}
+
+/* ==========================================================================
+   EVENT LISTENERS (Delegerade & Optimerade)
+   ========================================================================== */
+
+function initEventListeners() {
+  // 1. Event Delegation för filterknappar (endast 1 lyssnare för hela verktygsfältet)
+  dom.filterPills?.addEventListener('click', (e) => {
+    const pill = e.target.closest('.filter-pill');
+    if (!pill) return;
+
+    const selectedCategory = pill.dataset.category;
+    if (selectedCategory && selectedCategory !== state.activeCategory) {
+      state.activeCategory = selectedCategory;
+      updateFilterPillStates(); // Uppdaterar endast attribut, bygger inte om knapparna
+      renderProjects();
+    }
+  });
+
+  // 2. Debounced sökning (undviker onödiga omrenderingar vid snabb inmatning)
+  const handleSearch = debounce((value) => {
+    state.searchQuery = value;
+    renderProjects();
+  }, 100);
+
+  dom.searchInput?.addEventListener('input', (e) => {
+    handleSearch(e.target.value);
+  });
+
+  // 3. Tangentbordsgenväg '/' för sökfokus (ignorerar om användaren redan skriver i ett fält)
+  document.addEventListener('keydown', (e) => {
+    const activeTag = document.activeElement?.tagName;
+    const isInputFocused =
+      activeTag === 'INPUT' ||
+      activeTag === 'TEXTAREA' ||
+      document.activeElement?.isContentEditable;
+
+    if (e.key === '/' && !isInputFocused) {
+      e.preventDefault();
+      dom.searchInput?.focus();
+    } else if (e.key === 'Escape' && document.activeElement === dom.searchInput) {
+      if (dom.searchInput.value !== '') {
+        dom.searchInput.value = '';
+        state.searchQuery = '';
+        renderProjects();
+      } else {
+        dom.searchInput.blur();
+      }
+    }
+  });
+
+  // 4. Temaväxlare
+  dom.themeToggleBtn?.addEventListener('click', toggleTheme);
+
+  // 5. Mobilnavigation med tillgänglighetsstöd (Escape stänger menyn)
+  dom.mobileNavToggle?.addEventListener('click', () => {
+    const isExpanded = dom.mobileNavToggle.getAttribute('aria-expanded') === 'true';
+    const nextState = !isExpanded;
+    dom.mobileNavToggle.setAttribute('aria-expanded', String(nextState));
+    dom.mobileNavToggle.setAttribute(
+      'aria-label',
+      nextState ? 'Stäng meny' : 'Öppna meny'
+    );
+    dom.navLinks?.classList.toggle('is-open', nextState);
+
+    const hamburgerIcon = dom.mobileNavToggle.querySelector('.hamburger-icon');
+    const closeIcon = dom.mobileNavToggle.querySelector('.close-icon');
+    if (hamburgerIcon && closeIcon) {
+      hamburgerIcon.hidden = nextState;
+      closeIcon.hidden = !nextState;
+    }
+  });
+}
+
+/* ==========================================================================
+   INITIERING
+   ========================================================================== */
+
+function init() {
+  renderThemeButton();
+  renderFilterPills();
+  renderProjects();
+  initEventListeners();
+}
+
+init();
