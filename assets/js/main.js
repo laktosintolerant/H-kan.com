@@ -1,4 +1,4 @@
-import { PROJECTS_DATA, CATEGORIES } from './projects-data.js';
+import { PROJECTS_DATA, CATEGORIES } from './projects-data.js?v=2';
 
 const THEME_STORAGE_KEY = 'hakan_site_theme';
 

@@ -33,7 +33,7 @@
   </script>
 
   <!-- Ladda ES-moduler icke-blockerande i head -->
-  <script type="module" src="assets/js/main.js"></script>
+  <script type="module" src="assets/js/main.js?v=2"></script>
 </head>
 <body>
 
@@ -171,18 +171,98 @@
 
         <!-- Filterknappar -->
         <div class="filter-pills" id="filter-pills" role="toolbar" aria-label="Filtrera projekt efter kategori">
-          <!-- Renderas dynamiskt av JS -->
+          <button type="button" class="filter-pill active" data-category="Alla" aria-pressed="true">Alla</button>
+          <button type="button" class="filter-pill" data-category="Matematik" aria-pressed="false">Matematik</button>
+          <button type="button" class="filter-pill" data-category="Kemi" aria-pressed="false">Kemi</button>
+          <button type="button" class="filter-pill" data-category="Spel &amp; Labb" aria-pressed="false">Spel &amp; Labb</button>
         </div>
 
         <!-- Live-region för skärmläsare -->
         <div class="results-info">
-          <span id="results-count" role="status" aria-live="polite" aria-atomic="true">Laddar resurser...</span>
+          <span id="results-count" role="status" aria-live="polite" aria-atomic="true">Visar 5 resurser</span>
         </div>
       </div>
 
       <!-- Projektkort Grid -->
       <div class="projects-grid" id="projects-grid">
-        <!-- Renderas dynamiskt av assets/js/main.js -->
+        <article class="project-card" style="--card-accent: var(--color-math);">
+          <div class="card-header">
+            <span class="card-icon" aria-hidden="true">📐</span>
+            <span class="card-badge badge-internal">Ämnesportal</span>
+          </div>
+          <h2 class="card-title"><a href="subpages/matematik-1a/index.html" class="card-link">Matematik 1a</a></h2>
+          <p class="card-description">Interaktiva verktyg, övningar och formelsamlingar för gymnasiets Matematik 1a.</p>
+          <ul class="card-tags" aria-label="Taggar">
+            <li class="card-tag">Matematik 1a</li>
+            <li class="card-tag">Procent</li>
+            <li class="card-tag">Algebra</li>
+            <li class="card-tag">Geometri</li>
+          </ul>
+        </article>
+
+        <article class="project-card" style="--card-accent: var(--color-math);">
+          <div class="card-header">
+            <span class="card-icon" aria-hidden="true">📊</span>
+            <span class="card-badge badge-internal">Ämnesportal</span>
+          </div>
+          <h2 class="card-title"><a href="subpages/matematik-2a/index.html" class="card-link">Matematik 2a</a></h2>
+          <p class="card-description">Steg-för-steg PQ-formellösare, parabelritare med Canvas och moduler för Matematik 2a.</p>
+          <ul class="card-tags" aria-label="Taggar">
+            <li class="card-tag">Matematik 2a</li>
+            <li class="card-tag">PQ-formeln</li>
+            <li class="card-tag">Andragradsekvationer</li>
+            <li class="card-tag">Graf</li>
+          </ul>
+        </article>
+
+        <article class="project-card" style="--card-accent: var(--color-chem);">
+          <div class="card-header">
+            <span class="card-icon" aria-hidden="true">🧪</span>
+            <span class="card-badge badge-external">Extern länk</span>
+          </div>
+          <h2 class="card-title"><a href="https://kemi1.se" class="card-link" target="_blank" rel="noopener noreferrer">kemi1.se<span class="sr-only"> (öppnas i ny flik)</span></a></h2>
+          <p class="card-description">Komplett läromedel och interaktiva övningar för Kemi 1 på gymnasiet.</p>
+          <ul class="card-tags" aria-label="Taggar">
+            <li class="card-tag">Kemi 1</li>
+            <li class="card-tag">Periodiska systemet</li>
+            <li class="card-tag">Stökiometri</li>
+            <li class="card-tag">Gymnasiet</li>
+          </ul>
+        </article>
+
+        <article class="project-card" style="--card-accent: var(--color-ai);">
+          <div class="card-header">
+            <span class="card-icon" aria-hidden="true">🎯</span>
+            <span class="card-badge badge-internal">Interaktivt verktyg</span>
+          </div>
+          <h2 class="card-title"><a href="subpages/traningsstudio/index.html" class="card-link">Träningsstudio – Mängdträning (E / C / A)</a></h2>
+          <p class="card-description">Slumpa fram obegränsat med övningsuppgifter i Matematik 1a och 2a på E-, C- och A-nivå med direkt rättning och steg-för-steg-lösningar.</p>
+          <ul class="card-tags" aria-label="Taggar">
+            <li class="card-tag">Matematik 1a</li>
+            <li class="card-tag">Matematik 2a</li>
+            <li class="card-tag">Mängdträning</li>
+            <li class="card-tag">PQ-formeln</li>
+            <li class="card-tag">Ekvationer</li>
+            <li class="card-tag">Procent</li>
+          </ul>
+        </article>
+
+        <article class="project-card" style="--card-accent: var(--color-web);">
+          <div class="card-header">
+            <span class="card-icon" aria-hidden="true">🕹️</span>
+            <span class="card-badge badge-internal">Vibe-kodat spel</span>
+          </div>
+          <h2 class="card-title"><a href="subpages/Spel/acidbasebarista.html" class="card-link">The Acid/Base Barista – pH Lab Arcade</a></h2>
+          <p class="card-description">Interaktivt kemispel där du blandar syror, baser och buffertar i realtid. Utforska pH, BTB-indikator och kemisk jämvikt på molekylnivå.</p>
+          <ul class="card-tags" aria-label="Taggar">
+            <li class="card-tag">Kemi 1</li>
+            <li class="card-tag">Spel</li>
+            <li class="card-tag">Syror &amp; Baser</li>
+            <li class="card-tag">pH</li>
+            <li class="card-tag">Buffert</li>
+            <li class="card-tag">Simulering</li>
+          </ul>
+        </article>
       </div>
     </section>
   </main>
