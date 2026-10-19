@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="sv" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Träningsstudio – Mängdträning (E / C / A) | Håkan.com</title>
+  <meta name="description" content="Interaktiv träningsstudio för Matematik 1a och 2a. Slumpa obegränsat med övningsuppgifter på E-, C- och A-nivå med steg-för-steg-lösningar.">
+  <link rel="canonical" href="https://xn--hkan-qoa.com/subpages/traningsstudio/index.html">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%2338bdf8%22/><text x=%2250%22 y=%2268%22 font-family=%22system-ui, sans-serif%22 font-size=%2260%22 font-weight=%22900%22 fill=%22%230a0d14%22 text-anchor=%22middle%22>H</text></svg>">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="trainer.css">
+  <script>
+    (function() {
+      let s = null;
+      try { s = localStorage.getItem('hakan_site_theme'); } catch (e) {}
+      const d = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', s || (d ? 'dark' : 'light'));
+    })();
+  </script>
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Hoppa till huvudinnehåll</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../../index.html" class="brand-logo" aria-label="Tillbaka till Håkan.com startsida">
+        <div class="brand-icon" aria-hidden="true">H</div>
+        <span class="brand-text">Håkan.com</span>
+        <span class="brand-badge">STUDIO</span>
+      </a>
+      <nav class="nav-group" aria-label="Huvudnavigation">
+        <ul class="nav-links">
+          <li><a href="../../index.html" class="nav-link">← Portalen</a></li>
+          <li><a href="../matematik-1a/index.html" class="nav-link"><span aria-hidden="true">📐</span> Matematik 1a</a></li>
+          <li><a href="../matematik-2a/index.html" class="nav-link"><span aria-hidden="true">📊</span> Matematik 2a</a></li>
+        </ul>
+        <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Växla tema" aria-pressed="false">☀️</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="container studio-main" tabindex="-1">
+    <header class="studio-hero">
+      <div class="studio-hero-text">
+        <span class="studio-eyebrow">Interaktiv färdighetsträning</span>
+        <h1>🎲 Matematik &ndash; Träningsstudio</h1>
+        <p>Välj kurs, område och betygsnivå (<strong>E, C eller A</strong>). Slumpa fram obegränsat med övningsuppgifter, kontrollera dina svar direkt och se fullständiga steg-för-steg-lösningar.</p>
+      </div>
+      <div class="streak-box" aria-live="polite">
+        <div class="streak-stat">
+          <span class="streak-label">Rätt i rad</span>
+          <strong class="streak-value" id="streak-count">0 🔥</strong>
+        </div>
+        <div class="streak-stat">
+          <span class="streak-label">Lösta idag</span>
+          <strong class="streak-value" id="solved-count">0 ✓</strong>
+        </div>
+      </div>
+    </header>
+
+    <!-- Kontrollpanel: Kurs & Område -->
+    <section class="studio-controls-card" aria-label="Inställningar för övning">
+      <div class="controls-grid">
+        <div class="control-group">
+          <span class="control-label" id="course-label">1. Välj kurs</span>
+          <div class="segmented-control" role="group" aria-labelledby="course-label" id="course-selector">
+            <button type="button" class="seg-btn active" data-course="ma1a" aria-pressed="true">📐 Matematik 1a</button>
+            <button type="button" class="seg-btn" data-course="ma2a" aria-pressed="false">📊 Matematik 2a</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label" id="topic-label">2. Välj område</span>
+          <div class="topic-pills" role="group" aria-labelledby="topic-label" id="topic-selector"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ÖVNINGSYTA: SLUMPA UPPGIFT (E / C / A) -->
+    <section id="panel-practice" class="workspace-card" aria-label="Övningsuppgift">
+      <div class="workspace-toolbar">
+        <div class="level-group" role="group" aria-label="Välj betygsnivå" id="level-selector">
+          <button type="button" class="level-pill level-e active" data-level="E" aria-pressed="true">Nivå E</button>
+          <button type="button" class="level-pill level-c" data-level="C" aria-pressed="false">Nivå C</button>
+          <button type="button" class="level-pill level-a" data-level="A" aria-pressed="false">Nivå A</button>
+        </div>
+        <button type="button" class="btn-primary-action" id="btn-generate-problem">
+          <span aria-hidden="true">↻</span> Slumpa ny uppgift
+        </button>
+      </div>
+
+      <div class="problem-box" aria-live="polite">
+        <div class="problem-meta">
+          <span class="meta-badge" id="current-topic-badge">Förstagradsekvationer</span>
+          <span class="meta-badge level-indicator" id="current-level-badge">Nivå E</span>
+        </div>
+        <p class="problem-prompt" id="problem-prompt">Lös ekvationen:</p>
+        <div class="math-box" id="problem-math">3x + 5 = 20</div>
+
+        <div id="answer-form" class="answer-form">
+          <div id="answer-inputs-container" class="answer-inputs">
+            <label class="input-field-group" id="input-group-1">
+              <span id="input-label-1">x =</span>
+              <input type="text" inputmode="decimal" id="answer-input-1" class="math-input" placeholder="?" autocomplete="off">
+            </label>
+            <label class="input-field-group" id="input-group-2" hidden>
+              <span id="input-label-2">y =</span>
+              <input type="text" inputmode="decimal" id="answer-input-2" class="math-input" placeholder="?" autocomplete="off">
+            </label>
+          </div>
+          <div class="answer-actions">
+            <button type="button" id="btn-check-answer" class="btn-check">Kontrollera svar</button>
+            <button type="button" class="btn-outline" id="btn-show-hint" aria-expanded="false">💡 Visa ledtråd</button>
+            <button type="button" class="btn-outline" id="btn-show-solution" aria-expanded="false">📖 Visa lösning steg-för-steg</button>
+          </div>
+        </div>
+
+        <div id="hint-box" class="info-callout hint-callout" hidden></div>
+        <div id="practice-feedback" class="feedback-banner" role="status" aria-live="polite" hidden></div>
+        <div id="solution-container" class="solution-box" hidden>
+          <h3>Steg-för-steg-lösning</h3>
+          <ol id="solution-steps-list" class="steps-list"></ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div><strong>Håkan.com</strong> – Interaktiv Träningsstudio för Matematik 1a &amp; 2a.</div>
+      <ul class="footer-links">
+        <li><a href="../../index.html">Portalen</a></li>
+        <li><a href="../matematik-1a/index.html">Matematik 1a</a></li>
+        <li><a href="../matematik-2a/index.html">Matematik 2a</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    'use strict';
+
+    const TOPICS = {
+      ma1a: [
+        { id: 'linear_eq', title: 'Förstagradsekvationer' },
+        { id: 'percent', title: 'Procent & Förändringsfaktor' },
+        { id: 'linear_func', title: 'Räta linjen (y = kx + m)' }
+      ],
+      ma2a: [
+        { id: 'pq_eq', title: 'Andragradsekvationer (PQ)' },
+        { id: 'powers', title: 'Potenslagar & Ekvationer' },
+        { id: 'systems', title: 'Linjära ekvationssystem' }
+      ]
+    };
+
+    const state = {
+      course: 'ma1a',
+      topic: 'linear_eq',
+      level: 'E',
+      currentProblem: null,
+      problemSolved: false,
+      streak: 0,
+      solvedTotal: 0
+    };
+
+    const el = (id) => document.getElementById(id);
+    const dom = {
+      themeBtn: el('theme-toggle-btn'),
+      streakCount: el('streak-count'),
+      solvedCount: el('solved-count'),
+      courseSelector: el('course-selector'),
+      topicSelector: el('topic-selector'),
+      levelSelector: el('level-selector'),
+      btnGenerateProblem: el('btn-generate-problem'),
+      topicBadge: el('current-topic-badge'),
+      levelBadge: el('current-level-badge'),
+      problemPrompt: el('problem-prompt'),
+      problemMath: el('problem-math'),
+      inputGroup1: el('input-group-1'),
+      inputLabel1: el('input-label-1'),
+      answerInput1: el('answer-input-1'),
+      inputGroup2: el('input-group-2'),
+      inputLabel2: el('input-label-2'),
+      answerInput2: el('answer-input-2'),
+      btnCheckAnswer: el('btn-check-answer'),
+      btnShowHint: el('btn-show-hint'),
+      btnShowSolution: el('btn-show-solution'),
+      hintBox: el('hint-box'),
+      practiceFeedback: el('practice-feedback'),
+      solutionContainer: el('solution-container'),
+      solutionStepsList: el('solution-steps-list')
+    };
+
+    const randInt = (min, max, nz) => {
+      let v = 0;
+      do { v = Math.floor(Math.random() * (max - min + 1)) + min; } while (nz && v === 0);
+      return v;
+    };
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const fmt = (c, v = '') => c === 0 ? '' : (c > 0 ? ' + ' : ' - ') + (Math.abs(c) === 1 && v ? '' : Math.abs(c)) + v;
+
+    /* --- UPPGIFTSGENERATOR (E / C / A) --- */
+    function createPracticeProblem(topic, level) {
+      const x = randInt(-8, 10, true);
+      if (topic === 'linear_eq') {
+        if (level === 'E') {
+          const a = randInt(2, 7), b = randInt(-14, 14, true), rhs = a * x + b;
+          return {
+            prompt: 'Lös ekvationen:',
+            math: `${a}x${fmt(b)} = ${rhs}`,
+            labels: ['x ='],
+            answers: [x],
+            hint: `Få ${a}x ensamt genom att flytta konstanten till högerledet.`,
+            steps: [
+              `Ursprunglig ekvation: ${a}x${fmt(b)} = ${rhs}`,
+              `Flytta konstanten till högerledet: ${a}x = ${rhs - b}`,
+              `Dividera båda led med ${a}: x = ${rhs - b} / ${a} = ${x}`
+            ]
+          };
+        }
+        if (level === 'C') {
+          const a = randInt(4, 9), c = randInt(2, a - 1), b = randInt(-12, 12, true), d = (a - c) * x + b;
+          return {
+            prompt: 'Lös ekvationen med obekanta i båda led:',
+            math: `${a}x${fmt(b)} = ${c}x${fmt(d)}`,
+            labels: ['x ='],
+            answers: [x],
+            hint: `Subtrahera ${c}x från båda led först.`,
+            steps: [
+              `Samla x-termerna i vänsterledet (subtrahera ${c}x): ${a - c}x${fmt(b)} = ${d}`,
+              `Flytta konstanten till högerledet: ${a - c}x = ${d - b}`,
+              `Dividera båda led med ${a - c}: x = ${x}`
+            ]
+          };
+        }
+        const a = randInt(4, 7), b = randInt(2, 6), c = randInt(2, a - 1), rhs = a * x - c * (x - b);
+        return {
+          prompt: 'Förenkla vänsterledet och lös ekvationen:',
+          math: `${a}x - ${c}(x - ${b}) = ${rhs}`,
+          labels: ['x ='],
+          answers: [x],
+          hint: `Se upp med minustecknet framför parentesen: -${c}(x - ${b}) = -${c}x + ${c * b}.`,
+          steps: [
+            `Multiplicera in -${c} i parentesen (obs! teckenbyte): ${a}x - ${c}x + ${c * b} = ${rhs}`,
+            `Förenkla x-termerna: ${a - c}x + ${c * b} = ${rhs}`,
+            `Subtrahera ${c * b} i båda led: ${a - c}x = ${rhs - c * b}`,
+            `Dividera med ${a - c}: x = ${x}`
+          ]
+        };
+      }
+
+      if (topic === 'percent') {
+        if (level === 'E') {
+          const s = randInt(2, 9) * 100, p = pick([10, 15, 20, 25, 30, 40]), inc = Math.random() > 0.5, ff = inc ? 1 + p / 100 : 1 - p / 100, res = Math.round(s * ff);
+          return {
+            prompt: `En vara kostar ${s} kr och priset ${inc ? 'höjs' : 'sänks'} med ${p} %. Vad blir det nya priset?`,
+            math: `Startpris: ${s} kr (${inc ? '+' : '-'}${p} %)`,
+            labels: ['Nytt pris (kr) ='],
+            answers: [res],
+            hint: `Multiplicera startpriset med förändringsfaktorn ${ff}.`,
+            steps: [
+              `Bestäm förändringsfaktorn: 100 % ${inc ? '+' : '-'} ${p} % = ${ff * 100} % = ${ff}`,
+              `Multiplicera: ${s} * ${ff} = ${res} kr`
+            ]
+          };
+        }
+        if (level === 'C') {
+          const orig = randInt(3, 12) * 100, p = pick([20, 25, 50]), ff = 1 - p / 100, sale = orig * ff;
+          return {
+            prompt: `Efter en prissänkning på ${p} % kostar en jacka ${sale} kr. Vad kostade jackan från början?`,
+            math: `Reapris: ${sale} kr (efter -${p} %)`,
+            labels: ['Ursprungspris (kr) ='],
+            answers: [orig],
+            hint: `Ställ upp ekvationen x * ${ff} = ${sale} och dividera med ${ff}.`,
+            steps: [
+              `En sänkning med ${p} % ger förändringsfaktorn ${ff}.`,
+              `Ställ upp ekvationen: x * ${ff} = ${sale}`,
+              `Dividera med ${ff}: x = ${sale} / ${ff} = ${orig} kr`
+            ]
+          };
+        }
+        const p1 = pick([20, 25, 50]), p2 = pick([10, 20]), ff1 = 1 + p1 / 100, ff2 = 1 - p2 / 100, totFF = Number((ff1 * ff2).toFixed(4)), totPct = Number(((totFF - 1) * 100).toFixed(1));
+        return {
+          prompt: `En aktie ökar först med ${p1} % och minskar sedan med ${p2} %. Hur många procent har aktien ändrats totalt?`,
+          math: `Förändring 1: +${p1} %  |  Förändring 2: -${p2} %`,
+          labels: ['Total förändring (%) ='],
+          answers: [totPct],
+          hint: `Multiplicera förändringsfaktorerna med varandra: ${ff1} * ${ff2}.`,
+          steps: [
+            `Förändringsfaktor 1 (+${p1} %): ${ff1}`,
+            `Förändringsfaktor 2 (-${p2} %): ${ff2}`,
+            `Total förändringsfaktor: ${ff1} * ${ff2} = ${totFF}`,
+            `Omvandla till procentuell förändring: (${totFF} - 1) * 100 = ${totPct} %`
+          ]
+        };
+      }
+
+      if (topic === 'linear_func') {
+        const k = randInt(-5, 6, true), m = randInt(-8, 10);
+        if (level === 'E') {
+          const xv = randInt(2, 6), yv = k * xv + m;
+          return {
+            prompt: `Beräkna funktionsvärdet y då x = ${xv} för den räta linjen:`,
+            math: `y = ${k}x${fmt(m)}`,
+            labels: ['y ='],
+            answers: [yv],
+            hint: `Ersätt x med ${xv} i formeln.`,
+            steps: [
+              `Sätt in x = ${xv}: y = ${k} * ${xv}${fmt(m)}`,
+              `Beräkna: y = ${k * xv}${fmt(m)} = ${yv}`
+            ]
+          };
+        }
+        if (level === 'C') {
+          const x1 = randInt(1, 3), x2 = x1 + randInt(2, 4), y1 = k * x1 + m, y2 = k * x2 + m;
+          return {
+            prompt: `Bestäm riktningskoefficienten k och konstanttermen m för linjen genom (${x1}, ${y1}) och (${x2}, ${y2}):`,
+            math: `P1 = (${x1}, ${y1})   och   P2 = (${x2}, ${y2})`,
+            labels: ['k =', 'm ='],
+            answers: [k, m],
+            hint: `Använd k = (y2 - y1) / (x2 - x1) och sätt sedan in en av punkterna i y = kx + m.`,
+            steps: [
+              `Beräkna lutningen k: k = (${y2} - (${y1})) / (${x2} - ${x1}) = ${y2 - y1} / ${x2 - x1} = ${k}`,
+              `Sätt in k = ${k} och punkten (${x1}, ${y1}) i y = kx + m: ${y1} = ${k} * ${x1} + m`,
+              `Lös ut m: m = ${y1} - (${k * x1}) = ${m}`
+            ]
+          };
+        }
+        const rx = randInt(-6, 8, true), cy = randInt(2, 4), cx = k * cy, c = -cx * rx;
+        return {
+          prompt: `För vilket x-värde skär linjen nedan x-axeln (då y = 0)?`,
+          math: `${cx}x - ${cy}y${fmt(c)} = 0`,
+          labels: ['x ='],
+          answers: [rx],
+          hint: `När linjen skär x-axeln är y = 0. Sätt in y = 0 och lös ut x.`,
+          steps: [
+            `Sätt in y = 0 i ekvationen: ${cx}x - ${cy} * 0${fmt(c)} = 0`,
+            `Flytta konstanten: ${cx}x = ${-c}`,
+            `Dividera med ${cx}: x = ${rx}`
+          ]
+        };
+      }
+
+      if (topic === 'pq_eq') {
+        const x1 = randInt(-5, 6, true), x2 = level === 'E' ? x1 + randInt(1, 4) * 2 : x1 + randInt(1, 5);
+        const p = -(x1 + x2), q = x1 * x2, hp = -p / 2, ur = hp * hp - q, rv = Math.sqrt(ur), a = level === 'A' ? randInt(2, 4) : 1;
+        const mathStr = level === 'E' ? `x²${fmt(p, 'x')}${fmt(q)} = 0` : level === 'C' ? `x²${fmt(p, 'x')} = ${-q}` : `${a}x²${fmt(a * p, 'x')}${fmt(a * q)} = 0`;
+        const steps = [];
+        if (level === 'C') steps.push(`Skriv om på normalform (= 0): x²${fmt(p, 'x')}${fmt(q)} = 0`);
+        if (level === 'A') steps.push(`Dividera samtliga termer med ${a}: x²${fmt(p, 'x')}${fmt(q)} = 0`);
+        steps.push(`Identifiera koefficienterna: p = ${p} och q = ${q}`);
+        steps.push(`Sätt in i PQ-formeln: x = ${hp} ± √((${hp})² - (${q})) = ${hp} ± √${ur} = ${hp} ± ${rv}`);
+        steps.push(`Svar: x1 = ${Math.min(x1, x2)} och x2 = ${Math.max(x1, x2)} (ordningen spelar ingen roll)`);
+        return {
+          prompt: 'Lös andragradsekvationen (ange båda rötterna):',
+          math: mathStr,
+          labels: ['x1 =', 'x2 ='],
+          answers: [x1, x2],
+          unorderedAnswers: true,
+          hint: `Skriv på normalform x² + px + q = 0 (p = ${p}, q = ${q}). Halva p med omvänt tecken är ${hp}.`,
+          steps
+        };
+      }
+
+      if (topic === 'powers') {
+        if (level === 'E') {
+          const a = randInt(2, 7), b = randInt(2, 6), c = randInt(1, a + b - 2), ans = a + b - c;
+          return {
+            prompt: 'Förenkla uttrycket till formen x^n. Bestäm exponenten n:',
+            math: `(x^${a} * x^${b}) / x^${c} = x^n`,
+            labels: ['n ='],
+            answers: [ans],
+            hint: `Addera exponenterna i täljaren och subtrahera nämnarens exponent.`,
+            steps: [
+              `Multiplicera i täljaren (addera exponenterna): x^(${a} + ${b}) = x^${a + b}`,
+              `Dividera med nämnaren (subtrahera exponenten): x^(${a + b} - ${c}) = x^${ans}`,
+              `Svar: n = ${ans}`
+            ]
+          };
+        }
+        if (level === 'C') {
+          const a = randInt(2, 5), b = randInt(2, 4), c = randInt(-5, -1), ans = a * b + c;
+          return {
+            prompt: 'Förenkla uttrycket till formen x^n. Bestäm exponenten n:',
+            math: `(x^${a})^${b} * x^(${c}) = x^n`,
+            labels: ['n ='],
+            answers: [ans],
+            hint: `För (x^${a})^${b} multipliceras exponenterna (${a} * ${b}). Addera sedan (${c}).`,
+            steps: [
+              `Potens av en potens: (x^${a})^${b} = x^(${a} * ${b}) = x^${a * b}`,
+              `Multiplicera med x^(${c}): x^(${a * b} + (${c})) = x^${ans}`,
+              `Svar: n = ${ans}`
+            ]
+          };
+        }
+        const base = pick([2, 3, 5]), xv = randInt(2, 6), k = randInt(2, 3), m = randInt(1, 4), rhs = k * xv - m;
+        return {
+          prompt: `Lös ekvationen genom att skriva leden med samma bas (${base}):`,
+          math: `(${base}^${k})^x / ${base}^${m} = ${base}^${rhs}`,
+          labels: ['x ='],
+          answers: [xv],
+          hint: `Skriv om vänsterledet till ${base}^(${k}x - ${m}) och sätt exponenterna lika.`,
+          steps: [
+            `Förenkla täljaren: (${base}^${k})^x = ${base}^(${k}x)`,
+            `Dividera med ${base}^${m}: ${base}^(${k}x - ${m}) = ${base}^${rhs}`,
+            `Sätt exponenterna lika: ${k}x - ${m} = ${rhs}  ->  ${k}x = ${rhs + m}  ->  x = ${xv}`
+          ]
+        };
+      }
+
+      // Linjära ekvationssystem
+      const sx = randInt(-4, 6, true), sy = randInt(-4, 6, true);
+      if (level === 'E') {
+        const k = randInt(2, 4), m = sy - k * sx, sum = sx + sy;
+        return {
+          prompt: 'Lös ekvationssystemet med substitutionsmetoden:',
+          math: `(1)  y = ${k}x${fmt(m)}\n(2)  x + y = ${sum}`,
+          labels: ['x =', 'y ='],
+          answers: [sx, sy],
+          hint: `Ersätt y i ekvation (2) med (${k}x${fmt(m)}).`,
+          steps: [
+            `Substituera y i ekvation (2): x + (${k}x${fmt(m)}) = ${sum}`,
+            `Förenkla: ${k + 1}x = ${sum - m}  ->  x = ${sx}`,
+            `Sätt in x = ${sx} i ekvation (1): y = ${k} * (${sx})${fmt(m)} = ${sy}`,
+            `Svar: x = ${sx} och y = ${sy}`
+          ]
+        };
+      }
+      if (level === 'C') {
+        const a1 = randInt(2, 5), a2 = randInt(1, 4), b = randInt(2, 5), r1 = a1 * sx + b * sy, r2 = a2 * sx - b * sy;
+        return {
+          prompt: 'Lös ekvationssystemet med additionsmetoden:',
+          math: `(1)  ${a1}x + ${b}y = ${r1}\n(2)  ${a2}x - ${b}y = ${r2}`,
+          labels: ['x =', 'y ='],
+          answers: [sx, sy],
+          hint: `Addera ekvation (1) och (2) ledvis så tar +${b}y och -${b}y ut varandra.`,
+          steps: [
+            `Addera ekvationerna ledvis: (${a1} + ${a2})x = ${r1} + (${r2})`,
+            `Förenkla: ${a1 + a2}x = ${r1 + r2}  ->  x = ${sx}`,
+            `Sätt in x = ${sx} i ekvation (1): ${a1}*(${sx}) + ${b}y = ${r1}  ->  y = ${sy}`,
+            `Svar: x = ${sx} och y = ${sy}`
+          ]
+        };
+      }
+      const r1 = 2 * sx + 3 * sy, r2 = 3 * sx - 2 * sy;
+      return {
+        prompt: 'Lös ekvationssystemet:',
+        math: `(1)  2x + 3y = ${r1}\n(2)  3x - 2y = ${r2}`,
+        labels: ['x =', 'y ='],
+        answers: [sx, sy],
+        hint: `Multiplicera ekvation (1) med 2 och ekvation (2) med 3 för att få +6y och -6y.`,
+        steps: [
+          `Multiplicera ekv (1) med 2:  4x + 6y = ${2 * r1}`,
+          `Multiplicera ekv (2) med 3:  9x - 6y = ${3 * r2}`,
+          `Addera ekvationerna: 13x = ${2 * r1 + 3 * r2}  ->  x = ${sx}`,
+          `Sätt in x = ${sx} i ekv (1): 2*(${sx}) + 3y = ${r1}  ->  y = ${sy}`,
+          `Svar: x = ${sx} och y = ${sy}`
+        ]
+      };
+    }
+
+    /* --- VY & LOGIK --- */
+    function loadStats() {
+      try {
+        const p = JSON.parse(localStorage.getItem('hakan_studio_stats') || '{}');
+        state.streak = Number(p.streak) || 0;
+        state.solvedTotal = Number(p.solvedTotal) || 0;
+      } catch (e) {}
+      dom.streakCount.textContent = `${state.streak} 🔥`;
+      dom.solvedCount.textContent = `${state.solvedTotal} ✓`;
+    }
+
+    function saveStats() {
+      try { localStorage.setItem('hakan_studio_stats', JSON.stringify({ streak: state.streak, solvedTotal: state.solvedTotal })); } catch (e) {}
+      dom.streakCount.textContent = `${state.streak} 🔥`;
+      dom.solvedCount.textContent = `${state.solvedTotal} ✓`;
+    }
+
+    function getTopicTitle() {
+      return (TOPICS[state.course].find((t) => t.id === state.topic) || {}).title || '';
+    }
+
+    function renderTopicPills() {
+      const frag = document.createDocumentFragment();
+      TOPICS[state.course].forEach((t) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        const act = t.id === state.topic;
+        b.className = 'topic-pill' + (act ? ' active' : '');
+        b.dataset.topic = t.id;
+        b.setAttribute('aria-pressed', String(act));
+        b.textContent = t.title;
+        frag.appendChild(b);
+      });
+      dom.topicSelector.replaceChildren(frag);
+    }
+
+    function renderPracticeView() {
+      state.problemSolved = false;
+      const prob = (state.currentProblem = createPracticeProblem(state.topic, state.level));
+      dom.topicBadge.textContent = getTopicTitle();
+      dom.levelBadge.textContent = `Nivå ${state.level}`;
+      dom.problemPrompt.textContent = prob.prompt;
+      dom.problemMath.textContent = prob.math;
+
+      dom.inputLabel1.textContent = prob.labels[0];
+      dom.answerInput1.value = '';
+      dom.inputGroup2.hidden = prob.labels.length < 2;
+      if (prob.labels.length > 1) dom.inputLabel2.textContent = prob.labels[1];
+      dom.answerInput2.value = '';
+
+      dom.hintBox.hidden = true;
+      dom.hintBox.textContent = prob.hint;
+      dom.btnShowHint.setAttribute('aria-expanded', 'false');
+      dom.practiceFeedback.hidden = true;
+      dom.solutionContainer.hidden = true;
+      dom.btnShowSolution.setAttribute('aria-expanded', 'false');
+
+      const frag = document.createDocumentFragment();
+      prob.steps.forEach((s) => {
+        const li = document.createElement('li');
+        li.textContent = s;
+        frag.appendChild(li);
+      });
+      dom.solutionStepsList.replaceChildren(frag);
+    }
+
+    function checkUserAnswer() {
+      const prob = state.currentProblem;
+      if (!prob) return;
+      const parse = (v) => { const s = String(v).trim().replace(',', '.'); return s === '' ? NaN : Number(s); };
+      const u = [parse(dom.answerInput1.value)];
+      if (prob.labels.length > 1) u.push(parse(dom.answerInput2.value));
+
+      if (u.some(Number.isNaN)) {
+        dom.practiceFeedback.hidden = false;
+        dom.practiceFeedback.className = 'feedback-banner is-wrong';
+        dom.practiceFeedback.textContent = 'Ange ett giltigt tal i samtliga svarsfält.';
+        return;
+      }
+
+      const exp = prob.answers;
+      const ok = prob.unorderedAnswers && exp.length === 2
+        ? (Math.abs(u[0] - exp[0]) < 0.01 && Math.abs(u[1] - exp[1]) < 0.01) || (Math.abs(u[0] - exp[1]) < 0.01 && Math.abs(u[1] - exp[0]) < 0.01)
+        : exp.every((e, i) => Math.abs(u[i] - e) < 0.01);
+
+      dom.practiceFeedback.hidden = false;
+      if (ok) {
+        dom.practiceFeedback.className = 'feedback-banner is-correct';
+        dom.practiceFeedback.textContent = '🎉 Helt rätt! Bra jobbat! Klicka på "Slumpa ny uppgift" för nästa.';
+        if (!state.problemSolved) { state.problemSolved = true; state.streak++; state.solvedTotal++; saveStats(); }
+      } else {
+        dom.practiceFeedback.className = 'feedback-banner is-wrong';
+        dom.practiceFeedback.textContent = 'Inte riktigt rätt. Kontrollera uträkningen eller klicka på "Visa ledtråd" / "Visa lösning steg-för-steg"!';
+        state.streak = 0; saveStats();
+      }
+    }
+
+    /* --- EVENTS --- */
+    const curTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    dom.themeBtn.textContent = curTheme === 'dark' ? '☀️' : '🌙';
+    dom.themeBtn.addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('hakan_site_theme', next); } catch (e) {}
+      dom.themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+    });
+
+    dom.courseSelector.addEventListener('click', (e) => {
+      const b = e.target.closest('.seg-btn');
+      if (!b || b.dataset.course === state.course) return;
+      state.course = b.dataset.course;
+      state.topic = TOPICS[state.course][0].id;
+      dom.courseSelector.querySelectorAll('.seg-btn').forEach((el) => {
+        const act = el.dataset.course === state.course;
+        el.classList.toggle('active', act);
+        el.setAttribute('aria-pressed', String(act));
+      });
+      renderTopicPills();
+      renderPracticeView();
+    });
+
+    dom.topicSelector.addEventListener('click', (e) => {
+      const p = e.target.closest('.topic-pill');
+      if (!p || p.dataset.topic === state.topic) return;
+      state.topic = p.dataset.topic;
+      dom.topicSelector.querySelectorAll('.topic-pill').forEach((el) => {
+        const act = el.dataset.topic === state.topic;
+        el.classList.toggle('active', act);
+        el.setAttribute('aria-pressed', String(act));
+      });
+      renderPracticeView();
+    });
+
+    dom.levelSelector.addEventListener('click', (e) => {
+      const p = e.target.closest('.level-pill');
+      if (!p || p.dataset.level === state.level) return;
+      state.level = p.dataset.level;
+      dom.levelSelector.querySelectorAll('.level-pill').forEach((el) => {
+        const act = el.dataset.level === state.level;
+        el.classList.toggle('active', act);
+        el.setAttribute('aria-pressed', String(act));
+      });
+      renderPracticeView();
+    });
+
+    dom.btnGenerateProblem.addEventListener('click', renderPracticeView);
+    dom.btnCheckAnswer.addEventListener('click', checkUserAnswer);
+    [dom.answerInput1, dom.answerInput2].forEach((inp) => inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') checkUserAnswer(); }));
+
+    dom.btnShowHint.addEventListener('click', () => {
+      const next = !dom.hintBox.hidden;
+      dom.hintBox.hidden = next;
+      dom.btnShowHint.setAttribute('aria-expanded', String(!next));
+    });
+
+    dom.btnShowSolution.addEventListener('click', () => {
+      const next = !dom.solutionContainer.hidden;
+      dom.solutionContainer.hidden = next;
+      dom.btnShowSolution.setAttribute('aria-expanded', String(!next));
+    });
+
+    loadStats();
+    renderTopicPills();
+    renderPracticeView();
+  })();
+  </script>
+</body>
+</html>

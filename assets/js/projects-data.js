@@ -38,6 +38,19 @@ const RAW_PROJECTS = [
     accentColor: 'var(--color-chem)',
     tags: ['Kemi 1', 'Periodiska systemet', 'Stökiometri', 'Gymnasiet']
   }
+{
+  id: 'traningsstudio',
+  title: 'Träningsstudio – Mängdträning & Hitta felet',
+  category: 'Matematik',
+  description: 'Slumpa fram obegränsat med övningsuppgifter på E-, C- och A-nivå med steg-för-steg-lösningar eller träna på att hitta klassiska fel i uträkningar.',
+  icon: '🎯',
+  url: 'subpages/traningsstudio/index.html',
+  isExternal: false,
+  badge: 'Interaktivt verktyg',
+  badgeType: 'internal',
+  accentColor: 'var(--color-ai)',
+  tags: ['Matematik 1a', 'Matematik 2a', 'Mängdträning', 'Hitta felet', 'PQ-formeln', 'Ekvationer']
+}
 ];
 
 // Förberäkna sökindex en gång vid laddning för O(1) strängmatchning per projekt vid sökning
