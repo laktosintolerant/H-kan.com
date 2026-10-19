@@ -27,10 +27,15 @@ Håkan.com/
 │       ├── main.js              # Temahantering, sök, filter och kortrendering
 │       └── projects-data.js     # Registret där du lägger till eller ändrar projekt
 ├── subpages/
-│   └── matematik-2a/            # Exempel på undersida / ämnesportal
-│       ├── index.html           # Matematik 2a huvudsida
-│       ├── mat-style.css        # Matematikspecifik CSS
-│       └── mat-solver.js        # PQ-beräknare och dynamisk graf
+│   ├── matematik-1a/            # Modulbaserade snabbtest för Matematik 1a
+│   │   └── index.html
+│   ├── matematik-2a/            # Undersida / ämnesportal för Matematik 2a
+│   │   ├── index.html           # Matematik 2a huvudsida
+│   │   ├── mat-style.css        # Matematikspecifik CSS
+│   │   └── mat-solver.js        # PQ-beräknare och dynamisk graf
+│   └── traningsstudio/          # Interaktiv Träningsstudio (E/C/A mängdträning)
+│       ├── index.html           # Träningsstudio huvudsida & uppgiftsgenerator
+│       └── trainer.css          # Specifik stilmall för Träningsstudion
 └── templates/
     └── subpage-template.html    # Färdig mall för nya AI-byggda verktyg
 ```

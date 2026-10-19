@@ -28,31 +28,36 @@
   <header class="site-header">
     <div class="container header-inner">
       <a href="../../index.html" class="brand-logo" id="header-brand-logo">
-        <div class="brand-icon">H</div>
+        <div class="brand-icon" aria-hidden="true">H</div>
         <span class="brand-text">Håkan.com</span>
         <span class="brand-badge">PORTAL</span>
       </a>
 
-      <nav class="nav-group">
-        <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Öppna meny" aria-expanded="false">
-          <svg class="hamburger-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+      <nav class="nav-group" aria-label="Huvudnavigation">
+        <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Öppna meny" aria-expanded="false" aria-controls="primary-navigation">
+          <svg class="hamburger-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
-          <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24" style="display:none;">
+          <svg class="close-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24" hidden>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
 
-        <ul class="nav-links">
-          <li><a href="../matematik-1a/index.html" class="nav-link">📐 Matematik 1a</a></li>
-          <li><a href="../matematik-2a/index.html" class="nav-link">📊 Matematik 2a</a></li>
-          <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link">🧪 kemi1.se ↗</a></li>
+        <ul class="nav-links" id="primary-navigation">
+          <li><a href="../../index.html" class="nav-link"><span aria-hidden="true">🏠</span> Startsida</a></li>
+          <li class="nav-divider" aria-hidden="true"></li>
+          <li><a href="../matematik-1a/index.html" class="nav-link"><span aria-hidden="true">📐</span> Matematik 1a</a></li>
+          <li><a href="../matematik-2a/index.html" class="nav-link"><span aria-hidden="true">📊</span> Matematik 2a</a></li>
+          <li class="nav-divider" aria-hidden="true"></li>
+          <li><a href="../traningsstudio/index.html" class="nav-link nav-link-tool"><span aria-hidden="true">🎯</span> Träningsstudio</a></li>
+          <li class="nav-divider" aria-hidden="true"></li>
+          <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link nav-link-external"><span aria-hidden="true">🧪</span> kemi1.se <span class="nav-external-arrow" aria-hidden="true">↗</span></a></li>
           <li class="mobile-only-link"><a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="nav-link kofi-nav-item">☕ Stöd på Ko-fi ↗</a></li>
-          <li class="mobile-only-link"><a href="mailto:stark@håkan.com" class="nav-link">✉ Kontakt</a></li>
+          <li class="mobile-only-link"><a href="mailto:stark@xn--hkan-qoa.com" class="nav-link">✉ Kontakt</a></li>
         </ul>
 
         <!-- Ljust/Mörkt läge växlare -->
-        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Växla tema"></button>
+        <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Växla tema" aria-pressed="false">☀️</button>
       </nav>
     </div>
   </header>
@@ -117,6 +122,7 @@
         <li><a href="../../index.html">Startsida</a></li>
         <li><a href="../matematik-1a/index.html">Matematik 1a</a></li>
         <li><a href="../matematik-2a/index.html">Matematik 2a</a></li>
+        <li><a href="../traningsstudio/index.html">Träningsstudio</a></li>
         <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer">kemi1.se ↗</a></li>
         <li><a href="mailto:stark@håkan.com" class="footer-contact-link">✉ stark@håkan.com</a></li>
         <li><a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="kofi-btn">☕ Stöd på Ko-fi ↗</a></li>
@@ -125,6 +131,6 @@
   </footer>
 
   <!-- Grundläggande Portal-skript -->
-  <script src="../../assets/js/main.js"></script>
+  <script type="module" src="../../assets/js/main.js"></script>
 </body>
 </html>

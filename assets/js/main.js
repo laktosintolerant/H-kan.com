@@ -262,10 +262,237 @@ function initEventListeners() {
 }
 
 /* ==========================================================================
+   TVÅSTEGSMENY (Global huvudmeny + kontextuell kursmeny på samtliga sidor)
+   ========================================================================== */
+
+function getSiteRootPrefix() {
+  const path = window.location.pathname.replace(/\\/g, '/');
+  if (path.includes('/subpages/')) {
+    const after = path.split('/subpages/')[1] || '';
+    const depth = after.split('/').length; // t.ex. 'matematik-2a/index.html' -> 2 -> '../../'
+    return '../'.repeat(depth);
+  }
+  if (path.includes('/templates/')) {
+    return '../';
+  }
+  return '';
+}
+
+function getActiveSectionInfo() {
+  const path = window.location.pathname.replace(/\\/g, '/').toLowerCase();
+  if (path.includes('/subpages/matematik-1a')) {
+    return { main: 'ma1a', sub: 'overview' };
+  }
+  if (path.includes('/subpages/matematik-2a')) {
+    const file = path.split('/').pop() || 'index.html';
+    return { main: 'ma2a', sub: file === '' ? 'index.html' : file };
+  }
+  if (path.includes('/subpages/traningsstudio')) {
+    return { main: 'studio', sub: 'studio' };
+  }
+  return { main: 'home', sub: '' };
+}
+
+function buildSubNavbar(prefix, section) {
+  // Steg 2: Kursmeny för Matematik 2a
+  if (section.main === 'ma2a') {
+    const ma2aBase = `${prefix}subpages/matematik-2a/`;
+    const items = [
+      { file: 'index.html', label: '📚 Översikt' },
+      { divider: true },
+      { file: 'modul-1.html', label: '1. Algebra & Funktioner' },
+      { file: 'modul-2.html', label: '2. Räta linjen & System' },
+      { file: 'modul-3.html', label: '3. Potenser & PQ' },
+      { file: 'modul-4.html', label: '4. Geometri & Statistik' },
+      { divider: true },
+      { file: 'pq-formeln.html', label: '⚡ PQ-Lösare' },
+      { file: 'funktioner-grafer.html', label: '📉 Grafer & GeoGebra' }
+    ];
+
+    const subNav = document.createElement('nav');
+    subNav.className = 'sub-navbar';
+    subNav.setAttribute('aria-label', 'Kursmeny för Matematik 2a');
+
+    const inner = document.createElement('div');
+    inner.className = 'container sub-navbar-inner';
+
+    const label = document.createElement('span');
+    label.className = 'sub-navbar-label';
+    label.textContent = '📊 Matematik 2a';
+    inner.appendChild(label);
+
+    const ul = document.createElement('ul');
+    ul.className = 'sub-navbar-links';
+
+    for (const item of items) {
+      const li = document.createElement('li');
+      if (item.divider) {
+        li.className = 'sub-nav-divider';
+        li.setAttribute('aria-hidden', 'true');
+      } else {
+        const a = document.createElement('a');
+        a.href = `${ma2aBase}${item.file}`;
+        const isActive = section.sub === item.file;
+        a.className = `sub-nav-link${isActive ? ' active' : ''}`;
+        if (isActive) a.setAttribute('aria-current', 'page');
+        a.textContent = item.label;
+        li.appendChild(a);
+      }
+      ul.appendChild(li);
+    }
+
+    inner.appendChild(ul);
+    subNav.appendChild(inner);
+    return subNav;
+  }
+
+  // Steg 2: Kursmeny för Matematik 1a
+  if (section.main === 'ma1a') {
+    const subNav = document.createElement('nav');
+    subNav.className = 'sub-navbar';
+    subNav.setAttribute('aria-label', 'Kursmeny för Matematik 1a');
+
+    const inner = document.createElement('div');
+    inner.className = 'container sub-navbar-inner';
+
+    const label = document.createElement('span');
+    label.className = 'sub-navbar-label';
+    label.textContent = '📐 Matematik 1a';
+    inner.appendChild(label);
+
+    const ul = document.createElement('ul');
+    ul.className = 'sub-navbar-links';
+
+    const liQuiz = document.createElement('li');
+    const aQuiz = document.createElement('a');
+    aQuiz.href = `${prefix}subpages/matematik-1a/index.html`;
+    aQuiz.className = 'sub-nav-link active';
+    aQuiz.setAttribute('aria-current', 'page');
+    aQuiz.textContent = '🧠 Modulbaserade Snabbtest (1–6)';
+    liQuiz.appendChild(aQuiz);
+
+    const liDiv = document.createElement('li');
+    liDiv.className = 'sub-nav-divider';
+    liDiv.setAttribute('aria-hidden', 'true');
+
+    const liStudio = document.createElement('li');
+    const aStudio = document.createElement('a');
+    aStudio.href = `${prefix}subpages/traningsstudio/index.html`;
+    aStudio.className = 'sub-nav-link';
+    aStudio.textContent = '🎯 Mängdträna Ma 1a i Träningsstudion ➔';
+    liStudio.appendChild(aStudio);
+
+    ul.append(liQuiz, liDiv, liStudio);
+    inner.appendChild(ul);
+    subNav.appendChild(inner);
+    return subNav;
+  }
+
+  return null;
+}
+
+function initSharedNavigation() {
+  const header = document.querySelector('.site-header');
+  if (!header) return;
+
+  const prefix = getSiteRootPrefix();
+  const section = getActiveSectionInfo();
+
+  // Uppdatera logotypens länk och badge så att den är konsekvent överallt
+  const brandLogo = header.querySelector('.brand-logo');
+  if (brandLogo) {
+    brandLogo.href = `${prefix}index.html`;
+    const badge = brandLogo.querySelector('.brand-badge');
+    if (badge) badge.textContent = 'PORTAL';
+  }
+
+  // Säkerställ att mobilmeny-knappen finns i nav-group (t.ex. i Träningsstudion)
+  const navGroup = header.querySelector('.nav-group');
+  const navList = header.querySelector('.nav-links');
+  if (navGroup && navList) {
+    navList.id = 'primary-navigation';
+
+    if (!header.querySelector('.mobile-nav-toggle')) {
+      const toggleBtn = document.createElement('button');
+      toggleBtn.type = 'button';
+      toggleBtn.className = 'mobile-nav-toggle';
+      toggleBtn.id = 'mobile-nav-toggle';
+      toggleBtn.setAttribute('aria-label', 'Öppna meny');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+      toggleBtn.setAttribute('aria-controls', 'primary-navigation');
+      toggleBtn.innerHTML = `
+        <svg class="hamburger-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        <svg class="close-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24" hidden>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      `;
+      navGroup.insertBefore(toggleBtn, navList);
+      dom.mobileNavToggle = toggleBtn;
+    }
+
+    // Bygg enhetlig Steg 1-huvudmeny
+    navList.innerHTML = `
+      <li>
+        <a href="${prefix}index.html" class="nav-link${section.main === 'home' ? ' active' : ''}"${section.main === 'home' ? ' aria-current="page"' : ''}>
+          <span aria-hidden="true">🏠</span> Startsida
+        </a>
+      </li>
+      <li class="nav-divider" aria-hidden="true"></li>
+      <li>
+        <a href="${prefix}subpages/matematik-1a/index.html" class="nav-link${section.main === 'ma1a' ? ' active' : ''}"${section.main === 'ma1a' ? ' aria-current="page"' : ''}>
+          <span aria-hidden="true">📐</span> Matematik 1a
+        </a>
+      </li>
+      <li>
+        <a href="${prefix}subpages/matematik-2a/index.html" class="nav-link${section.main === 'ma2a' ? ' active' : ''}"${section.main === 'ma2a' ? ' aria-current="page"' : ''}>
+          <span aria-hidden="true">📊</span> Matematik 2a
+        </a>
+      </li>
+      <li class="nav-divider" aria-hidden="true"></li>
+      <li>
+        <a href="${prefix}subpages/traningsstudio/index.html" class="nav-link nav-link-tool${section.main === 'studio' ? ' active' : ''}"${section.main === 'studio' ? ' aria-current="page"' : ''}>
+          <span aria-hidden="true">🎯</span> Träningsstudio
+        </a>
+      </li>
+      <li class="nav-divider" aria-hidden="true"></li>
+      <li>
+        <a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link nav-link-external">
+          <span aria-hidden="true">🧪</span> kemi1.se <span class="nav-external-arrow" aria-hidden="true">↗</span>
+          <span class="sr-only">(öppnas i ny flik)</span>
+        </a>
+      </li>
+      <li class="mobile-only-link">
+        <a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="nav-link kofi-nav-item">
+          <span aria-hidden="true">☕</span> Stöd på Ko-fi <span aria-hidden="true">↗</span>
+          <span class="sr-only">(öppnas i ny flik)</span>
+        </a>
+      </li>
+      <li class="mobile-only-link">
+        <a href="mailto:stark@xn--hkan-qoa.com" class="nav-link">
+          <span aria-hidden="true">✉</span> Kontakt
+        </a>
+      </li>
+    `;
+    dom.navLinks = navList;
+  }
+
+  // Lägg till Steg 2 (Sekundär kursmeny) om sådan inte redan finns
+  if (!header.querySelector('.sub-navbar')) {
+    const subNav = buildSubNavbar(prefix, section);
+    if (subNav) {
+      header.appendChild(subNav);
+    }
+  }
+}
+
+/* ==========================================================================
    INITIERING
    ========================================================================== */
 
 function init() {
+  initSharedNavigation();
   renderThemeButton();
   renderFilterPills();
   renderProjects();

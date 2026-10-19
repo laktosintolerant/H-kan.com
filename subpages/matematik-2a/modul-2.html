@@ -55,32 +55,53 @@
   <header class="site-header">
     <div class="container header-inner">
       <a href="../../index.html" class="brand-logo">
-        <div class="brand-icon">H</div>
+        <div class="brand-icon" aria-hidden="true">H</div>
         <span class="brand-text">Håkan.com</span>
         <span class="brand-badge">PORTAL</span>
       </a>
 
-      <nav class="nav-group">
-        <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Öppna meny" aria-expanded="false">
-          <svg class="hamburger-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+      <nav class="nav-group" aria-label="Huvudnavigation">
+        <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Öppna meny" aria-expanded="false" aria-controls="primary-navigation">
+          <svg class="hamburger-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
-          <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24" style="display:none;">
+          <svg class="close-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24" hidden>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
 
-        <ul class="nav-links">
-          <li><a href="../matematik-1a/index.html" class="nav-link">📐 Matematik 1a</a></li>
-          <li><a href="index.html" class="nav-link active">📊 Matematik 2a</a></li>
-          <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link">🧪 kemi1.se ↗</a></li>
+        <ul class="nav-links" id="primary-navigation">
+          <li><a href="../../index.html" class="nav-link"><span aria-hidden="true">🏠</span> Startsida</a></li>
+          <li class="nav-divider" aria-hidden="true"></li>
+          <li><a href="../matematik-1a/index.html" class="nav-link"><span aria-hidden="true">📐</span> Matematik 1a</a></li>
+          <li><a href="index.html" class="nav-link active" aria-current="page"><span aria-hidden="true">📊</span> Matematik 2a</a></li>
+          <li class="nav-divider" aria-hidden="true"></li>
+          <li><a href="../traningsstudio/index.html" class="nav-link nav-link-tool"><span aria-hidden="true">🎯</span> Träningsstudio</a></li>
+          <li class="nav-divider" aria-hidden="true"></li>
+          <li><a href="https://kemi1.se" target="_blank" rel="noopener noreferrer" class="nav-link nav-link-external"><span aria-hidden="true">🧪</span> kemi1.se <span class="nav-external-arrow" aria-hidden="true">↗</span></a></li>
           <li class="mobile-only-link"><a href="https://ko-fi.com/lararehakan" target="_blank" rel="noopener noreferrer" class="nav-link kofi-nav-item">☕ Stöd på Ko-fi ↗</a></li>
-          <li class="mobile-only-link"><a href="mailto:stark@håkan.com" class="nav-link">✉ Kontakt</a></li>
+          <li class="mobile-only-link"><a href="mailto:stark@xn--hkan-qoa.com" class="nav-link">✉ Kontakt</a></li>
         </ul>
 
-        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Växla tema"></button>
+        <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Växla tema" aria-pressed="false">☀️</button>
       </nav>
     </div>
+    <nav class="sub-navbar" aria-label="Kursmeny för Matematik 2a">
+      <div class="container sub-navbar-inner">
+        <span class="sub-navbar-label">📊 Matematik 2a</span>
+        <ul class="sub-navbar-links">
+          <li><a href="index.html" class="sub-nav-link">📚 Översikt</a></li>
+          <li class="sub-nav-divider" aria-hidden="true"></li>
+          <li><a href="modul-1.html" class="sub-nav-link">1. Algebra &amp; Funktioner</a></li>
+          <li><a href="modul-2.html" class="sub-nav-link active" aria-current="page">2. Räta linjen &amp; System</a></li>
+          <li><a href="modul-3.html" class="sub-nav-link">3. Potenser &amp; PQ</a></li>
+          <li><a href="modul-4.html" class="sub-nav-link">4. Geometri &amp; Statistik</a></li>
+          <li class="sub-nav-divider" aria-hidden="true"></li>
+          <li><a href="pq-formeln.html" class="sub-nav-link">⚡ PQ-Lösare</a></li>
+          <li><a href="funktioner-grafer.html" class="sub-nav-link">📉 Grafer &amp; GeoGebra</a></li>
+        </ul>
+      </div>
+    </nav>
   </header>
 
   <!-- ========================================================================
@@ -343,7 +364,7 @@
     </div>
   </footer>
 
-  <script src="../../assets/js/main.js"></script>
+  <script type="module" src="../../assets/js/main.js"></script>
   <script src="mat2a-quiz.js"></script>
 </body>
 </html>

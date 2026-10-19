@@ -1009,10 +1009,24 @@
     }
   }
 
+  let currentShuffledOptions = [];
+
+  function shuffleArray(arr) {
+    const copy = arr.slice();
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = copy[i];
+      copy[i] = copy[j];
+      copy[j] = tmp;
+    }
+    return copy;
+  }
+
   function loadQuestion() {
     const topic = MAT2A_TOPICS[currentTopicIndex];
     const q = topic.questions[currentQuestionIndex];
     isAnswered = false;
+    currentShuffledOptions = shuffleArray(q.options);
 
     if (quizTopicTitleEl) quizTopicTitleEl.textContent = `${topic.icon} ${topic.title}`;
     if (questionProgressTextEl) questionProgressTextEl.textContent = `Fråga ${currentQuestionIndex + 1} av ${topic.questions.length}`;
@@ -1023,7 +1037,7 @@
     }
 
     let optionsHTML = '';
-    q.options.forEach((opt, idx) => {
+    currentShuffledOptions.forEach((opt, idx) => {
       optionsHTML += `
         <button class="option-btn" onclick="window.Mat2aQuiz.handleOptionSelect(${idx})" id="m2a-opt-btn-${idx}">
           <div style="display: flex; align-items: center;">
@@ -1062,12 +1076,13 @@
 
     const topic = MAT2A_TOPICS[currentTopicIndex];
     const q = topic.questions[currentQuestionIndex];
-    const selectedOpt = q.options[selectedIndex];
+    const options = currentShuffledOptions.length ? currentShuffledOptions : q.options;
+    const selectedOpt = options[selectedIndex];
     const isCorrect = selectedOpt.correct;
 
     userAnswers.push({ questionId: q.id, isCorrect: isCorrect, selectedIndex: selectedIndex });
 
-    q.options.forEach((opt, idx) => {
+    options.forEach((opt, idx) => {
       const btn = document.getElementById(`m2a-opt-btn-${idx}`);
       const ind = document.getElementById(`m2a-opt-ind-${idx}`);
       if (!btn) return;
