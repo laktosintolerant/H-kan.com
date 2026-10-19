@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>The Acid/Base Barista – pH Lab Arcade</title>
+<style>
+  :root {
+    --bg-dark: #0b0f19;
+    --panel-bg: rgba(18, 25, 43, 0.85);
+    --border-glow: rgba(99, 179, 237, 0.25);
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --success: #22c55e;
+    --warning: #eab308;
+    --danger: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  body, html {
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  #game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    cursor: grab;
+  }
+
+  canvas:active {
+    cursor: grabbing;
+  }
+
+  /* Minimalistisk, diegetisk toppmeny */
+  .hud-top {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 960px;
+    padding: 12px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    pointer-events: none;
+  }
+
+  .hud-top > * {
+    pointer-events: auto;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--panel-bg);
+    padding: 8px 16px;
+    border-radius: 14px;
+    border: 1px solid var(--border-glow);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  .brand h1 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    background: linear-gradient(90deg, #ff5e7e, #4ade80, #38bdf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .level-tabs {
+    display: flex;
+    gap: 6px;
+    background: var(--panel-bg);
+    padding: 6px;
+    border-radius: 14px;
+    border: 1px solid var(--border-glow);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  .btn {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-muted);
+    border: 1px solid transparent;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+
+  .btn:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .btn.active {
+    background: rgba(56, 189, 248, 0.18);
+    color: #fff;
+    border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+  }
+
+  .btn-action {
+    background: linear-gradient(135deg, #2563eb, #0284c7);
+    color: white;
+    border: 1px solid #38bdf8;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+  }
+
+  .btn-action:hover {
+    background: linear-gradient(135deg, #3b82f6, #0369a1);
+    transform: translateY(-1px);
+  }
+
+  /* Uppdragsbanner */
+  .mission-banner {
+    position: relative;
+    z-index: 10;
+    max-width: 720px;
+    width: 92%;
+    background: var(--panel-bg);
+    border: 1px solid var(--border-glow);
+    border-radius: 14px;
+    padding: 12px 18px;
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+    pointer-events: auto;
+    transition: border-color 0.3s ease;
+  }
+
+  .mission-text {
+    font-size: 0.92rem;
+    line-height: 1.45;
+    color: #e2e8f0;
+  }
+
+  .mission-text strong {
+    color: #38bdf8;
+  }
+
+  .chem-badge {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 5px;
+    font-weight: 700;
+    font-family: monospace;
+    font-size: 0.95em;
+    background: rgba(255,255,255,0.1);
+  }
+
+  /* Botteninstruktion */
+  .hud-bottom {
+    position: relative;
+    z-index: 10;
+    padding: 10px 20px 16px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    flex-wrap: wrap;
+  }
+
+  .hint-pill {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  @media (max-width: 700px) {
+    .hud-top {
+      padding: 8px 10px;
+      justify-content: center;
+    }
+    .brand h1 {
+      font-size: 0.95rem;
+    }
+    .btn {
+      padding: 6px 10px;
+      font-size: 0.78rem;
+    }
+    .mission-banner {
+      padding: 8px 12px;
+      flex-direction: column;
+      text-align: center;
+      gap: 8px;
+    }
+    .mission-text {
+      font-size: 0.82rem;
+    }
+    .hud-bottom {
+      display: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="game-container">
+  <header class="hud-top">
+    <div class="brand">
+      <span style="font-size: 1.4rem;">🧪</span>
+      <h1>THE ACID/BASE BARISTA</h1>
+    </div>
+
+    <div class="level-tabs">
+      <button class="btn active" id="btn-lvl-1" onclick="setLevel(1)">1. The Perfect Neutral</button>
+      <button class="btn" id="btn-lvl-2" onclick="setLevel(2)">2. Buffer Defense</button>
+      <button class="btn" id="btn-lvl-3" onclick="setLevel(3)">3. Free Sandbox</button>
+    </div>
+
+    <div class="level-tabs">
+      <a href="../../index.html" class="btn" title="Tillbaka till Håkan.com">🏠 Startsida</a>
+      <button class="btn" id="btn-reset" onclick="resetLevel()" title="Återställ bägaren">↺ Återställ</button>
+      <button class="btn" id="btn-sound" onclick="toggleSound()" title="Ljud På/Av">🔊</button>
+    </div>
+  </header>
+
+  <div class="mission-banner" id="mission-banner">
+    <div class="mission-text" id="mission-desc">
+      Laddar laboratorium...
+    </div>
+    <button class="btn btn-action" id="btn-storm" style="display:none;" onclick="startAcidStorm()">
+      🌧️ Starta Syra-storm!
+    </button>
+  </div>
+
+  <div style="flex:1;"></div>
+
+  <footer class="hud-bottom">
+    <div class="hint-pill">💧 <span><strong>Håll inne</strong> på en pipett för att droppa</span></div>
+    <div class="hint-pill">🥄 <span><strong>Dra i vätskan</strong> för att röra om</span></div>
+    <div class="hint-pill">🔍 <span><strong>Dra molekyl-linsen</strong> för att se H₃O⁺, OH⁻ &amp; jämvikt</span></div>
+  </footer>
+
+  <canvas id="labCanvas"></canvas>
+</div>
+
+<script>
+/**
+ * ============================================================================
+ * THE ACID/BASE BARISTA - Komplett 2D Kemi- och Fysikmotor i Canvas
+ * Pedagogiskt fokus: H₃O⁺ + OH⁻ ⇌ 2 H₂O, BTB-indikator, HAc/Ac⁻ buffert
+ * ============================================================================
+ */
+
+const canvas = document.getElementById('labCanvas');
+const ctx = canvas.getContext('2d');
+
+let W = window.innerWidth;
+let H = window.innerHeight;
+
+// --- LJUDMOTOR (Web Audio API med syntetiserade effekter) ---
+class SoundEngine {
+  constructor() {
+    this.ctx = null;
+    this.enabled = true;
+  }
+
+  init() {
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) this.ctx = new AudioCtx();
+    }
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  }
+
+  playDrip(pitchOffset = 0) {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'sine';
+    const baseFreq = 380 + pitchOffset + Math.random() * 60;
+    osc.frequency.setValueAtTime(baseFreq, now);
+    osc.frequency.exponentialRampToValueAtTime(baseFreq * 2.4, now + 0.085);
+
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(0.14, now + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.095);
+  }
+
+  playPop(type = 'neutralize') {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    if (type === 'neutralize') {
+      osc.type = 'triangle';
+      const startF = 520 + Math.random() * 180;
+      osc.frequency.setValueAtTime(startF, now);
+      osc.frequency.exponentialRampToValueAtTime(1150, now + 0.06);
+      gain.gain.setValueAtTime(0.11, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.065);
+      osc.start(now);
+      osc.stop(now + 0.07);
+    } else if (type === 'buffer') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, now);
+      osc.frequency.exponentialRampToValueAtTime(660, now + 0.07);
+      gain.gain.setValueAtTime(0.09, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
+      osc.start(now);
+      osc.stop(now + 0.08);
+    }
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+  }
+
+  playSwish() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(140 + Math.random() * 40, now);
+    osc.frequency.exponentialRampToValueAtTime(90, now + 0.08);
+
+    gain.gain.setValueAtTime(0.03, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.09);
+  }
+
+  playSuccess() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+    notes.forEach((freq, idx) => {
+      const now = this.ctx.currentTime + idx * 0.09;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.14, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.36);
+    });
+  }
+
+  playAlarm() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(210, now);
+    osc.frequency.linearRampToValueAtTime(135, now + 0.35);
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.4);
+  }
+}
+
+const sound = new SoundEngine();
+
+function toggleSound() {
+  sound.enabled = !sound.enabled;
+  document.getElementById('btn-sound').textContent = sound.enabled ? '🔊' : '🔇';
+}
+
+// --- GEOMETRI & TILLSTÅND ---
+let beaker = {
+  x: 0,
+  y: 0,
+  w: 340,
+  h: 360,
+  fillRatio: 0.62,
+  liquidTop: 0
+};
+
+// Ytvågor på vätskan (1D fjädersystem)
+const NUM_WAVE_POINTS = 45;
+let wavePoints = [];
+for (let i = 0; i < NUM_WAVE_POINTS; i++) {
+  wavePoints.push({ y: 0, vy: 0 });
+}
+
+// Pipetter ovanför bägaren
+const PIPETTE_TYPES = [
+  {
+    id: 'hcl',
+    label: 'HCl',
+    sub: 'Stark syra',
+    desc: 'Ger H₃O⁺ direkt',
+    color: '#ff3b5c',
+    liquidColor: 'rgba(255, 59, 92, 0.85)',
+    pitch: 120
+  },
+  {
+    id: 'hac',
+    label: 'HAc',
+    sub: 'Svag syra',
+    desc: 'CH₃COOH (Jämvikt)',
+    color: '#fb923c',
+    liquidColor: 'rgba(251, 146, 60, 0.85)',
+    pitch: 40
+  },
+  {
+    id: 'naoh',
+    label: 'NaOH',
+    sub: 'Stark bas',
+    desc: 'Ger OH⁻ direkt',
+    color: '#38bdf8',
+    liquidColor: 'rgba(56, 189, 248, 0.85)',
+    pitch: -60
+  },
+  {
+    id: 'ac',
+    label: 'NaAc',
+    sub: 'Buffertsalt',
+    desc: 'Ger Ac⁻ (Acetatjon)',
+    color: '#a855f7',
+    liquidColor: 'rgba(168, 85, 247, 0.85)',
+    pitch: 0
+  },
+  {
+    id: 'h2o',
+    label: 'H₂O',
+    sub: 'Rent vatten',
+    desc: 'Späder lösningen',
+    color: '#94a3b8',
+    liquidColor: 'rgba(148, 163, 184, 0.7)',
+    pitch: -120
+  }
+];
+
+let pipettes = [];
+let fallingDrops = [];
+let localColorPlumes = []; // Lokala färgmoln innan omrörning
+let particles = [];        // Alla molekyler/joner i bägaren
+let reactionFlashes = [];  // Ljusglimtar vid H₃O⁺ + OH⁻ -> 2 H₂O
+let floatingTexts = [];    // Pedagogiska popups i linsen
+
+// Molekyl-linsen (förstoringsglaset)
+let lens = {
+  x: 0,
+  y: 0,
+  r: 88,
+  dragging: false,
+  offsetX: 0,
+  offsetY: 0,
+  initialized: false
+};
+
+// Spel- och nivåstatus
+let currentLevel = 1;
+let currentPH = 7.0;
+let displayedPH = 7.0;
+let unmixedFactor = 0; // Höjs när droppar faller, sjunker vid omrörning
+
+// Level 1 mål
+let lvl1HoldTimer = 0;
+let lvl1Completed = false;
+let lvl1OvershotWarned = false;
+
+// Level 2 (Buffer Defense)
+let stormActive = false;
+let stormDropsRemaining = 0;
+let stormSpawnTimer = 0;
+let lvl2Completed = false;
+let lvl2Failed = false;
+
+// Interaktionsstatus
+let pointer = {
+  x: 0,
+  y: 0,
+  prevX: 0,
+  prevY: 0,
+  down: false,
+  activePipette: null,
+  holdTimer: 0,
+  stirring: false
+};
+
+// --- LAYOUT & RESIZE ---
+function updateLayout() {
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width = W;
+  canvas.height = H;
+
+  const isMobile = W < 680;
+  beaker.w = Math.min(Math.max(W * 0.44, 250), 390);
+  beaker.h = Math.min(Math.max(H * 0.42, 240), 370);
+  beaker.x = W / 2 - beaker.w / 2;
+  beaker.y = H - beaker.h - (isMobile ? 35 : 65);
+  beaker.liquidTop = beaker.y + beaker.h * (1 - beaker.fillRatio);
+
+  // Placera pipetter i en snygg rad ovanför bägaren
+  const pipCount = PIPETTE_TYPES.length;
+  const spacing = Math.min((beaker.w + 90) / pipCount, 90);
+  const startX = W / 2 - ((pipCount - 1) * spacing) / 2;
+  const pipY = beaker.y - (isMobile ? 92 : 112);
+
+  pipettes = PIPETTE_TYPES.map((t, i) => ({
+    ...t,
+    x: startX + i * spacing,
+    y: pipY,
+    w: isMobile ? 46 : 54,
+    h: isMobile ? 76 : 88,
+    squeeze: 0,
+    disabled: (currentLevel === 1 && (t.id === 'hac' || t.id === 'ac'))
+  }));
+
+  lens.r = isMobile ? 70 : 90;
+  if (!lens.initialized) {
+    lens.x = beaker.x + beaker.w * 0.62;
+    lens.y = beaker.liquidTop + (beaker.y + beaker.h - beaker.liquidTop) * 0.52;
+    lens.initialized = true;
+  } else {
+    // Håll linsen inom rimliga gränser vid resize
+    lens.x = Math.max(lens.r, Math.min(W - lens.r, lens.x));
+    lens.y = Math.max(lens.r + 60, Math.min(H - lens.r, lens.y));
+  }
+}
+
+window.addEventListener('resize', () => {
+  updateLayout();
+  clampParticlesToBeaker();
+});
+
+// --- PARTIKELSYSTEM (H₃O⁺, OH⁻, H₂O, HAc, Ac⁻) ---
+function createParticle(type, x, y) {
+  const margin = 18;
+  const px = x !== undefined ? x : beaker.x + margin + Math.random() * (beaker.w - margin * 2);
+  const py = y !== undefined ? y : beaker.liquidTop + margin + Math.random() * (beaker.y + beaker.h - beaker.liquidTop - margin * 2);
+
+  const angle = Math.random() * Math.PI * 2;
+  const speed = 0.4 + Math.random() * 0.7;
+
+  return {
+    type, // 'H3O', 'OH', 'H2O', 'HAc', 'Ac'
+    x: px,
+    y: py,
+    vx: Math.cos(angle) * speed,
+    vy: Math.sin(angle) * speed,
+    r: type === 'H2O' ? 5 : 8,
+    cooldown: 12 // Skyddar nybildade partiklar i några frames
+  };
+}
+
+function clampParticlesToBeaker() {
+  const left = beaker.x + 14;
+  const right = beaker.x + beaker.w - 14;
+  const top = beaker.liquidTop + 10;
+  const bottom = beaker.y + beaker.h - 14;
+
+  for (let p of particles) {
+    if (p.x < left) p.x = left + Math.random() * 10;
+    if (p.x > right) p.x = right - Math.random() * 10;
+    if (p.y < top) p.y = top + Math.random() * 10;
+    if (p.y > bottom) p.y = bottom - Math.random() * 10;
+  }
+}
+
+// --- KEMISK MOTOR & pH-BERÄKNING ---
+function calculateChemistry() {
+  let nH3O = 0;
+  let nOH = 0;
+  let nHAc = 0;
+  let nAc = 0;
+  let nH2O = 0;
+
+  for (let p of particles) {
+    if (p.type === 'H3O') nH3O++;
+    else if (p.type === 'OH') nOH++;
+    else if (p.type === 'HAc') nHAc++;
+    else if (p.type === 'Ac') nAc++;
+    else if (p.type === 'H2O') nH2O++;
+  }
+
+  // Håll antalet neutrala H₂O-bakgrundsmolekyler rimligt för prestanda & estetik
+  if (nH2O > 75) {
+    let toRemove = nH2O - 75;
+    for (let i = particles.length - 1; i >= 0 && toRemove > 0; i--) {
+      if (particles[i].type === 'H2O') {
+        particles.splice(i, 1);
+        toRemove--;
+      }
+    }
+  }
+
+  // Dynamisk jämvikt för svag syra (HAc + H₂O ⇌ H₃O⁺ + Ac⁻)
+  // Om det finns mycket HAc men nästan inga H₃O⁺ protolyseras en bråkdel spontant
+  const targetDissociated = Math.max(1, Math.floor(nHAc * 0.14));
+  if (nHAc >= 3 && nH3O < targetDissociated && nOH === 0 && Math.random() < 0.04) {
+    const hacParticle = particles.find(p => p.type === 'HAc');
+    if (hacParticle) {
+      hacParticle.type = 'Ac';
+      particles.push(createParticle('H3O', hacParticle.x + 6, hacParticle.y));
+      reactionFlashes.push({
+        x: hacParticle.x,
+        y: hacParticle.y,
+        r: 4,
+        maxR: 22,
+        alpha: 0.85,
+        color: '#fb923c'
+      });
+    }
+  }
+
+  // Om det finns både mycket H₃O⁺ och Ac⁻ (och ingen OH⁻), går reaktionen bakåt: H₃O⁺ + Ac⁻ -> HAc + H₂O
+  // (Detta hanteras primärt i partikelkollisionerna för visuell tydlighet!)
+
+  // Beräkna målvärde för pH utifrån partikelinnehåll
+  const volumeFactor = Math.max(0.7, beaker.fillRatio / 0.62);
+  const netCharge = (nH3O - nOH) / volumeFactor;
+
+  let targetPH = 7.0;
+
+  if (nH3O === 0 && nOH === 0) {
+    if (nHAc > 0 && nAc > 0) {
+      // Henderson-Hasselbalch: pH = pKa + log10([Ac⁻]/[HAc]), pKa ≈ 4.76 (visuellt centrerad mot neutral i spelet om man vill, men vi använder klassisk buffertrespons)
+      // För att Level 2 ska vara intuitivt med BTB (grön i buffertläge och gul vid krasch):
+      // I Level 2 låter vi en balanserad buffert ligga nära pH 6.8-7.0 så att BTB lyser smaragdgrönt tills bufferten spricker!
+      const ratio = Math.log10(nAc / nHAc);
+      targetPH = 6.95 + ratio * 0.65;
+    } else if (nHAc > 0) {
+      targetPH = Math.max(3.1, 4.8 - Math.log10(1 + nHAc) * 1.1);
+    } else if (nAc > 0) {
+      targetPH = Math.min(8.6, 7.3 + Math.log10(1 + nAc) * 0.65);
+    } else {
+      targetPH = 7.0;
+    }
+  } else if (netCharge > 0) {
+    // Överskott av H₃O⁺ -> Surt!
+    // Om buffert (Ac⁻) fortfarande finns kvar dämpas pH-fallet tills de krockar
+    if (nAc > 0) {
+      targetPH = Math.max(5.8, 6.8 - netCharge * 0.25);
+    } else {
+      // Skarp titreringskurva nära ekvivalenspunkten
+      targetPH = Math.max(1.0, 6.3 - Math.log10(1 + netCharge * 3.2) * 3.1);
+    }
+  } else if (netCharge < 0) {
+    // Överskott av OH⁻ -> Basiskt!
+    const excessOH = Math.abs(netCharge);
+    if (nHAc > 0) {
+      targetPH = Math.min(8.2, 7.2 + excessOH * 0.25);
+    } else {
+      targetPH = Math.min(14.0, 7.7 + Math.log10(1 + excessOH * 3.2) * 3.1);
+    }
+  }
+
+  currentPH = Math.max(1.0, Math.min(14.0, targetPH));
+  // Mjuk interpolering av pH-mätaren (snabbare när man rör om)
+  const lerpSpeed = pointer.stirring ? 0.14 : 0.05;
+  displayedPH += (currentPH - displayedPH) * lerpSpeed;
+
+  return { nH3O, nOH, nHAc, nAc, nH2O };
+}
+
+// --- BTB INDIKATORFÄRG (Bromtymolblått) ---
+// Gul vid pH < 6.0, Smaragdgrön vid pH 6.8 - 7.3, Koboltblå vid pH > 7.6
+function getBTBColor(ph, alpha = 0.85) {
+  let r, g, b;
+
+  if (ph <= 5.8) {
+    // Knallgul / varm bärnstensgul vid lågt pH
+    const t = Math.max(0, Math.min(1, (ph - 1.5) / 4.3));
+    r = Math.round(255);
+    g = Math.round(185 + t * 40);
+    b = Math.round(15);
+  } else if (ph < 7.0) {
+    // Övergång Gul -> Smaragdgrön (5.8 till 7.0)
+    const t = (ph - 5.8) / 1.2;
+    r = Math.round(255 * (1 - t) + 16 * t);
+    g = Math.round(225 * (1 - t) + 215 * t);
+    b = Math.round(15 * (1 - t) + 95 * t);
+  } else if (ph <= 7.35) {
+    // Klockren neutralgrön zon
+    const t = (ph - 7.0) / 0.35;
+    r = Math.round(16 * (1 - t) + 14 * t);
+    g = Math.round(215 * (1 - t) + 195 * t);
+    b = Math.round(95 * (1 - t) + 145 * t);
+  } else if (ph < 8.4) {
+    // Övergång Grön -> Djup Koboltblå (7.35 till 8.4)
+    const t = (ph - 7.35) / 1.05;
+    r = Math.round(14 * (1 - t) + 25 * t);
+    g = Math.round(195 * (1 - t) + 95 * t);
+    b = Math.round(145 * (1 - t) + 255 * t);
+  } else {
+    // Starkt basisk -> Djupblå/Indigo
+    const t = Math.min(1, (ph - 8.4) / 5.6);
+    r = Math.round(25 + t * 35);
+    g = Math.round(95 - t * 40);
+    b = Math.round(255);
+  }
+
+  return { r, g, b, css: `rgba(${r}, ${g}, ${b}, ${alpha})` };
+}
+
+// --- DROPP- & PIPETTFUNKTIONER ---
+function spawnDropFromPipette(pip, customX = null, customY = null) {
+  if (pip.disabled) return;
+  pip.squeeze = 1.0;
+  sound.playDrip(pip.pitch);
+
+  const dropX = customX !== null ? customX : pip.x + (Math.random() - 0.5) * 8;
+  const dropY = customY !== null ? customY : pip.y + pip.h / 2 + 8;
+
+  fallingDrops.push({
+    id: pip.id,
+    x: dropX,
+    y: dropY,
+    vy: 2.5,
+    r: 6.5,
+    color: pip.color
+  });
+}
+
+function handleDropImpact(drop) {
+  // Skapa ringar/vågor på vattenytan
+  const relX = (drop.x - beaker.x) / beaker.w;
+  const waveIdx = Math.max(1, Math.min(NUM_WAVE_POINTS - 2, Math.floor(relX * NUM_WAVE_POINTS)));
+  wavePoints[waveIdx].vy += 9.5;
+  if (waveIdx > 1) wavePoints[waveIdx - 1].vy += 5.5;
+  if (waveIdx < NUM_WAVE_POINTS - 2) wavePoints[waveIdx + 1].vy += 5.5;
+
+  // Lokalt färgmoln som löses upp snabbare om man rör om
+  let plumeColor = drop.color;
+  if (drop.id === 'hcl' || drop.id === 'hac') plumeColor = '#facc15';
+  if (drop.id === 'naoh') plumeColor = '#38bdf8';
+  if (drop.id === 'ac') plumeColor = '#a855f7';
+
+  localColorPlumes.push({
+    x: Math.max(beaker.x + 28, Math.min(beaker.x + beaker.w - 28, drop.x)),
+    y: beaker.liquidTop + 18,
+    vy: 0.7,
+    r: 14,
+    maxR: 68,
+    alpha: 0.65,
+    color: plumeColor
+  });
+
+  unmixedFactor = Math.min(1.0, unmixedFactor + 0.35);
+
+  const spawnX = Math.max(beaker.x + 24, Math.min(beaker.x + beaker.w - 24, drop.x));
+  const spawnY = beaker.liquidTop + 20;
+
+  // Skapa joner/molekyler beroende på pipett
+  if (drop.id === 'hcl') {
+    // Stark syra: Fullständig protolys -> Ger 2 st H₃O⁺ per droppe
+    particles.push(createParticle('H3O', spawnX - 6, spawnY));
+    particles.push(createParticle('H3O', spawnX + 6, spawnY + 5));
+  } else if (drop.id === 'naoh') {
+    // Stark bas: Ger 2 st OH⁻ per droppe
+    particles.push(createParticle('OH', spawnX - 6, spawnY));
+    particles.push(createParticle('OH', spawnX + 6, spawnY + 5));
+  } else if (drop.id === 'hac') {
+    // Svag syra (HAc): Ofullständig protolys -> Mest HAc-molekyler
+    particles.push(createParticle('HAc', spawnX - 8, spawnY));
+    particles.push(createParticle('HAc', spawnX + 8, spawnY + 4));
+    particles.push(createParticle('HAc', spawnX, spawnY + 9));
+  } else if (drop.id === 'ac') {
+    // Buffertsalt (NaAc): Ger 3 st Ac⁻ (acetatjoner)
+    particles.push(createParticle('Ac', spawnX - 8, spawnY));
+    particles.push(createParticle('Ac', spawnX + 8, spawnY + 4));
+    particles.push(createParticle('Ac', spawnX, spawnY + 9));
+  } else if (drop.id === 'h2o') {
+    // Vatten: Späder och lägger till H₂O-molekyler
+    beaker.fillRatio = Math.min(0.84, beaker.fillRatio + 0.015);
+    beaker.liquidTop = beaker.y + beaker.h * (1 - beaker.fillRatio);
+    particles.push(createParticle('H2O', spawnX - 5, spawnY));
+    particles.push(createParticle('H2O', spawnX + 5, spawnY));
+  }
+}
+
+// --- PARTIKELFYSIK & REAKTIONER (Kollisioner i realtid) ---
+function updateParticlesAndReactions() {
+  const left = beaker.x + 14;
+  const right = beaker.x + beaker.w - 14;
+  const top = beaker.liquidTop + 12;
+  const bottom = beaker.y + beaker.h - 14;
+
+  // Flytta alla partiklar
+  for (let p of particles) {
+    if (p.cooldown > 0) p.cooldown--;
+
+    // Brownsk rörelse (termisk skakning)
+    p.vx += (Math.random() - 0.5) * 0.12;
+    p.vy += (Math.random() - 0.5) * 0.12;
+
+    // Maxhastighet och dämpning
+    const speed = Math.hypot(p.vx, p.vy);
+    if (speed > 3.2) {
+      p.vx = (p.vx / speed) * 3.2;
+      p.vy = (p.vy / speed) * 3.2;
+    } else if (speed < 0.35) {
+      p.vx *= 1.05;
+      p.vy *= 1.05;
+    }
+
+    p.x += p.vx;
+    p.y += p.vy;
+
+    // Studsa mot bägarens väggar
+    if (p.x < left) { p.x = left; p.vx = Math.abs(p.vx); }
+    if (p.x > right) { p.x = right; p.vx = -Math.abs(p.vx); }
+    if (p.y < top) { p.y = top; p.vy = Math.abs(p.vy); }
+    if (p.y > bottom) { p.y = bottom; p.vy = -Math.abs(p.vy); }
+  }
+
+  // Kontrollera kemiska kollisioner
+  // 1) Neutralisation: H₃O⁺ + OH⁻ -> 2 H₂O
+  // 2) Buffertverkan mot syra: H₃O⁺ + Ac⁻ -> HAc + H₂O
+  // 3) Buffertverkan mot bas: OH⁻ + HAc -> Ac⁻ + H₂O
+  const reactionRadius = pointer.stirring ? 38 : 26;
+
+  for (let i = 0; i < particles.length; i++) {
+    const p1 = particles[i];
+    if (p1.cooldown > 0) continue;
+
+    for (let j = i + 1; j < particles.length; j++) {
+      const p2 = particles[j];
+      if (p2.cooldown > 0) continue;
+
+      const dx = p2.x - p1.x;
+      const dy = p2.y - p1.y;
+      const dist = Math.hypot(dx, dy);
+
+      // Mild magnetisk attraktion mellan reaktiva joner i närområdet så att reaktioner inte tar evigheter
+      const isPairNeutral = (p1.type === 'H3O' && p2.type === 'OH') || (p1.type === 'OH' && p2.type === 'H3O');
+      const isPairBufferAcid = (p1.type === 'H3O' && p2.type === 'Ac') || (p1.type === 'Ac' && p2.type === 'H3O');
+      const isPairBufferBase = (p1.type === 'OH' && p2.type === 'HAc') || (p1.type === 'HAc' && p2.type === 'OH');
+
+      if ((isPairNeutral || isPairBufferAcid || isPairBufferBase) && dist < 95 && dist > 1) {
+        const pull = pointer.stirring ? 0.14 : 0.045;
+        p1.vx += (dx / dist) * pull;
+        p1.vy += (dy / dist) * pull;
+        p2.vx -= (dx / dist) * pull;
+        p2.vy -= (dy / dist) * pull;
+      }
+
+      if (dist < reactionRadius) {
+        const midX = (p1.x + p2.x) / 2;
+        const midY = (p1.y + p2.y) / 2;
+
+        // FALL 1: Klassisk neutralisation H₃O⁺ + OH⁻ ⇌ 2 H₂O
+        if (isPairNeutral) {
+          p1.type = 'H2O';
+          p2.type = 'H2O';
+          p1.r = 5;
+          p2.r = 5;
+          p1.cooldown = 20;
+          p2.cooldown = 20;
+
+          sound.playPop('neutralize');
+          reactionFlashes.push({
+            x: midX,
+            y: midY,
+            r: 5,
+            maxR: 34,
+            alpha: 1.0,
+            color: '#4ade80'
+          });
+          floatingTexts.push({
+            x: midX,
+            y: midY - 8,
+            text: '2 H₂O',
+            color: '#86efac',
+            alpha: 1.0,
+            vy: -0.7
+          });
+          break;
+        }
+
+        // FALL 2: Buffert fångar upp H₃O⁺: H₃O⁺ + Ac⁻ -> HAc + H₂O
+        if (isPairBufferAcid) {
+          p1.type = 'HAc';
+          p2.type = 'H2O';
+          p1.r = 8;
+          p2.r = 5;
+          p1.cooldown = 25;
+          p2.cooldown = 25;
+
+          sound.playPop('buffer');
+          reactionFlashes.push({
+            x: midX,
+            y: midY,
+            r: 5,
+            maxR: 30,
+            alpha: 0.95,
+            color: '#c084fc'
+          });
+          floatingTexts.push({
+            x: midX,
+            y: midY - 8,
+            text: 'HAc + H₂O',
+            color: '#e9d5ff',
+            alpha: 1.0,
+            vy: -0.7
+          });
+          break;
+        }
+
+        // FALL 3: Buffert fångar upp OH⁻: OH⁻ + HAc -> Ac⁻ + H₂O
+        if (isPairBufferBase) {
+          p1.type = 'Ac';
+          p2.type = 'H2O';
+          p1.r = 8;
+          p2.r = 5;
+          p1.cooldown = 25;
+          p2.cooldown = 25;
+
+          sound.playPop('buffer');
+          reactionFlashes.push({
+            x: midX,
+            y: midY,
+            r: 5,
+            maxR: 30,
+            alpha: 0.95,
+            color: '#38bdf8'
+          });
+          floatingTexts.push({
+            x: midX,
+            y: midY - 8,
+            text: 'Ac⁻ + H₂O',
+            color: '#bae6fd',
+            alpha: 1.0,
+            vy: -0.7
+          });
+          break;
+        }
+      }
+    }
+  }
+}
+
+// --- SPELLÄGEN & UTMANINGAR ---
+function setLevel(lvl) {
+  currentLevel = lvl;
+  document.querySelectorAll('.level-tabs .btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.getElementById(`btn-lvl-${lvl}`);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  resetLevel();
+}
+
+function resetLevel() {
+  fallingDrops = [];
+  localColorPlumes = [];
+  particles = [];
+  reactionFlashes = [];
+  floatingTexts = [];
+  beaker.fillRatio = 0.62;
+  beaker.liquidTop = beaker.y + beaker.h * (1 - beaker.fillRatio);
+  unmixedFactor = 0;
+
+  lvl1HoldTimer = 0;
+  lvl1Completed = false;
+  lvl1OvershotWarned = false;
+
+  stormActive = false;
+  stormDropsRemaining = 0;
+  stormSpawnTimer = 0;
+  lvl2Completed = false;
+  lvl2Failed = false;
+
+  updateLayout();
+
+  // Skapa bas-vattenmolekyler (H₂O)
+  for (let i = 0; i < 42; i++) {
+    particles.push(createParticle('H2O'));
+  }
+
+  const banner = document.getElementById('mission-banner');
+  const desc = document.getElementById('mission-desc');
+  const stormBtn = document.getElementById('btn-storm');
+  banner.style.borderColor = 'rgba(99, 179, 237, 0.25)';
+  stormBtn.style.display = 'none';
+
+  if (currentLevel === 1) {
+    // Level 1: Starta med sur lösning (12 st H₃O⁺ -> pH ~2.0, knallgul BTB)
+    for (let i = 0; i < 12; i++) {
+      particles.push(createParticle('H3O'));
+    }
+    currentPH = 2.0;
+    displayedPH = 2.0;
+    desc.innerHTML = `<strong>Level 1 – The Perfect Neutral:</strong> Bägaren är sur (<span class="chem-badge">pH 2.0</span>, gul BTB) med <span class="chem-badge">12 st H₃O⁺</span>. Droppa i stark bas (<span class="chem-badge">NaOH</span>) och rör om för att pricka exakt neutralgrön (<span class="chem-badge">pH 6.8–7.2</span>). Se upp för omslagspunkten!`;
+  } else if (currentLevel === 2) {
+    // Level 2: Buffer Defense
+    currentPH = 7.0;
+    displayedPH = 7.0;
+    stormBtn.style.display = 'inline-flex';
+    stormBtn.disabled = false;
+    stormBtn.textContent = '🌧️ Starta Syra-storm!';
+    desc.innerHTML = `<strong>Level 2 – Buffer Defense:</strong> Bygg en stark acetatbuffert genom att droppa i både <span class="chem-badge">HAc</span> och <span class="chem-badge">NaAc (Ac⁻)</span> (minst 10 av varje). Klicka sedan på <em>Starta Syra-storm!</em> för att se om dina <span class="chem-badge">Ac⁻</span> klarar att fånga alla sura <span class="chem-badge">H₃O⁺</span>!`;
+  } else if (currentLevel === 3) {
+    // Level 3: Free Sandbox
+    currentPH = 7.0;
+    displayedPH = 7.0;
+    desc.innerHTML = `<strong>Level 3 – Free Sandbox:</strong> Fritt kemilab! Testa skillnaden i protolysgrad mellan stark syra (<span class="chem-badge">HCl</span>) och svag syra (<span class="chem-badge">HAc</span>), bygg egna buffertar eller titrera med <span class="chem-badge">NaOH</span>. Dra molekyl-linsen för att utforska!`;
+  }
+}
+
+function startAcidStorm() {
+  if (stormActive || currentLevel !== 2) return;
+  lvl2Completed = false;
+  lvl2Failed = false;
+  stormActive = true;
+  stormDropsRemaining = 9; // 9 droppar HCl = 18 st H₃O⁺ som regnar ner!
+  stormSpawnTimer = 10;
+  const stormBtn = document.getElementById('btn-storm');
+  stormBtn.disabled = true;
+  stormBtn.textContent = '⛈️ Storm pågår...';
+}
+
+function evaluateLevelGoals(counts) {
+  const banner = document.getElementById('mission-banner');
+  const desc = document.getElementById('mission-desc');
+  const stormBtn = document.getElementById('btn-storm');
+
+  if (currentLevel === 1) {
+    const inGreenZone = displayedPH >= 6.8 && displayedPH <= 7.25 && counts.nH3O === 0 && counts.nOH === 0;
+    if (inGreenZone && !lvl1Completed) {
+      lvl1HoldTimer++;
+      if (lvl1HoldTimer > 55) {
+        lvl1Completed = true;
+        sound.playSuccess();
+        banner.style.borderColor = '#22c55e';
+        desc.innerHTML = `🎉 <strong>PERFEKT NEUTRALISATION!</strong> Alla <span class="chem-badge">H₃O⁺</span> och <span class="chem-badge">OH⁻</span> har gått ihop till <span class="chem-badge">2 H₂O</span> vid <span class="chem-badge">pH 7.0</span> och BTB lyser smaragdgrönt! Prova nu <strong>Level 2: Buffer Defense</strong>.`;
+      }
+    } else if (!lvl1Completed) {
+      lvl1HoldTimer = 0;
+      if (counts.nOH > 0 && displayedPH > 7.6) {
+        if (!lvl1OvershotWarned) {
+          sound.playAlarm();
+          lvl1OvershotWarned = true;
+        }
+        banner.style.borderColor = '#38bdf8';
+        desc.innerHTML = `⚠️ <strong>Omslagspunkten passerad!</strong> En droppe <span class="chem-badge">NaOH</span> för mycket gjorde lösningen koboltblå (<span class="chem-badge">pH ${displayedPH.toFixed(1)}</span>). Justera försiktigt med en droppe <span class="chem-badge">HCl</span> eller återställ!`;
+      } else if (counts.nH3O > 0) {
+        lvl1OvershotWarned = false;
+        banner.style.borderColor = 'rgba(99, 179, 237, 0.25)';
+        desc.innerHTML = `<strong>Level 1 – The Perfect Neutral:</strong> Det finns <span class="chem-badge">${counts.nH3O} st H₃O⁺</span> kvar i bägaren (<span class="chem-badge">pH ${displayedPH.toFixed(1)}</span>). Tillsätt <span class="chem-badge">NaOH</span> och rör om tills lösningen blir grön!`;
+      }
+    }
+  } else if (currentLevel === 2) {
+    if (stormActive) {
+      stormSpawnTimer--;
+      if (stormSpawnTimer <= 0 && stormDropsRemaining > 0) {
+        const dropX = beaker.x + 36 + Math.random() * (beaker.w - 72);
+        fallingDrops.push({
+          id: 'hcl',
+          x: dropX,
+          y: beaker.y - 130,
+          vy: 3.4,
+          r: 7,
+          color: '#ff3b5c'
+        });
+        sound.playDrip(180);
+        stormDropsRemaining--;
+        stormSpawnTimer = 28; // Ny sur regndroppe var ~0.45 sekund
+      }
+
+      // Rör om lite automatiskt under stormen så joner krockar
+      for (let p of particles) {
+        p.vx += (Math.random() - 0.5) * 0.25;
+        p.vy += (Math.random() - 0.5) * 0.25;
+      }
+
+      // Kontrollera om stormen är över och alla droppar har landat
+      if (stormDropsRemaining === 0 && fallingDrops.length === 0) {
+        // Vänta ett litet ögonblick så de sista kollisionerna hinner ske
+        if (stormSpawnTimer < -75) {
+          stormActive = false;
+          stormBtn.disabled = false;
+          stormBtn.textContent = '🌧️ Kör en storm till!';
+
+          if (displayedPH >= 6.0 && counts.nH3O <= 1) {
+            lvl2Completed = true;
+            sound.playSuccess();
+            banner.style.borderColor = '#22c55e';
+            desc.innerHTML = `🛡️ <strong>BUFFERTEN HÖLL!</strong> Dina acetatjoner (<span class="chem-badge">Ac⁻</span>) fångade upp syrastormen genom <span class="chem-badge">H₃O⁺ + Ac⁻ ⇌ HAc + H₂O</span> och räddade lösningen vid <span class="chem-badge">pH ${displayedPH.toFixed(1)}</span>!`;
+          } else {
+            lvl2Failed = true;
+            sound.playAlarm();
+            banner.style.borderColor = '#ef4444';
+            desc.innerHTML = `💥 <strong>BUFFERTKAPACITETEN TOG SLUT!</strong> De fria <span class="chem-badge">Ac⁻</span>-jonerna räckte inte till, så överskottet av <span class="chem-badge">H₃O⁺</span> kraschade pH till <span class="chem-badge">${displayedPH.toFixed(1)}</span> (gul BTB). Återställ och dosera mer buffert!`;
+          }
+        }
+      }
+    } else if (!lvl2Completed && !lvl2Failed) {
+      desc.innerHTML = `<strong>Level 2 – Buffer Defense:</strong> Buffertstatus i bägaren: <span class="chem-badge">${counts.nHAc} HAc</span> och <span class="chem-badge">${counts.nAc} Ac⁻</span> (Mål inför storm: minst 18 <span class="chem-badge">Ac⁻</span> och ~12 <span class="chem-badge">HAc</span>).`;
+    }
+  }
+}
+
+// --- INPUT & INTERAKTION (Mus + Touch) ---
+function getCanvasCoords(e) {
+  if (e.touches && e.touches.length > 0) {
+    return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }
+  return { x: e.clientX, y: e.clientY };
+}
+
+function onPointerDown(e) {
+  sound.init();
+  const pos = getCanvasCoords(e);
+  pointer.x = pos.x;
+  pointer.y = pos.y;
+  pointer.prevX = pos.x;
+  pointer.prevY = pos.y;
+  pointer.down = true;
+
+  // 1. Kolla om spelaren tar tag i Molekyl-linsen
+  const distToLens = Math.hypot(pos.x - lens.x, pos.y - lens.y);
+  if (distToLens <= lens.r + 16) {
+    lens.dragging = true;
+    lens.offsetX = lens.x - pos.x;
+    lens.offsetY = lens.y - pos.y;
+    return;
+  }
+
+  // 2. Kolla om spelaren klickar/håller på en Pipett
+  for (let pip of pipettes) {
+    if (
+      pos.x >= pip.x - pip.w / 2 - 8 &&
+      pos.x <= pip.x + pip.w / 2 + 8 &&
+      pos.y >= pip.y - pip.h / 2 - 10 &&
+      pos.y <= pip.y + pip.h / 2 + 15
+    ) {
+      if (!pip.disabled) {
+        pointer.activePipette = pip;
+        pointer.holdTimer = 0;
+        spawnDropFromPipette(pip);
+      }
+      return;
+    }
+  }
+
+  // 3. Kolla om spelaren rör om i bägaren
+  if (
+    pos.x >= beaker.x &&
+    pos.x <= beaker.x + beaker.w &&
+    pos.y >= beaker.liquidTop - 20 &&
+    pos.y <= beaker.y + beaker.h
+  ) {
+    pointer.stirring = true;
+  }
+}
+
+function onPointerMove(e) {
+  const pos = getCanvasCoords(e);
+  pointer.prevX = pointer.x;
+  pointer.prevY = pointer.y;
+  pointer.x = pos.x;
+  pointer.y = pos.y;
+
+  if (!pointer.down) return;
+
+  // Dra Molekyl-linsen
+  if (lens.dragging) {
+    lens.x = Math.max(lens.r + 10, Math.min(W - lens.r - 10, pos.x + lens.offsetX));
+    lens.y = Math.max(lens.r + 70, Math.min(H - lens.r - 10, pos.y + lens.offsetY));
+    return;
+  }
+
+  // Omrörning i vätskan
+  if (
+    pointer.stirring ||
+    ( !pointer.activePipette &&
+      pos.x >= beaker.x &&
+      pos.x <= beaker.x + beaker.w &&
+      pos.y >= beaker.liquidTop &&
+      pos.y <= beaker.y + beaker.h )
+  ) {
+    pointer.stirring = true;
+    const vx = pointer.x - pointer.prevX;
+    const vy = pointer.y - pointer.prevY;
+    const speed = Math.hypot(vx, vy);
+
+    if (speed > 1.5) {
+      unmixedFactor = Math.max(0, unmixedFactor - 0.04);
+
+      // Skapa vågor på ytan vid omrörning
+      const relX = (pos.x - beaker.x) / beaker.w;
+      const idx = Math.max(1, Math.min(NUM_WAVE_POINTS - 2, Math.floor(relX * NUM_WAVE_POINTS)));
+      wavePoints[idx].vy += Math.max(-4, Math.min(4, vy * 0.25 + vx * 0.15));
+
+      // Ge fart åt partiklar nära fingret/muspekaren
+      for (let p of particles) {
+        const d = Math.hypot(p.x - pos.x, p.y - pos.y);
+        if (d < 85) {
+          p.vx += vx * 0.08;
+          p.vy += vy * 0.08;
+        }
+      }
+
+      // Lös upp lokala färgmoln vid omrörning
+      for (let plume of localColorPlumes) {
+        plume.r += speed * 0.18;
+        plume.alpha -= 0.025;
+      }
+
+      if (Math.random() < 0.15 && speed > 8) {
+        sound.playSwish();
+      }
+    }
+  }
+}
+
+function onPointerUp() {
+  pointer.down = false;
+  pointer.activePipette = null;
+  pointer.stirring = false;
+  lens.dragging = false;
+}
+
+canvas.addEventListener('mousedown', onPointerDown);
+window.addEventListener('mousemove', onPointerMove);
+window.addEventListener('mouseup', onPointerUp);
+
+canvas.addEventListener('touchstart', (e) => { e.preventDefault(); onPointerDown(e); }, { passive: false });
+window.addEventListener('touchmove', (e) => { if (pointer.down) e.preventDefault(); onPointerMove(e); }, { passive: false });
+window.addEventListener('touchend', onPointerUp);
+
+// --- FYSIKUPPDATERING FÖR VÅGOR & DROPPAR ---
+function updatePhysics() {
+  // Kontinuerlig droppning om man håller inne på en pipett
+  if (pointer.down && pointer.activePipette) {
+    pointer.holdTimer++;
+    if (pointer.holdTimer > 14 && pointer.holdTimer % 10 === 0) {
+      spawnDropFromPipette(pointer.activePipette);
+    }
+  }
+
+  // Återställ pipett-klämning mjukt
+  for (let pip of pipettes) {
+    if (pip.squeeze > 0) pip.squeeze = Math.max(0, pip.squeeze - 0.08);
+  }
+
+  // Uppdatera fallande droppar
+  for (let i = fallingDrops.length - 1; i >= 0; i--) {
+    const d = fallingDrops[i];
+    d.vy += 0.36; // Gravitation
+    d.y += d.vy;
+
+    if (d.y >= beaker.liquidTop) {
+      handleDropImpact(d);
+      fallingDrops.splice(i, 1);
+    }
+  }
+
+  // Uppdatera lokala färgmoln i vätskan
+  for (let i = localColorPlumes.length - 1; i >= 0; i--) {
+    const pl = localColorPlumes[i];
+    pl.y += pl.vy;
+    pl.vy *= 0.97;
+    pl.r += 0.35;
+    pl.alpha -= 0.008;
+    if (pl.alpha <= 0 || pl.r > pl.maxR) {
+      localColorPlumes.splice(i, 1);
+    }
+  }
+
+  // Uppdatera 1D vågfysik (Hookes lag + grannkoppling)
+  const k = 0.045;
+  const damping = 0.91;
+  for (let i = 0; i < NUM_WAVE_POINTS; i++) {
+    const wp = wavePoints[i];
+    const force = -k * wp.y;
+    wp.vy = (wp.vy + force) * damping;
+    wp.y += wp.vy;
+  }
+
+  for (let iter = 0; iter < 2; iter++) {
+    for (let i = 0; i < NUM_WAVE_POINTS; i++) {
+      if (i > 0) {
+        const diff = wavePoints[i].y - wavePoints[i - 1].y;
+        wavePoints[i - 1].vy += diff * 0.06;
+        wavePoints[i].vy -= diff * 0.06;
+      }
+      if (i < NUM_WAVE_POINTS - 1) {
+        const diff = wavePoints[i].y - wavePoints[i + 1].y;
+        wavePoints[i + 1].vy += diff * 0.06;
+        wavePoints[i].vy -= diff * 0.06;
+      }
+    }
+  }
+
+  // Uppdatera reaktionsblixtar & svävande text
+  for (let i = reactionFlashes.length - 1; i >= 0; i--) {
+    const fl = reactionFlashes[i];
+    fl.r += (fl.maxR - fl.r) * 0.22;
+    fl.alpha -= 0.045;
+    if (fl.alpha <= 0) reactionFlashes.splice(i, 1);
+  }
+
+  for (let i = floatingTexts.length - 1; i >= 0; i--) {
+    const ft = floatingTexts[i];
+    ft.y += ft.vy;
+    ft.alpha -= 0.022;
+    if (ft.alpha <= 0) floatingTexts.splice(i, 1);
+  }
+}
+
+// --- RENDERING (Canvas 2D) ---
+function drawBackground() {
+  // Stilren mörk labb-gradient med svagt rutnät
+  const bgGrad = ctx.createRadialGradient(W / 2, H * 0.55, 50, W / 2, H * 0.5, Math.max(W, H) * 0.75);
+  bgGrad.addColorStop(0, '#131c31');
+  bgGrad.addColorStop(1, '#070a12');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.strokeStyle = 'rgba(148, 163, 184, 0.04)';
+  ctx.lineWidth = 1;
+  const gridSize = 40;
+  for (let x = 0; x < W; x += gridSize) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, H);
+    ctx.stroke();
+  }
+  for (let y = 0; y < H; y += gridSize) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y);
+    ctx.stroke();
+  }
+
+  // Labb-bänk under bägaren
+  const benchY = beaker.y + beaker.h;
+  const benchGrad = ctx.createLinearGradient(0, benchY, 0, H);
+  benchGrad.addColorStop(0, '#1e293b');
+  benchGrad.addColorStop(0.15, '#0f172a');
+  benchGrad.addColorStop(1, '#060911');
+  ctx.fillStyle = benchGrad;
+  ctx.fillRect(0, benchY, W, H - benchY);
+
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, benchY);
+  ctx.lineTo(W, benchY);
+  ctx.stroke();
+}
+
+function drawPipettes() {
+  for (let pip of pipettes) {
+    ctx.save();
+    ctx.translate(pip.x, pip.y);
+    if (pip.disabled) ctx.globalAlpha = 0.28;
+
+    const sq = pip.squeeze * 3.5;
+
+    // Glasrör (nedre del)
+    ctx.fillStyle = 'rgba(226, 232, 240, 0.15)';
+    ctx.strokeStyle = 'rgba(226, 232, 240, 0.65)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-9, -4);
+    ctx.lineTo(-9, 24);
+    ctx.lineTo(-3, 40);
+    ctx.lineTo(3, 40);
+    ctx.lineTo(9, 24);
+    ctx.lineTo(9, -4);
+    ctx.closePath();
+    ctx.fill();
+
+    // Vätska i pipetten
+    ctx.fillStyle = pip.liquidColor;
+    ctx.beginPath();
+    ctx.moveTo(-7, 4);
+    ctx.lineTo(-7, 23);
+    ctx.lineTo(-2.5, 38);
+    ctx.lineTo(2.5, 38);
+    ctx.lineTo(7, 23);
+    ctx.lineTo(7, 4);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Gummituta (övre del som trycks ihop vid klick)
+    const bulbGrad = ctx.createLinearGradient(-16, -42, 16, -4);
+    bulbGrad.addColorStop(0, pip.color);
+    bulbGrad.addColorStop(1, '#1e293b');
+    ctx.fillStyle = bulbGrad;
+    ctx.beginPath();
+    ctx.roundRect(-15 + sq, -42 + sq * 0.5, 30 - sq * 2, 38 - sq * 0.5, 14);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    ctx.stroke();
+
+    // Etikett på pipetten
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 13px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(pip.label, 0, -19);
+
+    ctx.fillStyle = '#cbd5e1';
+    ctx.font = '600 10px system-ui, sans-serif';
+    ctx.fillText(pip.sub, 0, 56);
+
+    ctx.restore();
+  }
+}
+
+function drawFallingDrops() {
+  for (let d of fallingDrops) {
+    ctx.save();
+    ctx.fillStyle = d.color;
+    ctx.shadowColor = d.color;
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    // Klassisk droppform
+    ctx.moveTo(d.x, d.y - d.r * 1.6);
+    ctx.bezierCurveTo(
+      d.x + d.r * 1.2, d.y - d.r * 0.2,
+      d.x + d.r, d.y + d.r,
+      d.x, d.y + d.r
+    );
+    ctx.bezierCurveTo(
+      d.x - d.r, d.y + d.r,
+      d.x - d.r * 1.2, d.y - d.r * 0.2,
+      d.x, d.y - d.r * 1.6
+    );
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+function buildLiquidPath() {
+  ctx.beginPath();
+  const step = beaker.w / (NUM_WAVE_POINTS - 1);
+  ctx.moveTo(beaker.x, beaker.liquidTop + wavePoints[0].y);
+
+  for (let i = 1; i < NUM_WAVE_POINTS; i++) {
+    const x = beaker.x + i * step;
+    const y = beaker.liquidTop + wavePoints[i].y;
+    const prevX = beaker.x + (i - 1) * step;
+    const prevY = beaker.liquidTop + wavePoints[i - 1].y;
+    const midX = (prevX + x) / 2;
+    const midY = (prevY + y) / 2;
+    ctx.quadraticCurveTo(prevX, prevY, midX, midY);
+  }
+
+  const cornerR = 26;
+  ctx.lineTo(beaker.x + beaker.w, beaker.liquidTop + wavePoints[NUM_WAVE_POINTS - 1].y);
+  ctx.lineTo(beaker.x + beaker.w, beaker.y + beaker.h - cornerR);
+  ctx.quadraticCurveTo(beaker.x + beaker.w, beaker.y + beaker.h, beaker.x + beaker.w - cornerR, beaker.y + beaker.h);
+  ctx.lineTo(beaker.x + cornerR, beaker.y + beaker.h);
+  ctx.quadraticCurveTo(beaker.x, beaker.y + beaker.h, beaker.x, beaker.y + beaker.h - cornerR);
+  ctx.closePath();
+}
+
+function drawBeakerAndLiquid(counts) {
+  const btb = getBTBColor(displayedPH, 0.82);
+  const btbDeep = getBTBColor(displayedPH, 0.95);
+
+  ctx.save();
+  // Skugga/glöd bakom bägaren från indikatorfärgen
+  ctx.shadowColor = btb.css;
+  ctx.shadowBlur = 42;
+
+  buildLiquidPath();
+
+  const liqGrad = ctx.createLinearGradient(0, beaker.liquidTop, 0, beaker.y + beaker.h);
+  liqGrad.addColorStop(0, btb.css);
+  liqGrad.addColorStop(1, btbDeep.css);
+  ctx.fillStyle = liqGrad;
+  ctx.fill();
+  ctx.restore();
+
+  // Klipp till vätskans form för att rita lokala färgmoln och svaga bakgrundspartiklar
+  ctx.save();
+  buildLiquidPath();
+  ctx.clip();
+
+  // Lokala färgmoln innan omrörning
+  for (let pl of localColorPlumes) {
+    const radGrad = ctx.createRadialGradient(pl.x, pl.y, 2, pl.x, pl.y, pl.r);
+    radGrad.addColorStop(0, pl.color);
+    radGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.globalAlpha = Math.max(0, pl.alpha);
+    ctx.fillStyle = radGrad;
+    ctx.beginPath();
+    ctx.arc(pl.x, pl.y, pl.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  // Subtila glimmande partiklar i makro-vyn (ger liv åt vätskan även utanför linsen)
+  for (let p of particles) {
+    if (p.type === 'H2O') continue;
+    ctx.beginPath();
+    if (p.type === 'H3O') ctx.fillStyle = 'rgba(255, 80, 100, 0.35)';
+    else if (p.type === 'OH') ctx.fillStyle = 'rgba(56, 189, 248, 0.35)';
+    else if (p.type === 'HAc') ctx.fillStyle = 'rgba(251, 146, 60, 0.32)';
+    else if (p.type === 'Ac') ctx.fillStyle = 'rgba(192, 132, 252, 0.35)';
+    ctx.arc(p.x, p.y, 3.2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+
+  // Ljuslinje längs vätskeytan (menisk)
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  const step = beaker.w / (NUM_WAVE_POINTS - 1);
+  ctx.moveTo(beaker.x + 2, beaker.liquidTop + wavePoints[0].y);
+  for (let i = 1; i < NUM_WAVE_POINTS; i++) {
+    ctx.lineTo(beaker.x + i * step, beaker.liquidTop + wavePoints[i].y);
+  }
+  ctx.stroke();
+  ctx.restore();
+
+  // Själva glasbägaren (konturer, pip och glans)
+  ctx.save();
+  const cornerR = 26;
+  ctx.strokeStyle = 'rgba(226, 232, 240, 0.78)';
+  ctx.lineWidth = 4.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  ctx.beginPath();
+  // Vänster kant med liten hällpip
+  ctx.moveTo(beaker.x - 10, beaker.y);
+  ctx.lineTo(beaker.x, beaker.y + 10);
+  ctx.lineTo(beaker.x, beaker.y + beaker.h - cornerR);
+  ctx.quadraticCurveTo(beaker.x, beaker.y + beaker.h, beaker.x + cornerR, beaker.y + beaker.h);
+  ctx.lineTo(beaker.x + beaker.w - cornerR, beaker.y + beaker.h);
+  ctx.quadraticCurveTo(beaker.x + beaker.w, beaker.y + beaker.h, beaker.x + beaker.w, beaker.y + beaker.h - cornerR);
+  ctx.lineTo(beaker.x + beaker.w, beaker.y + 10);
+  ctx.lineTo(beaker.x + beaker.w + 8, beaker.y);
+  ctx.stroke();
+
+  // Vertikal glasreflektion till vänster
+  const shineGrad = ctx.createLinearGradient(beaker.x + 14, beaker.y, beaker.x + 34, beaker.y);
+  shineGrad.addColorStop(0, 'rgba(255,255,255,0.18)');
+  shineGrad.addColorStop(1, 'rgba(255,255,255,0.0)');
+  ctx.fillStyle = shineGrad;
+  ctx.fillRect(beaker.x + 12, beaker.y + 20, 22, beaker.h - 45);
+
+  // Volymmarkeringar (ml) till vänster på glaset
+  ctx.fillStyle = 'rgba(226, 232, 240, 0.45)';
+  ctx.strokeStyle = 'rgba(226, 232, 240, 0.35)';
+  ctx.lineWidth = 1.5;
+  ctx.font = '600 11px monospace';
+  ctx.textAlign = 'left';
+
+  const mlMarks = [100, 200, 300, 400];
+  mlMarks.forEach((ml, idx) => {
+    const my = beaker.y + beaker.h - ((idx + 1) * (beaker.h * 0.19));
+    ctx.beginPath();
+    ctx.moveTo(beaker.x + 18, my);
+    ctx.lineTo(beaker.x + 36, my);
+    ctx.stroke();
+    ctx.fillText(`${ml} ml`, beaker.x + 42, my + 4);
+  });
+
+  // --- DIEGETISK pH-SKALA PÅ BÄGARENS HÖGRA SIDA ---
+  const scaleX = beaker.x + beaker.w - 30;
+  const scaleTop = beaker.y + 32;
+  const scaleBottom = beaker.y + beaker.h - 36;
+  const scaleH = scaleBottom - scaleTop;
+
+  // Färgad BTB-pelare längs skalan (14 överst, 1 nederst)
+  for (let p = 1; p <= 14; p++) {
+    const frac1 = (p - 1) / 13;
+    const frac2 = p / 13;
+    const y1 = scaleBottom - frac1 * scaleH;
+    const y2 = scaleBottom - frac2 * scaleH;
+    const c = getBTBColor(p, 0.85);
+    ctx.strokeStyle = c.css;
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.moveTo(scaleX, y1);
+    ctx.lineTo(scaleX, y2);
+    ctx.stroke();
+  }
+
+  // Skalstreck för pH 1..14
+  ctx.font = 'bold 10px monospace';
+  ctx.textAlign = 'right';
+  for (let p = 1; p <= 14; p++) {
+    const frac = (p - 1) / 13;
+    const py = scaleBottom - frac * scaleH;
+    ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+    ctx.lineWidth = p === 7 ? 2.2 : 1;
+    ctx.beginPath();
+    ctx.moveTo(scaleX - (p % 2 === 1 || p === 7 ? 10 : 5), py);
+    ctx.lineTo(scaleX + 3, py);
+    ctx.stroke();
+
+    if (p === 1 || p === 4 || p === 7 || p === 10 || p === 14) {
+      ctx.fillStyle = p === 7 ? '#4ade80' : 'rgba(255,255,255,0.75)';
+      ctx.fillText(`pH ${p}`, scaleX - 13, py + 3);
+    }
+  }
+
+  // Aktuell pH-indikatorpil som glider längs bägarens sida
+  const clampedPH = Math.max(1, Math.min(14, displayedPH));
+  const pointerY = scaleBottom - ((clampedPH - 1) / 13) * scaleH;
+  const badgeColor = getBTBColor(displayedPH, 1.0);
+
+  ctx.save();
+  ctx.translate(scaleX + 8, pointerY);
+
+  // Liten pil in mot skalan
+  ctx.fillStyle = badgeColor.css;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(-4, 0);
+  ctx.lineTo(8, -11);
+  ctx.lineTo(76, -11);
+  ctx.quadraticCurveTo(84, -11, 84, -3);
+  ctx.lineTo(84, 3);
+  ctx.quadraticCurveTo(84, 11, 76, 11);
+  ctx.lineTo(8, 11);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = displayedPH < 6.4 ? '#0f172a' : '#ffffff';
+  ctx.font = '800 12px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(`pH ${displayedPH.toFixed(1)}`, 44, 4);
+  ctx.restore();
+
+  // Diskret kemisk sammanfattning på bägarens glasbotten
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.55)';
+  ctx.beginPath();
+  ctx.roundRect(beaker.x + 28, beaker.y + beaker.h - 32, beaker.w - 78, 22, 6);
+  ctx.fill();
+
+  ctx.fillStyle = '#f8fafc';
+  ctx.font = '600 11px system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  let statusLabel = 'BTB: Neutral (Grön) • H₃O⁺ = OH⁻';
+  if (displayedPH < 6.0) statusLabel = `BTB: Sur (Gul) • Överskott H₃O⁺ (${counts.nH3O})`;
+  else if (displayedPH > 7.6) statusLabel = `BTB: Basisk (Blå) • Överskott OH⁻ (${counts.nOH})`;
+  else if (counts.nHAc > 0 && counts.nAc > 0) statusLabel = `BTB: Grön • Buffert (${counts.nHAc} HAc / ${counts.nAc} Ac⁻)`;
+  ctx.fillText(statusLabel, beaker.x + (beaker.w - 22) / 2, beaker.y + beaker.h - 17);
+
+  ctx.restore();
+}
+
+// --- MOLEKYL-LINSEN (Den interaktiva mikrokikaren) ---
+function drawMolecularLens() {
+  ctx.save();
+
+  // Skugga runt linsen
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.65)';
+  ctx.shadowBlur = 24;
+
+  // Klipp allt inuti linsens cirkel
+  ctx.beginPath();
+  ctx.arc(lens.x, lens.y, lens.r, 0, Math.PI * 2);
+  ctx.clip();
+
+  // Mörk mikroskop-bakgrund tonad med vätskans BTB-färg
+  const btbTint = getBTBColor(displayedPH, 0.22);
+  ctx.fillStyle = '#090d16';
+  ctx.fillRect(lens.x - lens.r, lens.y - lens.r, lens.r * 2, lens.r * 2);
+  ctx.fillStyle = btbTint.css;
+  ctx.fillRect(lens.x - lens.r, lens.y - lens.r, lens.r * 2, lens.r * 2);
+
+  // Mikroskopiskt hårkors / rutnät i linsen
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+  ctx.lineWidth = 1;
+  for (let gx = lens.x - lens.r; gx <= lens.x + lens.r; gx += 24) {
+    ctx.beginPath();
+    ctx.moveTo(gx, lens.y - lens.r);
+    ctx.lineTo(gx, lens.y + lens.r);
+    ctx.stroke();
+  }
+  for (let gy = lens.y - lens.r; gy <= lens.y + lens.r; gy += 24) {
+    ctx.beginPath();
+    ctx.moveTo(lens.x - lens.r, gy);
+    ctx.lineTo(lens.x + lens.r, gy);
+    ctx.stroke();
+  }
+
+  // Rita alla molekyler/joner med 1.35x förstoring kring linsens centrum
+  const zoom = 1.35;
+
+  // 1. Rita först neutrala H₂O i bakgrunden
+  for (let p of particles) {
+    if (p.type !== 'H2O') continue;
+    const mx = lens.x + (p.x - lens.x) * zoom;
+    const my = lens.y + (p.y - lens.y) * zoom;
+    if (Math.hypot(mx - lens.x, my - lens.y) > lens.r + 15) continue;
+
+    ctx.fillStyle = 'rgba(148, 163, 184, 0.22)';
+    ctx.beginPath();
+    ctx.arc(mx, my, 6.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(226, 232, 240, 0.35)';
+    ctx.font = '600 8px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('H₂O', mx, my + 3);
+  }
+
+  // 2. Rita aktiva syra/bas/buffert-partiklar (H₃O⁺, OH⁻, HAc, Ac⁻)
+  for (let p of particles) {
+    if (p.type === 'H2O') continue;
+    const mx = lens.x + (p.x - lens.x) * zoom;
+    const my = lens.y + (p.y - lens.y) * zoom;
+    if (Math.hypot(mx - lens.x, my - lens.y) > lens.r + 20) continue;
+
+    ctx.save();
+    ctx.translate(mx, my);
+
+    if (p.type === 'H3O') {
+      // Oxoniumjon (H₃O⁺) – Röd lysande partikel med tydligt plus
+      ctx.shadowColor = '#ff3b5c';
+      ctx.shadowBlur = 12;
+      ctx.fillStyle = '#ff3b5c';
+      ctx.beginPath();
+      ctx.arc(0, 0, 13, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 9.5px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('H₃O⁺', 0, 3.5);
+    } else if (p.type === 'OH') {
+      // Hydroxidjon (OH⁻) – Klarblå lysande partikel med minus
+      ctx.shadowColor = '#38bdf8';
+      ctx.shadowBlur = 12;
+      ctx.fillStyle = '#0284c7';
+      ctx.strokeStyle = '#7dd3fc';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, 13, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 10px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('OH⁻', 0, 3.5);
+    } else if (p.type === 'HAc') {
+      // Oprotolyserad ättiksyra (HAc) – Orange kapsel med fast bunden protonprick
+      ctx.fillStyle = '#ea580c';
+      ctx.strokeStyle = '#fdba74';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, 12.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Liten röd H⁺ som fortfarande sitter fast på HAc
+      ctx.fillStyle = '#ff3b5c';
+      ctx.beginPath();
+      ctx.arc(9, -8, 4.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 9.5px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('HAc', 0, 3.5);
+    } else if (p.type === 'Ac') {
+      // Acetatjon (Ac⁻) – Lila buffertjon som kan fånga H₃O⁺
+      ctx.fillStyle = '#7e22ce';
+      ctx.strokeStyle = '#d8b4fe';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, 12.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 10px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Ac⁻', 0, 3.5);
+    }
+
+    ctx.restore();
+  }
+
+  // 3. Rita reaktionsglimtar (när H₃O⁺ + OH⁻ -> 2 H₂O)
+  for (let fl of reactionFlashes) {
+    const fx = lens.x + (fl.x - lens.x) * zoom;
+    const fy = lens.y + (fl.y - lens.y) * zoom;
+    ctx.strokeStyle = fl.color;
+    ctx.globalAlpha = Math.max(0, fl.alpha);
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(fx, fy, fl.r * zoom, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  // 4. Rita pedagogisk text vid kollision (t.ex. "2 H₂O")
+  for (let ft of floatingTexts) {
+    const tx = lens.x + (ft.x - lens.x) * zoom;
+    const ty = lens.y + (ft.y - lens.y) * zoom;
+    ctx.globalAlpha = Math.max(0, ft.alpha);
+    ctx.fillStyle = ft.color;
+    ctx.font = 'bold 11px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(ft.text, tx, ty);
+  }
+  ctx.globalAlpha = 1;
+
+  ctx.restore();
+
+  // Yttre metallisk/neon-infattning för Molekyl-linsen
+  ctx.save();
+  ctx.strokeStyle = lens.dragging ? '#38bdf8' : 'rgba(226, 232, 240, 0.85)';
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.arc(lens.x, lens.y, lens.r, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(lens.x, lens.y, lens.r - 4, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Liten etikett ovanpå linsen
+  ctx.fillStyle = '#0f172a';
+  ctx.strokeStyle = 'rgba(226, 232, 240, 0.7)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect(lens.x - 58, lens.y - lens.r - 12, 116, 20, 10);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = '#38bdf8';
+  ctx.font = 'bold 10px system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('🔍 MOLEKYL-LINS', lens.x, lens.y - lens.r + 1);
+  ctx.restore();
+}
+
+// --- HUVUDLOOP (60 FPS) ---
+function gameLoop() {
+  updatePhysics();
+  updateParticlesAndReactions();
+  const counts = calculateChemistry();
+  evaluateLevelGoals(counts);
+
+  drawBackground();
+  drawFallingDrops();
+  drawBeakerAndLiquid(counts);
+  drawPipettes();
+  drawMolecularLens();
+
+  requestAnimationFrame(gameLoop);
+}
+
+// Starta spelet
+updateLayout();
+setLevel(1);
+requestAnimationFrame(gameLoop);
+</script>
+</body>
+</html>

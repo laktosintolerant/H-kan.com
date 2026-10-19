@@ -50,6 +50,19 @@ const RAW_PROJECTS = [
     badgeType: 'internal',
     accentColor: 'var(--color-ai)',
     tags: ['Matematik 1a', 'Matematik 2a', 'Mängdträning', 'PQ-formeln', 'Ekvationer', 'Procent']
+  },
+  {
+    id: 'acid-base-barista',
+    title: 'The Acid/Base Barista – pH Lab Arcade',
+    category: 'Spel & Labb',
+    description: 'Interaktivt kemispel där du blandar syror, baser och buffertar i realtid. Utforska pH, BTB-indikator och kemisk jämvikt på molekylnivå.',
+    icon: '🕹️',
+    url: 'subpages/Spel/acidbasebarista.html',
+    isExternal: false,
+    badge: 'Vibe-kodat spel',
+    badgeType: 'internal',
+    accentColor: 'var(--color-web)',
+    tags: ['Kemi 1', 'Spel', 'Syror & Baser', 'pH', 'Buffert', 'Simulering']
   }
 ];
 
