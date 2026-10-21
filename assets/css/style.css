@@ -159,6 +159,26 @@ button {
   cursor: pointer;
 }
 
+/* Tillgänglighet: Globala fokus-stilar för tangentbordsnavigering */
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  border-radius: 2px; /* Fallback för element utan radius */
+}
+
+/* Anpassa radie på fokus för runda knappar */
+button:focus-visible,
+.nav-link:focus-visible,
+.filter-btn:focus-visible {
+  border-radius: var(--radius-sm);
+}
+
+.theme-toggle-btn:focus-visible,
+.mobile-nav-toggle:focus-visible,
+.sub-nav-link:focus-visible {
+  border-radius: var(--radius-full);
+}
+
 img, svg {
   display: block;
   max-width: 100%;
