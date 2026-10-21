@@ -294,8 +294,16 @@ function getActiveSectionInfo() {
 }
 
 function buildSubNavbar(prefix, section) {
+  if (section.main !== 'ma2a' && section.main !== 'ma1a') {
+    return null;
+  }
+
+  const subNav = document.createElement('nav');
+  subNav.className = 'sub-navbar';
+
   // Steg 2: Kursmeny för Matematik 2a
   if (section.main === 'ma2a') {
+    subNav.setAttribute('aria-label', 'Kursmeny för Matematik 2a');
     const ma2aBase = `${prefix}subpages/matematik-2a/`;
     const items = [
       { file: 'index.html', label: '📚 Översikt' },
@@ -309,82 +317,44 @@ function buildSubNavbar(prefix, section) {
       { file: 'funktioner-grafer.html', label: '📉 Grafer & GeoGebra' }
     ];
 
-    const subNav = document.createElement('nav');
-    subNav.className = 'sub-navbar';
-    subNav.setAttribute('aria-label', 'Kursmeny för Matematik 2a');
-
-    const inner = document.createElement('div');
-    inner.className = 'container sub-navbar-inner';
-
-    const label = document.createElement('span');
-    label.className = 'sub-navbar-label';
-    label.textContent = '📊 Matematik 2a';
-    inner.appendChild(label);
-
-    const ul = document.createElement('ul');
-    ul.className = 'sub-navbar-links';
-
-    for (const item of items) {
-      const li = document.createElement('li');
+    const listHtml = items.map(item => {
       if (item.divider) {
-        li.className = 'sub-nav-divider';
-        li.setAttribute('aria-hidden', 'true');
-      } else {
-        const a = document.createElement('a');
-        a.href = `${ma2aBase}${item.file}`;
-        const isActive = section.sub === item.file;
-        a.className = `sub-nav-link${isActive ? ' active' : ''}`;
-        if (isActive) a.setAttribute('aria-current', 'page');
-        a.textContent = item.label;
-        li.appendChild(a);
+        return `<li class="sub-nav-divider" aria-hidden="true"></li>`;
       }
-      ul.appendChild(li);
-    }
+      const isActive = section.sub === item.file;
+      const activeClass = isActive ? ' active' : '';
+      const ariaCurrent = isActive ? ' aria-current="page"' : '';
+      return `<li><a href="${ma2aBase}${item.file}" class="sub-nav-link${activeClass}"${ariaCurrent}>${item.label}</a></li>`;
+    }).join('');
 
-    inner.appendChild(ul);
-    subNav.appendChild(inner);
+    subNav.innerHTML = `
+      <div class="container sub-navbar-inner">
+        <span class="sub-navbar-label">📊 Matematik 2a</span>
+        <ul class="sub-navbar-links">
+          ${listHtml}
+        </ul>
+      </div>
+    `;
     return subNav;
   }
 
   // Steg 2: Kursmeny för Matematik 1a
   if (section.main === 'ma1a') {
-    const subNav = document.createElement('nav');
-    subNav.className = 'sub-navbar';
     subNav.setAttribute('aria-label', 'Kursmeny för Matematik 1a');
-
-    const inner = document.createElement('div');
-    inner.className = 'container sub-navbar-inner';
-
-    const label = document.createElement('span');
-    label.className = 'sub-navbar-label';
-    label.textContent = '📐 Matematik 1a';
-    inner.appendChild(label);
-
-    const ul = document.createElement('ul');
-    ul.className = 'sub-navbar-links';
-
-    const liQuiz = document.createElement('li');
-    const aQuiz = document.createElement('a');
-    aQuiz.href = `${prefix}subpages/matematik-1a/index.html`;
-    aQuiz.className = 'sub-nav-link active';
-    aQuiz.setAttribute('aria-current', 'page');
-    aQuiz.textContent = '🧠 Modulbaserade Snabbtest (1–6)';
-    liQuiz.appendChild(aQuiz);
-
-    const liDiv = document.createElement('li');
-    liDiv.className = 'sub-nav-divider';
-    liDiv.setAttribute('aria-hidden', 'true');
-
-    const liStudio = document.createElement('li');
-    const aStudio = document.createElement('a');
-    aStudio.href = `${prefix}subpages/traningsstudio/index.html`;
-    aStudio.className = 'sub-nav-link';
-    aStudio.textContent = '🎯 Mängdträna Ma 1a i Träningsstudion ➔';
-    liStudio.appendChild(aStudio);
-
-    ul.append(liQuiz, liDiv, liStudio);
-    inner.appendChild(ul);
-    subNav.appendChild(inner);
+    subNav.innerHTML = `
+      <div class="container sub-navbar-inner">
+        <span class="sub-navbar-label">📐 Matematik 1a</span>
+        <ul class="sub-navbar-links">
+          <li>
+            <a href="${prefix}subpages/matematik-1a/index.html" class="sub-nav-link active" aria-current="page">🧠 Modulbaserade Snabbtest (1–6)</a>
+          </li>
+          <li class="sub-nav-divider" aria-hidden="true"></li>
+          <li>
+            <a href="${prefix}subpages/traningsstudio/index.html" class="sub-nav-link">🎯 Mängdträna Ma 1a i Träningsstudion ➔</a>
+          </li>
+        </ul>
+      </div>
+    `;
     return subNav;
   }
 
