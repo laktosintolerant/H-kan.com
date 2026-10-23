@@ -177,7 +177,26 @@ function renderProjects() {
   if (count === 0) {
     const emptyState = document.createElement('div');
     emptyState.className = 'empty-state';
-    emptyState.textContent = 'Inga resurser matchade din sökning.';
+    emptyState.innerHTML = `
+      <div class="empty-state-icon" aria-hidden="true">📭</div>
+      <h3 style="margin-bottom: 0.5rem; font-family: var(--font-heading); font-size: 1.25rem;">Inga träffar</h3>
+      <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Kunde inte hitta några resurser som matchar din sökning.</p>
+      <button type="button" class="filter-btn clear-search-btn">
+        Rensa sökning
+      </button>
+    `;
+
+    emptyState.querySelector('.clear-search-btn').addEventListener('click', () => {
+      state.searchQuery = '';
+      state.activeCategory = 'Alla';
+      if (dom.searchInput) {
+        dom.searchInput.value = '';
+        dom.searchInput.focus();
+      }
+      updateFilterPillStates();
+      renderProjects();
+    });
+
     fragment.appendChild(emptyState);
   } else {
     for (const project of filtered) {
