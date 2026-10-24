@@ -40,10 +40,9 @@ function renderThemeButton() {
   if (!dom.themeToggleBtn) return;
   const isDark = state.theme === 'dark';
   dom.themeToggleBtn.setAttribute('aria-pressed', String(isDark));
-  dom.themeToggleBtn.setAttribute(
-    'aria-label',
-    isDark ? 'Byt till ljust tema' : 'Byt till mörkt tema'
-  );
+  const label = isDark ? 'Byt till ljust tema' : 'Byt till mörkt tema';
+  dom.themeToggleBtn.setAttribute('aria-label', label);
+  dom.themeToggleBtn.setAttribute('title', label);
   dom.themeToggleBtn.textContent = isDark ? '☀️' : '🌙';
 }
 
@@ -246,10 +245,9 @@ function initEventListeners() {
     const isExpanded = dom.mobileNavToggle.getAttribute('aria-expanded') === 'true';
     const nextState = !isExpanded;
     dom.mobileNavToggle.setAttribute('aria-expanded', String(nextState));
-    dom.mobileNavToggle.setAttribute(
-      'aria-label',
-      nextState ? 'Stäng meny' : 'Öppna meny'
-    );
+    const label = nextState ? 'Stäng meny' : 'Öppna meny';
+    dom.mobileNavToggle.setAttribute('aria-label', label);
+    dom.mobileNavToggle.setAttribute('title', label);
     dom.navLinks?.classList.toggle('is-open', nextState);
 
     const hamburgerIcon = dom.mobileNavToggle.querySelector('.hamburger-icon');
@@ -388,6 +386,7 @@ function initSharedNavigation() {
       toggleBtn.className = 'mobile-nav-toggle';
       toggleBtn.id = 'mobile-nav-toggle';
       toggleBtn.setAttribute('aria-label', 'Öppna meny');
+      toggleBtn.setAttribute('title', 'Öppna meny');
       toggleBtn.setAttribute('aria-expanded', 'false');
       toggleBtn.setAttribute('aria-controls', 'primary-navigation');
       toggleBtn.innerHTML = `
