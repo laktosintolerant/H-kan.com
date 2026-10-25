@@ -44,6 +44,10 @@ function renderThemeButton() {
     'aria-label',
     isDark ? 'Byt till ljust tema' : 'Byt till mörkt tema'
   );
+  dom.themeToggleBtn.setAttribute(
+    'title',
+    isDark ? 'Byt till ljust tema' : 'Byt till mörkt tema'
+  );
   dom.themeToggleBtn.textContent = isDark ? '☀️' : '🌙';
 }
 
@@ -250,6 +254,10 @@ function initEventListeners() {
       'aria-label',
       nextState ? 'Stäng meny' : 'Öppna meny'
     );
+    dom.mobileNavToggle.setAttribute(
+      'title',
+      nextState ? 'Stäng meny' : 'Öppna meny'
+    );
     dom.navLinks?.classList.toggle('is-open', nextState);
 
     const hamburgerIcon = dom.mobileNavToggle.querySelector('.hamburger-icon');
@@ -388,6 +396,7 @@ function initSharedNavigation() {
       toggleBtn.className = 'mobile-nav-toggle';
       toggleBtn.id = 'mobile-nav-toggle';
       toggleBtn.setAttribute('aria-label', 'Öppna meny');
+      toggleBtn.setAttribute('title', 'Öppna meny');
       toggleBtn.setAttribute('aria-expanded', 'false');
       toggleBtn.setAttribute('aria-controls', 'primary-navigation');
       toggleBtn.innerHTML = `
