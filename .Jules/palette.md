@@ -5,3 +5,6 @@
 ## 2024-05-15 - Added Tooltips to Icon-Only Buttons
 **Learning:** Icon-only buttons (like the theme toggler or mobile hamburger menu) provide an `aria-label` for screen readers, but sighted users interacting with a mouse have no immediate context for what the button does unless they click it or infer it from an icon.
 **Action:** Reused the existing `aria-label` string and applied it to the native `title` attribute on icon-only buttons. This adds native tooltips for mouse hover without needing complex JS implementations, bridging the gap between screen reader and sighted mouse users.
+## 2026-10-22 - Added Empty State Clear Filters Action
+**Learning:** When a search or filter yields zero results, plain text messages leave users stranded without an obvious recovery path. Re-focusing the search input after clearing filters is crucial for keyboard users.
+**Action:** Replaced plain text empty state with an actionable layout including a 'Clear filters' button that resets all state, updates the UI, and programmatically returns focus to the search input.
