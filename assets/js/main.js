@@ -40,6 +40,14 @@ function renderThemeButton() {
   if (!dom.themeToggleBtn) return;
   const isDark = state.theme === 'dark';
   dom.themeToggleBtn.setAttribute('aria-pressed', String(isDark));
+  dom.themeToggleBtn.setAttribute(
+    'aria-label',
+    isDark ? 'Byt till ljust tema' : 'Byt till mörkt tema'
+  );
+  dom.themeToggleBtn.setAttribute(
+    'title',
+    isDark ? 'Byt till ljust tema' : 'Byt till mörkt tema'
+  );
   const label = isDark ? 'Byt till ljust tema' : 'Byt till mörkt tema';
   dom.themeToggleBtn.setAttribute('aria-label', label);
   dom.themeToggleBtn.setAttribute('title', label);
@@ -264,6 +272,14 @@ function initEventListeners() {
     const isExpanded = dom.mobileNavToggle.getAttribute('aria-expanded') === 'true';
     const nextState = !isExpanded;
     dom.mobileNavToggle.setAttribute('aria-expanded', String(nextState));
+    dom.mobileNavToggle.setAttribute(
+      'aria-label',
+      nextState ? 'Stäng meny' : 'Öppna meny'
+    );
+    dom.mobileNavToggle.setAttribute(
+      'title',
+      nextState ? 'Stäng meny' : 'Öppna meny'
+    );
     const label = nextState ? 'Stäng meny' : 'Öppna meny';
     dom.mobileNavToggle.setAttribute('aria-label', label);
     dom.mobileNavToggle.setAttribute('title', label);
