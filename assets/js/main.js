@@ -40,6 +40,14 @@ function renderThemeButton() {
   if (!dom.themeToggleBtn) return;
   const isDark = state.theme === 'dark';
   dom.themeToggleBtn.setAttribute('aria-pressed', String(isDark));
+  dom.themeToggleBtn.setAttribute(
+    'aria-label',
+    isDark ? 'Byt till ljust tema' : 'Byt till mörkt tema'
+  );
+  dom.themeToggleBtn.setAttribute(
+    'title',
+    isDark ? 'Byt till ljust tema' : 'Byt till mörkt tema'
+  );
   const label = isDark ? 'Byt till ljust tema' : 'Byt till mörkt tema';
   dom.themeToggleBtn.setAttribute('aria-label', label);
   dom.themeToggleBtn.setAttribute('title', label);
@@ -176,7 +184,13 @@ function renderProjects() {
   if (count === 0) {
     const emptyState = document.createElement('div');
     emptyState.className = 'empty-state';
-    emptyState.textContent = 'Inga resurser matchade din sökning.';
+    emptyState.innerHTML = `
+      <div class="empty-state-icon" aria-hidden="true">🔍</div>
+      <p>Inga resurser matchade din sökning.</p>
+      <button type="button" class="filter-btn clear-filters-btn" style="margin-top: 1rem;">
+        Rensa filter och sökning
+      </button>
+    `;
     fragment.appendChild(emptyState);
   } else {
     for (const project of filtered) {
@@ -192,6 +206,19 @@ function renderProjects() {
    ========================================================================== */
 
 function initEventListeners() {
+  // 0. Event Delegation för "Rensa filter"-knapp i empty state
+  dom.grid?.addEventListener('click', (e) => {
+    const clearBtn = e.target.closest('.clear-filters-btn');
+    if (!clearBtn) return;
+
+    state.searchQuery = '';
+    state.activeCategory = 'Alla';
+    if (dom.searchInput) dom.searchInput.value = '';
+    updateFilterPillStates();
+    renderProjects();
+    if (dom.searchInput) dom.searchInput.focus();
+  });
+
   // 1. Event Delegation för filterknappar (endast 1 lyssnare för hela verktygsfältet)
   dom.filterPills?.addEventListener('click', (e) => {
     const pill = e.target.closest('.filter-pill');
@@ -245,6 +272,14 @@ function initEventListeners() {
     const isExpanded = dom.mobileNavToggle.getAttribute('aria-expanded') === 'true';
     const nextState = !isExpanded;
     dom.mobileNavToggle.setAttribute('aria-expanded', String(nextState));
+    dom.mobileNavToggle.setAttribute(
+      'aria-label',
+      nextState ? 'Stäng meny' : 'Öppna meny'
+    );
+    dom.mobileNavToggle.setAttribute(
+      'title',
+      nextState ? 'Stäng meny' : 'Öppna meny'
+    );
     const label = nextState ? 'Stäng meny' : 'Öppna meny';
     dom.mobileNavToggle.setAttribute('aria-label', label);
     dom.mobileNavToggle.setAttribute('title', label);
@@ -399,6 +434,13 @@ function initSharedNavigation() {
       `;
       navGroup.insertBefore(toggleBtn, navList);
       dom.mobileNavToggle = toggleBtn;
+    }
+
+    // Update existing mobile nav toggle title if it was hardcoded without one
+    if (dom.mobileNavToggle) {
+      if (!dom.mobileNavToggle.getAttribute('title')) {
+        dom.mobileNavToggle.setAttribute('title', dom.mobileNavToggle.getAttribute('aria-label') || 'Öppna meny');
+      }
     }
 
     // Bygg enhetlig Steg 1-huvudmeny
