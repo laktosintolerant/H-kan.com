@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Fönsterspöket – Projektion</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: #000000;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, sans-serif;
+      touch-action: manipulation;
+    }
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+    /* Diskret statusruta vid start så man ser att JS körs i mobilen */
+    #boot-toast {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(20, 30, 45, 0.85);
+      color: #a5f3fc;
+      border: 1px solid rgba(165, 243, 252, 0.3);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+      z-index: 20;
+      text-align: center;
+      white-space: nowrap;
+    }
+    /* Touch- och tangentbordspanel */
+    #ui-panel {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 16px;
+      padding: 12px;
+      color: #f8fafc;
+      z-index: 30;
+      display: none;
+      width: min(92vw, 420px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+    #ui-panel.visible {
+      display: block;
+    }
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #94a3b8;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    button {
+      background: rgba(51, 65, 85, 0.8);
+      color: #f1f5f9;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      padding: 9px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      text-align: left;
+      active: scale(0.98);
+    }
+    button:active {
+      background: rgba(71, 85, 105, 1);
+    }
+    .btn-row {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-row button {
+      flex: 1;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="ghostCanvas"></canvas>
+
+  <div id="boot-toast">👻 Spöket är redo! (1 tryck = Bus, Dubbeltryck = Meny)</div>
+
+  <div id="ui-panel">
+    <div class="panel-title">
+      <span>👻 Spök-kontroller (Dubbeltryck/H för att dölja)</span>
+    </div>
+    <div class="btn-grid">
+      <button data-prank="wave">👋 Q: Vinka & BU!</button>
+      <button data-prank="peekaboo">🙈 W: Tittut!</button>
+      <button data-prank="clean">🧽 E: Imma & Tvätta</button>
+      <button data-prank="upsidedown">🙃 R: Upp-och-ner</button>
+      <button data-prank="spin">💫 T: Snurr-yr</button>
+      <button data-prank="hat">🎩 Y: Hatt-tricket</button>
+      <button data-prank="flashlight">🔦 U: Detektiven</button>
+      <button data-prank="random" style="background:#0284c7; font-weight:600;">🎲 Slumpa bus</button>
+    </div>
+    <div class="btn-row">
+      <button id="btn-cal">🎯 Ram (C)</button>
+      <button id="btn-theme">🎨 Färg (1-3)</button>
+      <button id="btn-size-down">➖ Krymp</button>
+      <button id="btn-size-up">➕ Förstora</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const canvas = document.getElementById('ghostCanvas');
+      const ctx = canvas.getContext('2d');
+      const bootToast = document.getElementById('boot-toast');
+      const uiPanel = document.getElementById('ui-panel');
+
+      // Dölj start-toast efter 4 sekunder
+      setTimeout(function() {
+        if (bootToast) bootToast.style.opacity = '0';
+      }, 4000);
+
+      // Bakåtkompatibel runda-hörn-hjälpare (ersätter ctx.roundRect som kraschar äldre mobiler)
+      function drawRoundedRect(ctx, x, y, w, h, r) {
+        r = Math.min(r, w / 2, h / 2);
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+      }
+
+      // Säker localStorage-hantering (kraschar inte via file:// på mobil)
+      function loadConfig() {
+        const defaults = { offsetX: 0, offsetY: 0, scale: 1.0, theme: 0, calibrate: false };
+        try {
+          const saved = localStorage.getItem('ghostWindowCfg');
+          if (saved) return Object.assign(defaults, JSON.parse(saved));
+        } catch (e) {}
+        return defaults;
+      }
+
+      function saveConfig() {
+        try {
+          localStorage.setItem('ghostWindowCfg', JSON.stringify({
+            offsetX: cfg.offsetX,
+            offsetY: cfg.offsetY,
+            scale: cfg.scale,
+            theme: cfg.theme
+          }));
+        } catch (e) {}
+      }
+
+      const cfg = loadConfig();
+
+      const themes = [
+        { name: 'Kallblå', core: '#ffffff', mid: 'rgba(186, 230, 253, 0.88)', glow: 'rgba(56, 189, 248, 0.45)' },
+        { name: 'Spökgrön', core: '#f0fdf4', mid: 'rgba(134, 239, 172, 0.88)', glow: 'rgba(34, 197, 94, 0.45)' },
+        { name: 'Kritvit', core: '#ffffff', mid: 'rgba(255, 255, 255, 0.96)', glow: 'rgba(255, 255, 255, 0.55)' }
+      ];
+
+      let width = window.innerWidth || 360;
+      let height = window.innerHeight || 640;
+
+      function resize() {
+        width = window.innerWidth || document.documentElement.clientWidth || 360;
+        height = window.innerHeight || document.documentElement.clientHeight || 640;
+        canvas.width = width;
+        canvas.height = height;
+      }
+      window.addEventListener('resize', resize);
+      window.addEventListener('orientationchange', function() { setTimeout(resize, 200); });
+      resize();
+
+      // Spökets tillstånd
+      const pranks = ['wave', 'peekaboo', 'clean', 'upsidedown', 'spin', 'hat', 'flashlight'];
+      const ghost = {
+        x: 0,
+        y: 0,
+        targetX: 0,
+        targetY: 0,
+        vx: 0,
+        vy: 0,
+        lookX: 0,
+        lookY: 0,
+        targetLookX: 0,
+        targetLookY: 0,
+        blinkTimer: 0,
+        isBlinking: false,
+        prank: null,
+        prankTime: 0,
+        prankDuration: 5.0,
+        nextPrankTimer: 12 + Math.random() * 12,
+        nextMoveTimer: 3.0
+      };
+
+      function triggerPrank(name) {
+        if (name === 'random') {
+          name = pranks[Math.floor(Math.random() * pranks.length)];
+        }
+        ghost.prank = name;
+        ghost.prankTime = 0;
+        const durations = {
+          wave: 4.2,
+          peekaboo: 5.2,
+          clean: 6.5,
+          upsidedown: 5.8,
+          spin: 5.2,
+          hat: 4.8,
+          flashlight: 6.0
+        };
+        ghost.prankDuration = durations[name] || 5.0;
+        ghost.nextPrankTimer = 18 + Math.random() * 17;
+      }
+
+      // Touch-hantering (Enkeltryck = Bus, Dubbeltryck = Meny)
+      let lastTap = 0;
+      canvas.addEventListener('pointerdown', function(e) {
+        const now = Date.now();
+        if (now - lastTap < 320) {
+          uiPanel.classList.toggle('visible');
+          lastTap = 0;
+        } else {
+          lastTap = now;
+          if (!uiPanel.classList.contains('visible')) {
+            triggerPrank('random');
+          }
+        }
+      });
+
+      // UI-knappar i menyn
+      const prankButtons = document.querySelectorAll('[data-prank]');
+      for (let i = 0; i < prankButtons.length; i++) {
+        prankButtons[i].addEventListener('click', function(e) {
+          e.stopPropagation();
+          triggerPrank(this.getAttribute('data-prank'));
+        });
+      }
+
+      document.getElementById('btn-cal').addEventListener('click', function(e) {
+        e.stopPropagation();
+        cfg.calibrate = !cfg.calibrate;
+      });
+      document.getElementById('btn-theme').addEventListener('click', function(e) {
+        e.stopPropagation();
+        cfg.theme = (cfg.theme + 1) % themes.length;
+        saveConfig();
+      });
+      document.getElementById('btn-size-down').addEventListener('click', function(e) {
+        e.stopPropagation();
+        cfg.scale = Math.max(0.4, cfg.scale - 0.1);
+        saveConfig();
+      });
+      document.getElementById('btn-size-up').addEventListener('click', function(e) {
+        e.stopPropagation();
+        cfg.scale = Math.min(2.2, cfg.scale + 0.1);
+        saveConfig();
+      });
+
+      // Tangentbordskontroller för laptopen
+      window.addEventListener('keydown', function(e) {
+        const key = e.key.toLowerCase();
+        if (key === ' ') { e.preventDefault(); triggerPrank('random'); }
+        else if (key === 'q') triggerPrank('wave');
+        else if (key === 'w') triggerPrank('peekaboo');
+        else if (key === 'e') triggerPrank('clean');
+        else if (key === 'r') triggerPrank('upsidedown');
+        else if (key === 't') triggerPrank('spin');
+        else if (key === 'y') triggerPrank('hat');
+        else if (key === 'u') triggerPrank('flashlight');
+        else if (key === 'c') cfg.calibrate = !cfg.calibrate;
+        else if (key === 'h') uiPanel.classList.toggle('visible');
+        else if (key === '1') { cfg.theme = 0; saveConfig(); }
+        else if (key === '2') { cfg.theme = 1; saveConfig(); }
+        else if (key === '3') { cfg.theme = 2; saveConfig(); }
+        else if (key === '+' || key === '=') { cfg.scale = Math.min(2.2, cfg.scale + 0.08); saveConfig(); }
+        else if (key === '-') { cfg.scale = Math.max(0.4, cfg.scale - 0.08); saveConfig(); }
+        else if (e.key === 'ArrowLeft') { cfg.offsetX -= 15; saveConfig(); }
+        else if (e.key === 'ArrowRight') { cfg.offsetX += 15; saveConfig(); }
+        else if (e.key === 'ArrowUp') { cfg.offsetY -= 15; saveConfig(); }
+        else if (e.key === 'ArrowDown') { cfg.offsetY += 15; saveConfig(); }
+      });
+
+      let lastTime = performance.now();
+
+      function update(dt, elapsed) {
+        // Sväva lugnt inom säkerhetszonen
+        ghost.nextMoveTimer -= dt;
+        if (ghost.nextMoveTimer <= 0 && !ghost.prank) {
+          ghost.nextMoveTimer = 2.5 + Math.random() * 3.5;
+          ghost.targetX = (Math.random() - 0.5) * 90;
+          ghost.targetY = (Math.random() - 0.5) * 50;
+          ghost.targetLookX = (Math.random() - 0.5) * 14;
+          ghost.targetLookY = (Math.random() - 0.5) * 8;
+        }
+
+        // Blinka naturligt
+        ghost.blinkTimer -= dt;
+        if (ghost.blinkTimer <= 0) {
+          if (ghost.isBlinking) {
+            ghost.isBlinking = false;
+            ghost.blinkTimer = 2.5 + Math.random() * 4.0;
+          } else {
+            ghost.isBlinking = true;
+            ghost.blinkTimer = 0.14;
+          }
+        }
+
+        // Räknare till nästa bus
+        if (!ghost.prank) {
+          ghost.nextPrankTimer -= dt;
+          if (ghost.nextPrankTimer <= 0) {
+            triggerPrank('random');
+          }
+        } else {
+          ghost.prankTime += dt;
+          if (ghost.prankTime >= ghost.prankDuration) {
+            ghost.prank = null;
+            ghost.prankTime = 0;
+          }
+        }
+
+        // Mjuk interpolation
+        ghost.x += (ghost.targetX - ghost.x) * Math.min(1, dt * 1.8);
+        ghost.y += (ghost.targetY - ghost.y) * Math.min(1, dt * 1.8);
+        ghost.lookX += (ghost.targetLookX - ghost.lookX) * Math.min(1, dt * 4.0);
+        ghost.lookY += (ghost.targetLookY - ghost.lookY) * Math.min(1, dt * 4.0);
+      }
+
+      function draw(elapsed) {
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, width, height);
+
+        const centerX = width / 2 + cfg.offsetX;
+        const centerY = height / 2 + cfg.offsetY;
+        const baseUnit = Math.min(width, height) * 0.16 * cfg.scale;
+        const theme = themes[cfg.theme] || themes[0];
+
+        // Rita kalibreringsram om aktiverad
+        if (cfg.calibrate) {
+          ctx.save();
+          ctx.strokeStyle = 'rgba(239, 68, 68, 0.75)';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([8, 6]);
+          const zoneW = baseUnit * 4.2;
+          const zoneH = baseUnit * 4.2;
+          ctx.strokeRect(centerX - zoneW / 2, centerY - zoneH / 2, zoneW, zoneH);
+          ctx.fillStyle = 'rgba(239, 68, 68, 0.9)';
+          ctx.font = '14px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('SÄKERHETSZON (Piltangenter = flytta, +/- = storlek, C = dölj)', centerX, centerY - zoneH / 2 - 10);
+          ctx.restore();
+        }
+
+        // Beräkna bus-transformationer
+        let px = ghost.x * cfg.scale;
+        let py = ghost.y * cfg.scale + Math.sin(elapsed * 2.1) * (baseUnit * 0.12);
+        let scaleX = 1.0;
+        let scaleY = 1.0;
+        let rotation = Math.sin(elapsed * 1.2) * 0.04;
+        let leftArmAngle = 0.3 + Math.sin(elapsed * 2.2) * 0.1;
+        let rightArmAngle = -0.3 - Math.sin(elapsed * 2.2) * 0.1;
+        let mouthOpen = 0.2;
+        let eyesCovered = false;
+        let dizzyEyes = false;
+        let bigRightEye = 1.0;
+
+        const p = ghost.prank;
+        const pt = ghost.prankTime;
+        const pd = ghost.prankDuration;
+        const norm = p ? Math.min(1, pt / pd) : 0;
+
+        if (p === 'wave') {
+          rightArmAngle = -1.2 + Math.sin(pt * 14) * 0.45;
+          mouthOpen = 0.85;
+          rotation = Math.sin(pt * 5) * 0.08;
+        } else if (p === 'peekaboo') {
+          if (norm < 0.25) {
+            const k = norm / 0.25;
+            py += Math.sin(k * Math.PI * 0.5) * (baseUnit * 2.3);
+          } else if (norm < 0.65) {
+            py += baseUnit * 0.7;
+            rotation = 0.18;
+            eyesCovered = true;
+          } else {
+            const k = (norm - 0.65) / 0.35;
+            py += (1 - k) * (baseUnit * 0.7);
+            mouthOpen = 0.95;
+            leftArmAngle = -0.9;
+            rightArmAngle = 0.9;
+          }
+        } else if (p === 'clean') {
+          const zoom = norm < 0.2 ? norm / 0.2 : (norm > 0.85 ? (1 - norm) / 0.15 : 1);
+          scaleX = 1 + zoom * 0.38;
+          scaleY = 1 + zoom * 0.32;
+          if (norm > 0.2 && norm < 0.45) {
+            mouthOpen = 1.0;
+          }
+        } else if (p === 'upsidedown') {
+          if (norm < 0.22) {
+            const k = norm / 0.22;
+            py -= k * (baseUnit * 3.0);
+          } else if (norm < 0.8) {
+            const k = Math.min(1, (norm - 0.22) / 0.18);
+            rotation = Math.PI;
+            py = -baseUnit * 2.6 + Math.sin(k * Math.PI * 0.5) * (baseUnit * 2.2);
+            rightArmAngle = -1.0 + Math.sin(pt * 12) * 0.35;
+            mouthOpen = 0.7;
+          } else {
+            const k = (norm - 0.8) / 0.2;
+            rotation = Math.PI;
+            py = -baseUnit * 0.4 - k * (baseUnit * 2.6);
+          }
+        } else if (p === 'spin') {
+          if (norm < 0.45) {
+            const k = norm / 0.45;
+            rotation = k * Math.PI * 4;
+            scaleX = Math.cos(k * Math.PI * 4);
+          } else {
+            dizzyEyes = true;
+            rotation = Math.sin(pt * 10) * 0.15;
+            mouthOpen = 0.6;
+          }
+        } else if (p === 'hat') {
+          mouthOpen = 0.6;
+          if (norm > 0.35 && norm < 0.75) {
+            rightArmAngle = -1.3;
+          }
+        } else if (p === 'flashlight') {
+          const sweep = Math.sin(pt * 2.6);
+          ghost.lookX = sweep * 16;
+          bigRightEye = 1.65;
+          mouthOpen = 0.45;
+        }
+
+        ctx.save();
+        ctx.translate(centerX + px, centerY + py);
+        ctx.rotate(rotation);
+        ctx.scale(scaleX, scaleY);
+
+        // Yttre mjukt sken (döljer projektorns kanter)
+        const aura = ctx.createRadialGradient(0, 0, baseUnit * 0.2, 0, 0, baseUnit * 2.2);
+        aura.addColorStop(0, theme.glow);
+        aura.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = aura;
+        ctx.beginPath();
+        ctx.arc(0, 0, baseUnit * 2.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        const r = baseUnit * 0.85;
+        const bodyH = baseUnit * 1.15;
+
+        // Spökets kropp (lakansform med böljande nederkant)
+        const bodyGrad = ctx.createRadialGradient(0, -r * 0.3, r * 0.1, 0, r * 0.2, r * 2.1);
+        bodyGrad.addColorStop(0, theme.core);
+        bodyGrad.addColorStop(0.65, theme.mid);
+        bodyGrad.addColorStop(1, 'rgba(0,0,0,0)');
+
+        ctx.fillStyle = bodyGrad;
+        ctx.beginPath();
+        ctx.arc(0, -r * 0.2, r, Math.PI, 0, false);
+        ctx.lineTo(r, bodyH);
+
+        // Böljande fåll längst ner
+        const waves = 4;
+        const step = (r * 2) / waves;
+        for (let i = 0; i < waves; i++) {
+          const wx1 = r - i * step - step * 0.5;
+          const wx2 = r - (i + 1) * step;
+          const waveOffset = Math.sin(elapsed * 4.5 + i * 1.6) * (baseUnit * 0.14);
+          ctx.quadraticCurveTo(wx1, bodyH + baseUnit * 0.22 + waveOffset, wx2, bodyH - baseUnit * 0.05 - waveOffset * 0.5);
+        }
+        ctx.lineTo(-r, -r * 0.2);
+        ctx.closePath();
+        ctx.fill();
+
+        // Små spökarmar
+        ctx.fillStyle = theme.mid;
+        // Vänster arm
+        ctx.save();
+        ctx.translate(-r * 0.82, 0);
+        ctx.rotate(eyesCovered ? -1.1 : leftArmAngle);
+        ctx.beginPath();
+        ctx.ellipse(-r * 0.25, 0, r * 0.32, r * 0.16, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // Höger arm
+        ctx.save();
+        ctx.translate(r * 0.82, 0);
+        ctx.rotate(eyesCovered ? 1.1 : rightArmAngle);
+        ctx.beginPath();
+        ctx.ellipse(r * 0.25, 0, r * 0.32, r * 0.16, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // Ögon & Ansikte
+        const eyeX = r * 0.32;
+        const eyeY = -r * 0.22 + ghost.lookY;
+        const lx = ghost.lookX;
+
+        // Rosiga kinder
+        ctx.fillStyle = 'rgba(244, 114, 182, 0.35)';
+        ctx.beginPath();
+        ctx.ellipse(-eyeX * 1.35 + lx * 0.5, eyeY + r * 0.24, r * 0.15, r * 0.09, 0, 0, Math.PI * 2);
+        ctx.ellipse(eyeX * 1.35 + lx * 0.5, eyeY + r * 0.24, r * 0.15, r * 0.09, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#0f172a';
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = Math.max(2, baseUnit * 0.04);
+
+        if (eyesCovered) {
+          // Händer framför ögonen vid Tittut
+          ctx.fillStyle = theme.core;
+          ctx.beginPath();
+          ctx.arc(-eyeX, eyeY, r * 0.22, 0, Math.PI * 2);
+          ctx.arc(eyeX, eyeY, r * 0.22, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (dizzyEyes) {
+          // Snurriga ögon (@)
+          for (let side = -1; side <= 1; side += 2) {
+            ctx.save();
+            ctx.translate(side * eyeX + lx, eyeY);
+            ctx.rotate(elapsed * 8 * side);
+            ctx.beginPath();
+            for (let a = 0; a < Math.PI * 3.5; a += 0.3) {
+              const sr = (a / (Math.PI * 3.5)) * (r * 0.18);
+              const sx = Math.cos(a) * sr;
+              const sy = Math.sin(a) * sr;
+              if (a === 0) ctx.moveTo(sx, sy);
+              else ctx.lineTo(sx, sy);
+            }
+            ctx.stroke();
+            ctx.restore();
+          }
+        } else if (ghost.isBlinking) {
+          // Glad blinkning
+          for (let side = -1; side <= 1; side += 2) {
+            ctx.beginPath();
+            ctx.arc(side * eyeX + lx, eyeY, r * 0.13, Math.PI, 0, false);
+            ctx.stroke();
+          }
+        } else {
+          // Vanliga snälla spökögon med glimt
+          const leftR = r * 0.14;
+          const rightR = r * 0.14 * bigRightEye;
+          ctx.beginPath();
+          ctx.ellipse(-eyeX + lx, eyeY, leftR, leftR * 1.2, 0, 0, Math.PI * 2);
+          ctx.ellipse(eyeX + lx, eyeY, rightR, rightR * 1.2, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Ljusglimt i ögonen
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(-eyeX + lx - leftR * 0.3, eyeY - leftR * 0.35, leftR * 0.32, 0, Math.PI * 2);
+          ctx.arc(eyeX + lx - rightR * 0.3, eyeY - rightR * 0.35, rightR * 0.32, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Mun
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        if (mouthOpen > 0.5) {
+          ctx.ellipse(lx * 0.7, eyeY + r * 0.34, r * 0.13 * mouthOpen, r * 0.17 * mouthOpen, 0, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.arc(lx * 0.7, eyeY + r * 0.26, r * 0.14, 0.15 * Math.PI, 0.85 * Math.PI, false);
+          ctx.stroke();
+        }
+
+        // Extrarekvisita för busen
+        if (p === 'wave') {
+          ctx.save();
+          const floatY = -r * 1.35 - Math.sin(pt * 4) * (baseUnit * 0.15);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold ' + Math.round(baseUnit * 0.42) + 'px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('BU! ✨', 0, floatY);
+          ctx.restore();
+        } else if (p === 'spin' && norm >= 0.45) {
+          // Snurrande stjärnor runt huvudet
+          for (let s = 0; s < 3; s++) {
+            const ang = elapsed * 4 + (s * Math.PI * 2) / 3;
+            const sx = Math.cos(ang) * (r * 0.85);
+            const sy = -r * 0.95 + Math.sin(ang) * (r * 0.22);
+            ctx.fillStyle = '#fde047';
+            ctx.font = Math.round(baseUnit * 0.32) + 'px sans-serif';
+            ctx.fillText('★', sx, sy);
+          }
+        } else if (p === 'hat') {
+          // Cylinderhatt som lyfts
+          const lift = (norm > 0.3 && norm < 0.75) ? Math.sin(((norm - 0.3) / 0.45) * Math.PI) * (baseUnit * 0.55) : 0;
+          const tilt = (norm > 0.3 && norm < 0.75) ? -0.25 : 0;
+          ctx.save();
+          ctx.translate(0, -r * 1.05 - lift);
+          ctx.rotate(tilt);
+          ctx.fillStyle = '#1e293b';
+          ctx.strokeStyle = '#e2e8f0';
+          ctx.lineWidth = 2;
+          // Brätte
+          drawRoundedRect(ctx, -r * 0.7, 0, r * 1.4, r * 0.16, 6);
+          ctx.fill();
+          ctx.stroke();
+          // Kulle
+          drawRoundedRect(ctx, -r * 0.45, -r * 0.65, r * 0.9, r * 0.66, 6);
+          ctx.fill();
+          ctx.stroke();
+          // Band
+          ctx.fillStyle = '#38bdf8';
+          ctx.fillRect(-r * 0.45, -r * 0.16, r * 0.9, r * 0.12);
+          ctx.restore();
+        } else if (p === 'flashlight') {
+          // Ficklampa och ljuskägla
+          const beamAngle = Math.sin(pt * 2.6) * 0.55;
+          ctx.save();
+          ctx.translate(r * 0.55, r * 0.1);
+          ctx.rotate(beamAngle);
+          const beamGrad = ctx.createLinearGradient(0, 0, baseUnit * 2.4, 0);
+          beamGrad.addColorStop(0, 'rgba(254, 240, 138, 0.75)');
+          beamGrad.addColorStop(1, 'rgba(254, 240, 138, 0)');
+          ctx.fillStyle = beamGrad;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(baseUnit * 2.4, -baseUnit * 0.85);
+          ctx.lineTo(baseUnit * 2.4, baseUnit * 0.85);
+          ctx.closePath();
+          ctx.fill();
+
+          // Själva ficklampan
+          ctx.fillStyle = '#475569';
+          drawRoundedRect(ctx, -baseUnit * 0.15, -baseUnit * 0.1, baseUnit * 0.35, baseUnit * 0.2, 4);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        ctx.restore();
+
+        // Imma och tvättsvamp ritas i fönstrets plan (ovanför spöket)
+        if (p === 'clean' && norm > 0.25) {
+          ctx.save();
+          ctx.translate(centerX + px, centerY + py);
+          const fogAlpha = norm < 0.5 ? (norm - 0.25) / 0.25 : Math.max(0, 1 - (norm - 0.5) / 0.42);
+          const fogGrad = ctx.createRadialGradient(0, 0, baseUnit * 0.1, 0, 0, baseUnit * 1.15);
+          fogGrad.addColorStop(0, 'rgba(224, 242, 254, ' + (fogAlpha * 0.75) + ')');
+          fogGrad.addColorStop(1, 'rgba(224, 242, 254, 0)');
+          ctx.fillStyle = fogGrad;
+          ctx.beginPath();
+          ctx.arc(0, 0, baseUnit * 1.15, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Gul tvättsvamp som gnuggar i cirklar
+          if (norm >= 0.45 && norm <= 0.9) {
+            const sx = Math.cos(pt * 9) * (baseUnit * 0.45);
+            const sy = Math.sin(pt * 9) * (baseUnit * 0.3);
+            ctx.translate(sx, sy);
+            ctx.rotate(Math.sin(pt * 9) * 0.3);
+            ctx.fillStyle = '#facc15';
+            ctx.strokeStyle = '#ca8a04';
+            ctx.lineWidth = 2;
+            drawRoundedRect(ctx, -baseUnit * 0.24, -baseUnit * 0.16, baseUnit * 0.48, baseUnit * 0.32, 8);
+            ctx.fill();
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+      }
+
+      function loop(now) {
+        const dt = Math.min(0.1, (now - lastTime) / 1000);
+        lastTime = now;
+        const elapsed = now / 1000;
+        update(dt, elapsed);
+        draw(elapsed);
+        requestAnimationFrame(loop);
+      }
+
+      requestAnimationFrame(loop);
+    })();
+  </script>
+</body>
+</html>
